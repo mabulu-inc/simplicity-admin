@@ -27,6 +27,22 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@25.3.5)
 
+  packages/api:
+    dependencies:
+      '@simplicity-admin/core':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^25.3.5
+        version: 25.3.5
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@25.3.5)
+
   packages/auth:
     dependencies:
       '@simplicity-admin/core':
