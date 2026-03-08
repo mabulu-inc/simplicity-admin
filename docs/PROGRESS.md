@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-015
-Next eligible task: T-016
+Last completed task: T-016
+Next eligible task: T-017
 Blockers: none
-Test suite status: 205 passed
+Test suite status: 253 passed
 
 ---
 
@@ -226,3 +226,29 @@ Format for each entry:
 **Test results**: 205 passed, 0 failed
 **Review**: introspectSchema() orchestrates listTables, introspectRelations, and introspectEnums in parallel, then populates columns on each table in parallel via introspectColumns (B-DB-012). Returns complete SchemaMeta with all tables (columns + primaryKey populated), all relations (both directions), and all enums. Defaults to 'public' schema. Handles empty schemas gracefully. Errors wrapped in DatabaseError with DB_003 code. All 8 integration tests use real Postgres with multi-table schema including composite PKs, FKs, and enums. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
+
+### 2026-03-08 — T-016: System schema YAML (schema-flow)
+**Status**: DONE
+**Commit**: 6e8dd9c
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/db/schema/tables/users.yaml (id, email, password_hash, display_name, super_admin, active)
+- packages/db/schema/tables/tenants.yaml (id, name, slug with format check)
+- packages/db/schema/tables/memberships.yaml (id, user_id FK, tenant_id FK, role with validity check)
+- packages/db/schema/roles/authenticator.yaml (login role, member of all app roles)
+- packages/db/schema/roles/anon.yaml (unauthenticated, no login)
+- packages/db/schema/roles/app_viewer.yaml (read-only)
+- packages/db/schema/roles/app_editor.yaml (read+write)
+- packages/db/schema/roles/app_admin.yaml (full access)
+- packages/db/schema/functions/current_user_id.yaml (SQL, returns uuid from app.user_id)
+- packages/db/schema/functions/current_tenant_id.yaml (SQL, returns uuid from app.tenant_id)
+- packages/db/schema/functions/begin_session.yaml (PL/pgSQL, sets role + pgSettings)
+- packages/db/schema/functions/update_timestamp.yaml (PL/pgSQL trigger, sets updated_at)
+- packages/db/schema/mixins/timestamps.yaml (created_at, updated_at + update trigger)
+- packages/db/schema/mixins/tenant_scoped.yaml (tenant_id FK + RLS policy with super-admin bypass)
+- packages/db/schema/mixins/auditable.yaml (created_by, updated_by FK to users)
+- packages/db/tests/schema-validation.test.ts (48 tests)
+- packages/db/package.json (added yaml devDependency)
+**Test results**: 253 passed, 0 failed
+**Review**: All 14 schema-flow YAML files follow the documented YAML format reference. Tables: users has uuid PK, unique email, timestamps mixin; tenants has unique slug with regex check; memberships has composite unique index on (user_id, tenant_id, role) with FK constraints and role validity check. Roles: authenticator is login role with membership in all functional roles (anon, app_viewer, app_editor, app_admin) per ADR-005; functional roles are non-login with inherit. Functions: current_user_id/current_tenant_id return uuid from pgSettings; begin_session uses SECURITY DEFINER to SET LOCAL role and configure session variables; update_timestamp is the trigger function for timestamps mixin. Mixins: timestamps adds created_at/updated_at with auto-update trigger; tenant_scoped adds tenant_id with RLS policy matching B-TEN-011/018 (tenant isolation + super-admin bypass); auditable adds created_by/updated_by with FK to users. Grants on system tables restrict app_viewer/app_editor to SELECT on safe columns, app_admin gets full access. All 48 validation tests pass. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: Also created update_timestamp.yaml function (referenced by timestamps mixin trigger) which is not in the Produces list but is required for the mixin to work.
