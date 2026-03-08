@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-030
-Next eligible task: T-031
+Last completed task: T-031
+Next eligible task: T-032
 Blockers: none
-Test suite status: 330 passed
+Test suite status: 360 passed
 
 ---
 
@@ -447,3 +447,15 @@ Format for each entry:
 **Test results**: 330 passed, 0 failed
 **Review**: ThemeTokens interface matches spec exactly with all 30 required properties (10 colors, 6 spacing, 6 typography, 3 radius, 2 shadows). lightTheme and darkTheme define all tokens — dark theme differs in color tokens (dark surface, light text) while sharing spacing/typography/radius/shadow values. applyTheme() converts camelCase keys to CSS custom properties (e.g. colorPrimary → --color-primary, space1 → --space-1) and sets them on document.documentElement (B-UI-023/024). getSystemPreference() uses window.matchMedia for prefers-color-scheme detection. CSS files provide static fallback for SSR. Primitives layer separates raw values from semantic mappings. All 9 tests pass including token completeness, theme application, overwrite behavior, and system preference. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: Added jsdom as devDependency for DOM-based theme tests.
+
+### 2026-03-08 — T-031: Field type mapping
+**Status**: DONE
+**Commit**: 7d09dc2
+**Duration**: ~4 min
+**Files created/modified**:
+- packages/ui/src/lib/components/field-map.ts (getFieldComponent(), getDisplayFormatter(), FieldComponent type)
+- packages/ui/src/lib/index.ts (added field-map re-exports)
+- packages/ui/tests/field-map.test.ts (35 tests)
+**Test results**: 360 passed, 0 failed
+**Review**: getFieldComponent() maps all ColumnTypes to correct FieldComponent values per B-UI-025: text→TextArea, varchar/char→TextInput, all numeric types→NumberInput, boolean→Toggle, enum→Select, date→DatePicker, timestamp/timestamptz→DateTimePicker, json/jsonb→JSONEditor, array→TagInput, uuid with _id suffix (FK heuristic)→RelationPicker, uuid (plain)→TextInput, time/timetz→TextInput, unknown→TextInput (fallback per error handling spec). getDisplayFormatter() returns formatters: booleans→✓/✗ (B-UI-007), dates→locale string via toLocaleDateString (B-UI-008), enums→title case with underscore-to-space, nulls/undefined→em dash "—", all others→String(). Both functions exported from @simplicity-admin/ui. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
