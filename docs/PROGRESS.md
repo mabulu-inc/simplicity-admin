@@ -255,7 +255,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-017: DB bootstrap orchestrator
 **Status**: DONE
-**Commit**: (pending)
+**Commit**: 2d9630b
 **Duration**: ~8 min
 **Files created/modified**:
 - packages/db/src/bootstrap.ts (bootstrap() orchestrator with roles, functions, tables, indexes, triggers, grants, seed data)
