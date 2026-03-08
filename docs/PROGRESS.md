@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-009
-Next eligible task: T-010
+Last completed task: T-010
+Next eligible task: T-011
 Blockers: none
-Test suite status: 154 passed
+Test suite status: 161 passed
 
 ---
 
@@ -152,3 +152,17 @@ Format for each entry:
 **Test results**: 154 passed, 0 failed
 **Review**: Package follows same structure as core. Depends on @simplicity-admin/core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
 **Notes**: —
+
+### 2026-03-08 — T-010: DB connection manager
+**Status**: DONE
+**Commit**: fe2b9f0
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/db/src/errors.ts (DatabaseError class + maskConnectionUrl helper)
+- packages/db/src/connection.ts (createPool() returning ConnectionPool backed by pg.Pool)
+- packages/db/src/index.ts (added createPool, DatabaseError, maskConnectionUrl re-exports)
+- packages/db/tests/connection.test.ts (8 tests: connect+SELECT 1, withClient, pool.end cleanup, bad URL throws DatabaseError, maskConnectionUrl tests)
+- packages/db/package.json (added pg, @types/pg dependencies)
+**Test results**: 161 passed, 0 failed
+**Review**: createPool() returns ConnectionPool interface backed by pg.Pool (B-DB-001). Lazy connection — first query triggers connect. Query failures wrapped in DatabaseError with DB_002 code. Connection failures wrapped with DB_001 code. Passwords masked in all error messages via maskConnectionUrl(). pool.end() cleanly closes connections (B-DB-003). withClient() acquires client, runs function, releases client. Idle pool errors handled silently. All integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: Had to create simplicity_admin database — compose.yaml volume persisted old data with different DB name.
