@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-008
-Next eligible task: T-009
+Last completed task: T-009
+Next eligible task: T-010
 Blockers: none
-Test suite status: 153 passed
+Test suite status: 154 passed
 
 ---
 
@@ -137,4 +137,18 @@ Format for each entry:
 - packages/core/tests/exports.test.ts (20 tests verifying all public API exports)
 **Test results**: 153 passed, 0 failed
 **Review**: All runtime exports verified (defineConfig, loadConfig, resolveConfig, DEFAULT_CONFIG, mapPgType, ProviderRegistry, createRegistry, PluginManager, all 6 error classes). Type exports verified compilable (ProjectConfig, SchemaMeta, Provider, Plugin, ColumnType). Single import path `import { ... } from '@simplicity-admin/core'` works for all exports. index.ts already had all re-exports from T-002–T-007. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-009: Initialize @simplicity-admin/db package
+**Status**: DONE
+**Commit**: df741c6
+**Duration**: ~3 min
+**Files created/modified**:
+- packages/db/package.json (@simplicity-admin/db, depends on @simplicity-admin/core)
+- packages/db/tsconfig.json
+- packages/db/vitest.config.ts (aliases for @simplicity-admin/db and @simplicity-admin/core)
+- packages/db/src/index.ts (empty re-export)
+- packages/db/tests/smoke.test.ts (1 test)
+**Test results**: 154 passed, 0 failed
+**Review**: Package follows same structure as core. Depends on @simplicity-admin/core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
 **Notes**: —
