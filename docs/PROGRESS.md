@@ -118,7 +118,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-007: Core plugin types + manager
 **Status**: DONE
-**Commit**: (pending)
+**Commit**: 2931516
 **Duration**: ~5 min
 **Files created/modified**:
 - packages/core/src/plugins/types.ts (Plugin, AppContext, RequestContext interfaces)
