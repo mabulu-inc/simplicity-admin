@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-023
-Next eligible task: T-024
+Last completed task: T-024
+Next eligible task: T-025
 Blockers: none
-Test suite status: 293 passed
+Test suite status: 301 passed
 
 ---
 
@@ -346,3 +346,14 @@ Format for each entry:
 **Test results**: 293 passed, 0 failed
 **Review**: createLoginHandler() handles POST /auth/login with password strategy. Queries users table by email, verifies bcrypt password, fetches memberships for role/tenant resolution (B-AUTH-013/014/015/016). Returns same "Invalid credentials" error for missing email and wrong password — no email enumeration (B-AUTH-014/015). JWT payload includes userId, tenantId, roles, activeRole, authStrategy. Highest-privilege role is default activeRole (B-AUTH-016). Super-admin login sets superAdmin: true and defaults to app_admin role with first/default tenant (B-AUTH-027). createLogoutHandler() accepts refresh token and adds to in-memory revocation set (B-AUTH-017). createRefreshHandler() checks revocation set before refreshing token pair, returns 401 for revoked tokens (B-AUTH-018). Default admin (admin@localhost / changeme) can log in after bootstrap. All 8 integration tests use real Postgres with full bootstrap. No circular deps. Lint, typecheck, test all pass.
 **Notes**: Token revocation uses in-memory Set — suitable for M1. Production would use Redis or a DB table.
+
+### 2026-03-08 — T-024: Auth index — re-export all public API
+**Status**: DONE
+**Commit**: 130e327
+**Duration**: ~3 min
+**Files created/modified**:
+- packages/auth/src/index.ts (added route handler re-exports)
+- packages/auth/tests/exports.test.ts (8 tests)
+**Test results**: 301 passed, 0 failed
+**Review**: All public API functions importable from single `@simplicity-admin/auth` path: hashPassword, verifyPassword, jwtTokenProvider, AuthError, createAuthMiddleware, getUserFromRequest, createLoginHandler, createLogoutHandler, createRefreshHandler. HttpMiddleware and AuthenticatedRequest types also exported. All 8 export tests verify runtime availability via dynamic import. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
