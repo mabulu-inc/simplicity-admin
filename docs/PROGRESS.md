@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-024
-Next eligible task: T-025
+Last completed task: T-025
+Next eligible task: T-026
 Blockers: none
-Test suite status: 301 passed
+Test suite status: 302 passed
 
 ---
 
@@ -356,4 +356,18 @@ Format for each entry:
 - packages/auth/tests/exports.test.ts (8 tests)
 **Test results**: 301 passed, 0 failed
 **Review**: All public API functions importable from single `@simplicity-admin/auth` path: hashPassword, verifyPassword, jwtTokenProvider, AuthError, createAuthMiddleware, getUserFromRequest, createLoginHandler, createLogoutHandler, createRefreshHandler. HttpMiddleware and AuthenticatedRequest types also exported. All 8 export tests verify runtime availability via dynamic import. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-025: Initialize @simplicity-admin/api package
+**Status**: DONE
+**Commit**: 47e76fb
+**Duration**: ~3 min
+**Files created/modified**:
+- packages/api/package.json (@simplicity-admin/api, depends on @simplicity-admin/core)
+- packages/api/tsconfig.json
+- packages/api/vitest.config.ts (aliases for @simplicity-admin/api and @simplicity-admin/core)
+- packages/api/src/index.ts (empty re-export)
+- packages/api/tests/smoke.test.ts (1 test)
+**Test results**: 302 passed, 0 failed
+**Review**: Package follows same structure as core, db, and auth. Depends on @simplicity-admin/core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
 **Notes**: —
