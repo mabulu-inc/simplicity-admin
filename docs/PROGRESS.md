@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-035
-Next eligible task: T-036
+Last completed task: T-036
+Next eligible task: T-037
 Blockers: none
-Test suite status: 423 passed
+Test suite status: 436 passed
 
 ---
 
@@ -517,4 +517,16 @@ Format for each entry:
 - packages/ui/tests/components/layout.test.ts
 **Test results**: 423 passed, 0 failed
 **Review**: Shell renders Sidebar on left and content area on right via flex layout (B-UI-016). Shell accepts sidebarItems, currentPath, user, roles, activeRole, and optional tenant/role/logout props, composing Sidebar and TopBar internally. Sidebar renders navigation items as links with correct labels and hrefs (B-UI-017). Active item highlighted via 'active' CSS class matching currentPath (B-UI-018). Grouped items rendered under section headers using Map-based grouping (B-UI-019). TopBar renders user displayName and avatar initial (B-UI-020). Tenant switcher shown when tenants provided with multiple entries as <select> dropdown (B-UI-021). Tenant switcher hidden when tenants omitted (B-UI-022). Single tenant shows label only without dropdown (B-UI-023-b). Super-admin gets "Global Mode" option in tenant dropdown. Role switcher shows <select> with formatted role names (app_admin→"Admin") when multiple roles (B-UI-026). Single role shows label only without dropdown (B-UI-028). formatRole() strips "app_" prefix and title-cases. All components use Svelte 5 $props() runes. No <style> blocks used (consistent with existing components, avoids vite 6 CSS preprocessing issue in test environment). 10 tests cover all specified behaviors. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-036: GraphQL query builder
+**Status**: DONE
+**Commit**: 5ecfacb
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/ui/src/lib/graphql/query-builder.ts (buildListQuery, buildDetailQuery, buildCreateMutation, buildUpdateMutation, buildDeleteMutation)
+- packages/ui/tests/crud/query-builder.test.ts (13 tests)
+- packages/ui/src/lib/index.ts (added query builder re-exports)
+**Test results**: 436 passed, 0 failed
+**Review**: All 5 query builder functions implemented per B-CRUD-019/020 and PostGraphile V5 naming conventions. buildListQuery() generates paginated queries with allTableName(first:, offset:, orderBy:) pattern, supports column filtering for RBAC (third optional parameter). buildDetailQuery() generates single-record queries via tableByRowId(rowId:) with one-to-many relation subqueries (dealsByContactId pattern). buildCreateMutation() uses createTable(input:) pattern. buildUpdateMutation() uses updateTableByRowId(input:) pattern. buildDeleteMutation() uses deleteTableByRowId(input:) pattern. All functions correctly convert snake_case column names to camelCase (PostGraphile convention) and table names to PascalCase. Singularize helper handles common English pluralization patterns. Column filtering works for RBAC — only specified columns appear in selection set. All types and functions exported from @simplicity-admin/ui. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
