@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-022
-Next eligible task: T-023
+Last completed task: T-023
+Next eligible task: T-024
 Blockers: none
-Test suite status: 285 passed
+Test suite status: 293 passed
 
 ---
 
@@ -331,3 +331,18 @@ Format for each entry:
 **Test results**: 285 passed, 0 failed
 **Review**: createAuthMiddleware() returns HttpMiddleware that extracts Bearer token from Authorization header. Valid token → decodes payload via tokenProvider.verify(), populates req.user with userId, tenantId, roles, activeRole, superAdmin, calls next() (B-AUTH-010). Missing token or non-Bearer auth → req.user undefined, next() called for public route support (B-AUTH-011). Invalid/expired token → 401 response with JSON { error: "Invalid token" } (B-AUTH-012). AuthenticatedRequest extends IncomingMessage with optional user property. getUserFromRequest() safely extracts user from any IncomingMessage. All exported from @simplicity-admin/auth. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
+
+### 2026-03-08 — T-023: Login/logout/refresh routes
+**Status**: DONE
+**Commit**: (pending)
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/auth/src/routes/helpers.ts (parseBody, json, token revocation helpers)
+- packages/auth/src/routes/login.ts (createLoginHandler — password strategy login with role/tenant resolution)
+- packages/auth/src/routes/logout.ts (createLogoutHandler — token revocation)
+- packages/auth/src/routes/refresh.ts (createRefreshHandler — token pair refresh with revocation check)
+- packages/auth/tests/auth-routes.test.ts (8 integration tests)
+- packages/auth/vitest.config.ts (added @simplicity-admin/db alias for integration tests)
+**Test results**: 293 passed, 0 failed
+**Review**: createLoginHandler() handles POST /auth/login with password strategy. Queries users table by email, verifies bcrypt password, fetches memberships for role/tenant resolution (B-AUTH-013/014/015/016). Returns same "Invalid credentials" error for missing email and wrong password — no email enumeration (B-AUTH-014/015). JWT payload includes userId, tenantId, roles, activeRole, authStrategy. Highest-privilege role is default activeRole (B-AUTH-016). Super-admin login sets superAdmin: true and defaults to app_admin role with first/default tenant (B-AUTH-027). createLogoutHandler() accepts refresh token and adds to in-memory revocation set (B-AUTH-017). createRefreshHandler() checks revocation set before refreshing token pair, returns 401 for revoked tokens (B-AUTH-018). Default admin (admin@localhost / changeme) can log in after bootstrap. All 8 integration tests use real Postgres with full bootstrap. No circular deps. Lint, typecheck, test all pass.
+**Notes**: Token revocation uses in-memory Set — suitable for M1. Production would use Redis or a DB table.
