@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-029
-Next eligible task: T-030
+Last completed task: T-030
+Next eligible task: T-031
 Blockers: none
-Test suite status: 321 passed
+Test suite status: 330 passed
 
 ---
 
@@ -429,3 +429,21 @@ Format for each entry:
 **Test results**: 321 passed, 0 failed
 **Review**: Package follows same structure as core/db/auth/api. Uses @sveltejs/package for library builds (svelte-package command). Depends on @simplicity-admin/core via workspace protocol. @sveltejs/vite-plugin-svelte v5 used for vite 6 compatibility. Build produces dist/ with JS and declaration files. .svelte-kit/ added to gitignore (generated directory). No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
+
+### 2026-03-08 — T-030: Design tokens + theming
+**Status**: DONE
+**Commit**: 5bef2f7
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/ui/src/lib/tokens/types.ts (ThemeTokens interface with 30 token properties)
+- packages/ui/src/lib/tokens/primitives.ts (raw color, spacing, typography, radius, shadow values)
+- packages/ui/src/lib/tokens/semantic.ts (lightTokens, darkTokens mapping primitives to ThemeTokens)
+- packages/ui/src/lib/themes/index.ts (lightTheme, darkTheme exports, applyTheme(), getSystemPreference())
+- packages/ui/src/lib/themes/light.css (light theme CSS custom properties)
+- packages/ui/src/lib/themes/dark.css (dark theme CSS custom properties)
+- packages/ui/tests/tokens/themes.test.ts (9 tests)
+- packages/ui/vitest.config.ts (added jsdom environment)
+- packages/ui/package.json (added jsdom devDependency)
+**Test results**: 330 passed, 0 failed
+**Review**: ThemeTokens interface matches spec exactly with all 30 required properties (10 colors, 6 spacing, 6 typography, 3 radius, 2 shadows). lightTheme and darkTheme define all tokens — dark theme differs in color tokens (dark surface, light text) while sharing spacing/typography/radius/shadow values. applyTheme() converts camelCase keys to CSS custom properties (e.g. colorPrimary → --color-primary, space1 → --space-1) and sets them on document.documentElement (B-UI-023/024). getSystemPreference() uses window.matchMedia for prefers-color-scheme detection. CSS files provide static fallback for SSR. Primitives layer separates raw values from semantic mappings. All 9 tests pass including token completeness, theme application, overwrite behavior, and system preference. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: Added jsdom as devDependency for DOM-based theme tests.
