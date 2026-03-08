@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-026
-Next eligible task: T-027
+Last completed task: T-027
+Next eligible task: T-028
 Blockers: none
-Test suite status: 304 passed
+Test suite status: 306 passed
 
 ---
 
@@ -382,4 +382,17 @@ Format for each entry:
 - packages/api/src/index.ts (added export)
 **Test results**: 304 passed, 0 failed
 **Review**: createPgSettingsFromToken() maps TokenPayload to pgSettings per B-API-011/012. Sets `role` to activeRole, `app.user_id` to userId. Includes `app.tenant_id` only when tenantId is present (B-API-012). Exported from @simplicity-admin/api. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-027: PostGraphile preset
+**Status**: DONE
+**Commit**: 4c79798
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/api/src/graphql/preset.ts (createPreset() function)
+- packages/api/src/index.ts (added createPreset re-export)
+- packages/api/tests/preset.test.ts (5 tests)
+- packages/api/package.json (updated postgraphile to V5 rc.5)
+**Test results**: 306 passed, 0 failed
+**Review**: createPreset() returns a valid PostGraphile V5 preset per B-API-001. Extends PostGraphileAmberPreset, configures pgServices with makePgService from @dataplan/pg/adaptors/pg targeting 'public' schema, and sets grafserv.graphiql from config. Updated postgraphile dependency from V4 (4.14.1) to V5 (5.0.0-rc.5) to match spec requirement. All 5 tests verify: preset has extends array, pgServices configuration, correct schema target, graphiql enabled/disabled. Exported from @simplicity-admin/api. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
