@@ -1,0 +1,9 @@
+name: current_tenant_id
+language: sql
+returns: uuid
+replace: true
+body: |
+  SELECT current_setting('app.tenant_id')::uuid;
+grants:
+  - to: [anon, app_viewer, app_editor, app_admin]
+    privileges: [EXECUTE]

@@ -1,0 +1,44 @@
+table: users
+comment: "System users — authentication and identity"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: email
+    type: text
+    unique: true
+
+  - name: password_hash
+    type: text
+
+  - name: display_name
+    type: text
+    nullable: true
+
+  - name: super_admin
+    type: boolean
+    default: "false"
+
+  - name: active
+    type: boolean
+    default: "true"
+
+indexes:
+  - name: idx_users_email
+    columns: [email]
+    unique: true
+
+grants:
+  - to: app_viewer
+    privileges: [SELECT]
+    columns: [id, email, display_name, active]
+  - to: app_editor
+    privileges: [SELECT]
+    columns: [id, email, display_name, active]
+  - to: app_admin
+    privileges: [SELECT, INSERT, UPDATE, DELETE]

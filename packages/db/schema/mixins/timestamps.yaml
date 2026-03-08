@@ -1,0 +1,18 @@
+mixin: timestamps
+
+columns:
+  - name: created_at
+    type: timestamptz
+    default: now()
+
+  - name: updated_at
+    type: timestamptz
+    default: now()
+
+triggers:
+  - name: set_{table}_updated_at
+    timing: BEFORE
+    events: [UPDATE]
+    function: update_timestamp
+    for_each: ROW
+    when: "OLD.* IS DISTINCT FROM NEW.*"

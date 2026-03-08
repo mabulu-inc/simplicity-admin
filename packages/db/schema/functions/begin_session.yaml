@@ -1,0 +1,18 @@
+name: begin_session
+language: plpgsql
+returns: void
+replace: true
+security: definer
+args: "p_role text, p_user_id text, p_tenant_id text DEFAULT '', p_is_super_admin text DEFAULT 'false'"
+body: |
+  BEGIN
+    EXECUTE format('set local role %I', p_role);
+    PERFORM set_config('app.user_id', p_user_id, true);
+    IF p_tenant_id <> '' THEN
+      PERFORM set_config('app.tenant_id', p_tenant_id, true);
+    END IF;
+    PERFORM set_config('app.is_super_admin', p_is_super_admin, true);
+  END;
+grants:
+  - to: [authenticator]
+    privileges: [EXECUTE]

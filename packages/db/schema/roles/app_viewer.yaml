@@ -1,0 +1,4 @@
+role: app_viewer
+login: false
+inherit: true
+comment: "Read-only application access"

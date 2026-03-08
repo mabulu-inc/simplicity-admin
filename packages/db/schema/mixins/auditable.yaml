@@ -1,0 +1,18 @@
+mixin: auditable
+
+columns:
+  - name: created_by
+    type: uuid
+    nullable: true
+    references:
+      table: users
+      column: id
+      on_delete: SET NULL
+
+  - name: updated_by
+    type: uuid
+    nullable: true
+    references:
+      table: users
+      column: id
+      on_delete: SET NULL

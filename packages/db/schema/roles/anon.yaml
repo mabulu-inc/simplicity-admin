@@ -1,0 +1,4 @@
+role: anon
+login: false
+inherit: false
+comment: "Unauthenticated requests — minimal or no access"

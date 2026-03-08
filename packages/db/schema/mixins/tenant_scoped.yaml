@@ -1,0 +1,18 @@
+mixin: tenant_scoped
+
+columns:
+  - name: tenant_id
+    type: uuid
+    references:
+      table: tenants
+      column: id
+      on_delete: CASCADE
+
+rls: true
+force_rls: true
+
+policies:
+  - name: "{table}_tenant_isolation"
+    for: ALL
+    using: "tenant_id = current_setting('app.tenant_id')::uuid OR current_setting('app.is_super_admin', true)::boolean = true"
+    check: "tenant_id = current_setting('app.tenant_id')::uuid"

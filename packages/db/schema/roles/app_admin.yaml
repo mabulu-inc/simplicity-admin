@@ -1,0 +1,4 @@
+role: app_admin
+login: false
+inherit: true
+comment: "Full application access including delete and system administration"

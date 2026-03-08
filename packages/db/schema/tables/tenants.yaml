@@ -1,0 +1,36 @@
+table: tenants
+comment: "Tenants for multi-tenancy isolation"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: name
+    type: text
+
+  - name: slug
+    type: text
+    unique: true
+
+indexes:
+  - name: idx_tenants_slug
+    columns: [slug]
+    unique: true
+
+checks:
+  - name: chk_tenants_slug_format
+    expression: "slug ~ '^[a-z0-9][a-z0-9-]*$'"
+
+grants:
+  - to: app_viewer
+    privileges: [SELECT]
+    columns: [id, name, slug]
+  - to: app_editor
+    privileges: [SELECT]
+    columns: [id, name, slug]
+  - to: app_admin
+    privileges: [SELECT, INSERT, UPDATE, DELETE]

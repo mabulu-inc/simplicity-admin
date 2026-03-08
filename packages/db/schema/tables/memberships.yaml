@@ -1,0 +1,49 @@
+table: memberships
+comment: "Links users to tenants with a functional role"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: user_id
+    type: uuid
+    references:
+      table: users
+      column: id
+      on_delete: CASCADE
+
+  - name: tenant_id
+    type: uuid
+    references:
+      table: tenants
+      column: id
+      on_delete: CASCADE
+
+  - name: role
+    type: text
+    comment: "Functional database role name (app_viewer, app_editor, app_admin)"
+
+indexes:
+  - name: idx_memberships_unique
+    columns: [user_id, tenant_id, role]
+    unique: true
+  - name: idx_memberships_user
+    columns: [user_id]
+  - name: idx_memberships_tenant
+    columns: [tenant_id]
+
+checks:
+  - name: chk_memberships_role_valid
+    expression: "role IN ('app_viewer', 'app_editor', 'app_admin')"
+
+grants:
+  - to: app_viewer
+    privileges: [SELECT]
+  - to: app_editor
+    privileges: [SELECT]
+  - to: app_admin
+    privileges: [SELECT, INSERT, UPDATE, DELETE]

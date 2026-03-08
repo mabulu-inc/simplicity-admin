@@ -1,0 +1,4 @@
+role: app_editor
+login: false
+inherit: true
+comment: "Read and write application access"

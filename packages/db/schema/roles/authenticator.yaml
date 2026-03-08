@@ -1,0 +1,5 @@
+role: authenticator
+login: true
+inherit: true
+in: [anon, app_viewer, app_editor, app_admin]
+comment: "Connection role — switches to functional roles via SET LOCAL role"

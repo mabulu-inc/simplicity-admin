@@ -1,0 +1,9 @@
+name: current_user_id
+language: sql
+returns: uuid
+replace: true
+body: |
+  SELECT current_setting('app.user_id')::uuid;
+grants:
+  - to: [anon, app_viewer, app_editor, app_admin]
+    privileges: [EXECUTE]
