@@ -18,7 +18,12 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@simplicity-admin/core": "workspace:*"
+    "@dataplan/pg": "1.0.0-rc.5",
+    "@simplicity-admin/core": "workspace:*",
+    "grafserv": "1.0.0-rc.6",
+    "graphile-config": "1.0.0-rc.5",
+    "graphql": "^16.9.0",
+    "postgraphile": "5.0.0-rc.5"
   },
   "devDependencies": {
     "@types/node": "^25.3.5",
