@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-011
-Next eligible task: T-012
+Last completed task: T-012
+Next eligible task: T-013
 Blockers: none
-Test suite status: 169 passed
+Test suite status: 183 passed
 
 ---
 
@@ -177,4 +177,16 @@ Format for each entry:
 - packages/db/src/index.ts (added listTables re-export)
 **Test results**: 169 passed, 0 failed
 **Review**: listTables() queries pg_catalog.pg_class for user tables (relkind='r') in the given schema, excluding pg_* tables (B-DB-004). Schema filter works correctly via parameterized query on pg_namespace (B-DB-005). Table comments retrieved via obj_description(). Returns TableMeta[] with name, schema, comment populated; columns and primaryKey left empty for introspectColumns to fill. Defaults to 'public' schema. Introspection failures wrapped in DatabaseError with DB_003 code. All 8 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-012: DB introspection — columns
+**Status**: DONE
+**Commit**: 0e1641c
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/db/src/introspect/columns.ts (introspectColumns() function)
+- packages/db/tests/introspect-columns.test.ts (14 integration tests)
+- packages/db/src/index.ts (added introspectColumns re-export)
+**Test results**: 183 passed, 0 failed
+**Review**: introspectColumns() queries information_schema.columns with pg_catalog joins for full column metadata (B-DB-006). Correctly maps all PG types via mapPgType() from core. Detects primary keys via pg_index (B-DB-006). Enum columns detected as USER-DEFINED type with values fetched from pg_enum in sort order (B-DB-007). Generated columns detected via is_generated='ALWAYS' (B-DB-008). varchar(N) maxLength, numeric(P,S) precision/scale all populated. Array columns detected with element type. Column comments via col_description(). Defaults to 'public' schema. Returns empty array for non-existent tables. Errors wrapped in DatabaseError with DB_003 code. All 14 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
