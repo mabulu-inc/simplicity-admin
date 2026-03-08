@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-002
-Next eligible task: T-003
+Last completed task: T-003
+Next eligible task: T-004
 Blockers: none
-Test suite status: 23 passed
+Test suite status: 50 passed
 
 ---
 
@@ -59,4 +59,19 @@ Format for each entry:
 - packages/core/vitest.config.ts (added resolve alias for @simplicity-admin/core)
 **Test results**: 23 passed, 0 failed
 **Review**: All 6 error classes match spec error table (CORE_001–CORE_012 codes). Each extends Error, has correct name property, supports error codes, and ProviderError/PluginError/HookError/ActionError support cause chaining. All exported from @simplicity-admin/core. instanceof works correctly across classes. No circular deps. vitest alias added so tests resolve package imports to source.
+**Notes**: —
+
+### 2026-03-08 — T-003: Core config types + Zod schema
+**Status**: DONE
+**Commit**: 246102b
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/core/src/config/types.ts (ProjectConfig, APIConfig, AuthConfig, AuthStrategyConfig, TenancyConfig, ProviderOverrides + forward-declared provider types)
+- packages/core/src/config/defaults.ts (DEFAULT_CONFIG, DEFAULT_API, DEFAULT_AUTH, DEFAULT_TENANCY)
+- packages/core/src/config/schema.ts (Zod v4 schema + defineConfig() with validation and defaults)
+- packages/core/src/index.ts (added config type and function re-exports)
+- packages/core/tests/config.test.ts (27 tests)
+- packages/core/package.json (added zod dependency)
+**Test results**: 50 passed, 0 failed
+**Review**: All config types match spec interfaces. defineConfig() validates with Zod v4, applies all defaults per B-CORE-001/002/003/004/004b. Missing database → CORE_001 ConfigError, invalid types → CORE_002 ConfigError. Explicitly set values preserved over defaults. Forward-declared provider/plugin types use `type = object` (will be replaced by full interfaces in later tasks). No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
