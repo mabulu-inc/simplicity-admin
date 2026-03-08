@@ -21,3 +21,4 @@ export type {
 
 export { DEFAULT_CONFIG } from './config/defaults.js';
 export { defineConfig } from './config/schema.js';
+export { loadConfig, resolveConfig } from './config/loader.js';
