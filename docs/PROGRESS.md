@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-028
-Next eligible task: T-029
+Last completed task: T-029
+Next eligible task: T-030
 Blockers: none
-Test suite status: 320 passed
+Test suite status: 321 passed
 
 ---
 
@@ -412,3 +412,20 @@ Format for each entry:
 **Test results**: 320 passed, 0 failed
 **Review**: createAPIServer() creates a full PostGraphile V5 GraphQL server per B-API-002. Uses postgraphile() + grafserv for Node.js HTTP handling. pgSettings are set from JWT payload via grafast context callback, mapping authenticated user to PostgreSQL role and session settings (B-API-011/012). GraphiQL enabled/disabled via config.api.graphiql (B-API-003). All 6 integration tests use real Postgres with a test schema containing a contacts table. Tests verify: GraphQL query returns data, create mutation works, list query returns created records, update mutation works (via updateContactByRowId in V5), delete mutation works (via deleteContactByRowId in V5), and GraphiQL serves HTML in dev mode. postgraphileProvider() wraps createAPIServer() as the default APIProvider with shutdown support. Fixed PostGraphile V5 package version incompatibility (grafast rc.7 → rc.8 to resolve markSyncAndSafe error). No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: Upgraded PostGraphile V5 RC packages for version compatibility: postgraphile→rc.9, grafast→rc.8, @dataplan/pg→rc.7. PostGraphile V5 uses `updateContactByRowId`/`deleteContactByRowId` naming convention instead of V4's `updateContactById`.
+
+### 2026-03-08 — T-029: Initialize @simplicity-admin/ui package
+**Status**: DONE
+**Commit**: e59689c
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/ui/package.json (@simplicity-admin/ui, Svelte 5, SvelteKit 2, Tailwind CSS v4)
+- packages/ui/svelte.config.js (vitePreprocess)
+- packages/ui/vite.config.ts (svelte plugin for dev/test)
+- packages/ui/tsconfig.json (extends tsconfig.base.json)
+- packages/ui/vitest.config.ts (aliases for @simplicity-admin/ui and @simplicity-admin/core)
+- packages/ui/src/lib/index.ts (empty re-export)
+- packages/ui/tests/smoke.test.ts (1 test)
+- .gitignore (added .svelte-kit/)
+**Test results**: 321 passed, 0 failed
+**Review**: Package follows same structure as core/db/auth/api. Uses @sveltejs/package for library builds (svelte-package command). Depends on @simplicity-admin/core via workspace protocol. @sveltejs/vite-plugin-svelte v5 used for vite 6 compatibility. Build produces dist/ with JS and declaration files. .svelte-kit/ added to gitignore (generated directory). No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
