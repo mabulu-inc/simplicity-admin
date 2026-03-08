@@ -7,3 +7,4 @@ export { listTables } from './introspect/tables.js';
 export { introspectColumns } from './introspect/columns.js';
 export { introspectRelations } from './introspect/relations.js';
 export { introspectEnums } from './introspect/enums.js';
+export { introspectSchema } from './introspect/index.js';
