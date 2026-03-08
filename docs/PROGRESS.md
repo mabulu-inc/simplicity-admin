@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-007
-Next eligible task: T-008
+Last completed task: T-008
+Next eligible task: T-009
 Blockers: none
-Test suite status: 133 passed
+Test suite status: 153 passed
 
 ---
 
@@ -127,4 +127,14 @@ Format for each entry:
 - packages/core/src/index.ts (added plugin type and PluginManager re-exports)
 **Test results**: 133 passed, 0 failed
 **Review**: All plugin interfaces match spec exactly (Plugin with 5 lifecycle hooks, AppContext, RequestContext). PluginManager.runHook() executes hooks in registration order (B-CORE-010). onSchemaLoaded chains transformations — each plugin receives previous plugin's output (B-CORE-011). Plugins without a given hook are silently skipped. Hook failures wrapped in PluginError with CORE_006 code, plugin name, hook name, and cause chaining. All types and PluginManager exported from @simplicity-admin/core. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-008: Core index — re-export all public API
+**Status**: DONE
+**Commit**: 6816519
+**Duration**: ~3 min
+**Files created/modified**:
+- packages/core/tests/exports.test.ts (20 tests verifying all public API exports)
+**Test results**: 153 passed, 0 failed
+**Review**: All runtime exports verified (defineConfig, loadConfig, resolveConfig, DEFAULT_CONFIG, mapPgType, ProviderRegistry, createRegistry, PluginManager, all 6 error classes). Type exports verified compilable (ProjectConfig, SchemaMeta, Provider, Plugin, ColumnType). Single import path `import { ... } from '@simplicity-admin/core'` works for all exports. index.ts already had all re-exports from T-002–T-007. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
