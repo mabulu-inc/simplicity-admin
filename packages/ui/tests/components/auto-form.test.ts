@@ -11,42 +11,62 @@ afterEach(() => cleanup());
 const textColumn: ColumnMeta = {
   name: 'name',
   type: 'varchar',
+  pgType: 'character varying',
   nullable: false,
   hasDefault: false,
+  defaultValue: null,
+  isPrimaryKey: false,
   isGenerated: false,
+  comment: null,
 };
 
 const booleanColumn: ColumnMeta = {
   name: 'active',
   type: 'boolean',
+  pgType: 'boolean',
   nullable: false,
   hasDefault: false,
+  defaultValue: null,
+  isPrimaryKey: false,
   isGenerated: false,
+  comment: null,
 };
 
 const enumColumn: ColumnMeta = {
   name: 'status',
   type: 'enum',
+  pgType: 'USER-DEFINED',
   nullable: false,
   hasDefault: false,
+  defaultValue: null,
+  isPrimaryKey: false,
   isGenerated: false,
   enumValues: ['draft', 'published', 'archived'],
+  comment: null,
 };
 
 const pkColumn: ColumnMeta = {
   name: 'id',
   type: 'uuid',
+  pgType: 'uuid',
   nullable: false,
   hasDefault: true,
+  defaultValue: 'gen_random_uuid()',
+  isPrimaryKey: true,
   isGenerated: false,
+  comment: null,
 };
 
 const generatedColumn: ColumnMeta = {
   name: 'created_at',
   type: 'timestamptz',
+  pgType: 'timestamp with time zone',
   nullable: false,
   hasDefault: true,
+  defaultValue: 'now()',
+  isPrimaryKey: false,
   isGenerated: true,
+  comment: null,
 };
 
 const allColumns: ColumnMeta[] = [pkColumn, textColumn, booleanColumn, enumColumn, generatedColumn];

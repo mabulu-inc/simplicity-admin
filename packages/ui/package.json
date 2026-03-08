@@ -13,16 +13,23 @@
     }
   },
   "scripts": {
+    "dev": "vite dev",
     "build": "svelte-package",
+    "build:app": "vite build",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "typecheck": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "eslint src/",
     "clean": "rm -rf dist .turbo *.tsbuildinfo .svelte-kit"
   },
   "dependencies": {
-    "@simplicity-admin/core": "workspace:*"
+    "@simplicity-admin/auth": "workspace:^",
+    "@simplicity-admin/core": "workspace:*",
+    "@simplicity-admin/db": "workspace:^"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@sveltejs/adapter-node": "^5.5.4",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/package": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
