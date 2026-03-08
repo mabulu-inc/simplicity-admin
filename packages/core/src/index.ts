@@ -33,3 +33,29 @@ export type {
 } from './metadata/types.js';
 
 export { mapPgType } from './metadata/column-types.js';
+
+export type {
+  Provider,
+  DatabaseProvider,
+  APIProvider,
+  TokenProvider,
+  AuthStrategy,
+  AuthResult,
+  TableHooks,
+  HookContext,
+  TableAction,
+  ActionContext,
+  ActionResult,
+  UIProvider,
+  UIConfig,
+  HttpHandler,
+  TokenPayload,
+  TokenPair,
+  ConnectionPool,
+  QueryResult,
+  PoolClient,
+  MigrationConfig,
+  MigrationResult,
+} from './providers/types.js';
+
+export { ProviderRegistry, createRegistry } from './providers/registry.js';
