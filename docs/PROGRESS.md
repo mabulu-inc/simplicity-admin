@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-034
-Next eligible task: T-035
+Last completed task: T-035
+Next eligible task: T-036
 Blockers: none
-Test suite status: 413 passed
+Test suite status: 423 passed
 
 ---
 
@@ -504,4 +504,17 @@ Format for each entry:
 - packages/ui/tests/components/auto-form.test.ts
 **Test results**: 413 passed, 0 failed
 **Review**: AutoForm generates correct field components from ColumnMeta[] via getFieldComponent() mapping (B-UI-009). Edit mode populates values into fields (B-UI-010). Required validation prevents submit when nullable:false + hasDefault:false fields are empty, showing inline "This field is required" error (B-UI-011). PK and generated/hasDefault columns hidden in create mode (B-UI-012). readOnlyColumns rendered but disabled in edit mode (B-UI-013). onSubmit called with form data on Save click (B-UI-014). Delete button shown only when onDelete provided; triggers callback (B-UI-015). ConfirmDialog renders title/message with Confirm/Cancel buttons, hidden when open=false. Toast renders message with type-based CSS class (success/error/warning/info), hidden when visible=false. All 3 components use Svelte 5 $props() runes. 15 tests cover all specified behaviors. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-035: Layout components (Shell, Sidebar, TopBar)
+**Status**: DONE
+**Commit**: 68d3f36
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/lib/components/Shell.svelte
+- packages/ui/src/lib/components/Sidebar.svelte
+- packages/ui/src/lib/components/TopBar.svelte
+- packages/ui/tests/components/layout.test.ts
+**Test results**: 423 passed, 0 failed
+**Review**: Shell renders Sidebar on left and content area on right via flex layout (B-UI-016). Shell accepts sidebarItems, currentPath, user, roles, activeRole, and optional tenant/role/logout props, composing Sidebar and TopBar internally. Sidebar renders navigation items as links with correct labels and hrefs (B-UI-017). Active item highlighted via 'active' CSS class matching currentPath (B-UI-018). Grouped items rendered under section headers using Map-based grouping (B-UI-019). TopBar renders user displayName and avatar initial (B-UI-020). Tenant switcher shown when tenants provided with multiple entries as <select> dropdown (B-UI-021). Tenant switcher hidden when tenants omitted (B-UI-022). Single tenant shows label only without dropdown (B-UI-023-b). Super-admin gets "Global Mode" option in tenant dropdown. Role switcher shows <select> with formatted role names (app_admin→"Admin") when multiple roles (B-UI-026). Single role shows label only without dropdown (B-UI-028). formatRole() strips "app_" prefix and title-cases. All components use Svelte 5 $props() runes. No <style> blocks used (consistent with existing components, avoids vite 6 CSS preprocessing issue in test environment). 10 tests cover all specified behaviors. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
