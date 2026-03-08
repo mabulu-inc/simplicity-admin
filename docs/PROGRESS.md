@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-014
-Next eligible task: T-015
+Last completed task: T-015
+Next eligible task: T-016
 Blockers: none
-Test suite status: 197 passed
+Test suite status: 205 passed
 
 ---
 
@@ -213,4 +213,16 @@ Format for each entry:
 - packages/db/src/index.ts (added introspectEnums re-export)
 **Test results**: 197 passed, 0 failed
 **Review**: introspectEnums() queries pg_catalog.pg_type for enum types (typtype='e') in the given schema (B-DB-011). Enum values fetched via pg_enum ordered by enumsortorder for correct defined order. Schema qualification included on all EnumMeta objects. Defaults to 'public' schema. Returns empty array for schemas with no enums. Errors wrapped in DatabaseError with DB_003 code. All 6 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-015: DB introspection — full schema assembly
+**Status**: DONE
+**Commit**: f568dc9
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/db/src/introspect/index.ts (introspectSchema() orchestrator)
+- packages/db/tests/introspect-full.test.ts (8 integration tests)
+- packages/db/src/index.ts (added introspectSchema re-export)
+**Test results**: 205 passed, 0 failed
+**Review**: introspectSchema() orchestrates listTables, introspectRelations, and introspectEnums in parallel, then populates columns on each table in parallel via introspectColumns (B-DB-012). Returns complete SchemaMeta with all tables (columns + primaryKey populated), all relations (both directions), and all enums. Defaults to 'public' schema. Handles empty schemas gracefully. Errors wrapped in DatabaseError with DB_003 code. All 8 integration tests use real Postgres with multi-table schema including composite PKs, FKs, and enums. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
