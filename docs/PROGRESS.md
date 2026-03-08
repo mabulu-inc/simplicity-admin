@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-018
-Next eligible task: T-019
+Last completed task: T-019
+Next eligible task: T-020
 Blockers: none
-Test suite status: 268 passed
+Test suite status: 269 passed
 
 ---
 
@@ -277,3 +277,17 @@ Format for each entry:
 **Test results**: 268 passed, 0 failed
 **Review**: postgresProvider() returns a DatabaseProvider with name='postgres', version='0.0.1'. connect() wraps createPool() and verifies connectivity with a SELECT 1 query. introspect() delegates to introspectSchema(). migrate() delegates to bootstrap() for system schema setup (full schema-flow diff/apply to be added later). generate() is a no-op placeholder for B-DB-017 (schema-flow YAML generation from DB). All 4 DatabaseProvider methods implemented. Provider is stateless — each call to postgresProvider() creates a fresh instance. All 6 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: migrate() currently wraps bootstrap() only. Full schema-flow migration (diff + apply) will be implemented when schema-flow engine is built.
+
+### 2026-03-08 — T-019: Initialize @simplicity-admin/auth package
+**Status**: DONE
+**Commit**: fd61771
+**Duration**: ~3 min
+**Files created/modified**:
+- packages/auth/package.json (@simplicity-admin/auth, depends on @simplicity-admin/core)
+- packages/auth/tsconfig.json
+- packages/auth/vitest.config.ts (aliases for @simplicity-admin/auth and @simplicity-admin/core)
+- packages/auth/src/index.ts (empty re-export)
+- packages/auth/tests/smoke.test.ts (1 test)
+**Test results**: 269 passed, 0 failed
+**Review**: Package follows same structure as core and db. Depends on @simplicity-admin/core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
+**Notes**: —
