@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-037
-Next eligible task: T-038
+Last completed task: T-038
+Next eligible task: T-039
 Blockers: none
-Test suite status: 436 passed, 5 E2E passed
+Test suite status: 436 passed, 11 E2E passed
 
 ---
 
@@ -559,3 +559,16 @@ Format for each entry:
 **Test results**: 436 passed (vitest), 5 passed (Playwright E2E)
 **Review**: SvelteKit app boots with auth gate per task spec. hooks.server.ts reads access_token cookie and verifies JWT via jwtTokenProvider (B-AUTH-010/011/012). (app) route group has layout.server.ts that redirects unauthenticated users to /login (302). Login page renders email/password form with data-testid attributes for E2E testing. Login flow: POST /api/auth/login verifies password against DB, resolves user roles/tenant/super_admin status, issues JWT token pair. POST /api/auth/session sets HttpOnly cookies (access_token 15min, refresh_token 7d) with secure flag in production. DELETE /api/auth/session clears cookies for logout. (app) layout wraps content in Shell component with sidebar and topbar. Admin home shows welcome message with user email and role. No email enumeration — same "Invalid credentials" for missing user and wrong password. All 5 E2E Playwright tests pass: unauthenticated redirect, login form renders, valid login succeeds, invalid login shows error, authenticated user sees shell. Typecheck passes (0 errors, 2 warnings from AutoForm). No circular deps. No regressions.
 **Notes**: Fixed pre-existing type issues: ColumnMeta test fixtures missing pgType/defaultValue/isPrimaryKey/comment fields, tsconfig extended SvelteKit generated config, added skipLibCheck for vite 5/6 type conflict in node_modules.
+
+### 2026-03-08 — T-038: Admin app — dynamic list view
+**Status**: DONE
+**Commit**: 1ab0768
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/routes/(app)/[table]/+page.server.ts (list data loader with pagination, sorting, SQL queries)
+- packages/ui/src/routes/(app)/[table]/+page.svelte (list view with DataTable, empty state, sort/pagination handlers)
+- packages/ui/src/lib/server/db.ts (server-side DB pool + schema metadata cache)
+- packages/ui/tests/e2e/list-view.spec.ts (6 E2E tests)
+- packages/ui/tests/e2e/global-setup.ts (added contacts table seeding for E2E tests)
+**Test results**: 436 passed (vitest), 11 passed (Playwright E2E: 5 auth-gate + 6 list-view)
+**Review**: Dynamic list view renders DataTable for any table via [table] route param (B-CRUD-001). +page.server.ts validates table exists in metadata (404 if not), parses page/pageSize/sort/dir from URL params, runs parallel COUNT and SELECT queries against PostgreSQL with proper schema qualification. Pagination defaults: page=1, pageSize=25, max 100 (B-CRUD-002/003). Sorting validates column exists in table schema, defaults to PK DESC (B-CRUD-004). +page.svelte renders DataTable with sort/pagination/rowClick handlers, shows empty state with "No records yet" message and Create button when totalCount===0 (B-CRUD-007). humanize() converts snake_case to Title Case for table name display. db.ts provides lazy-initialized connection pool and cached schema metadata via introspectSchema(). 6 E2E tests cover: DataTable with data, column headers match schema, pagination (pageSize=3 shows 1-3 of 10, Next navigates to 4-6), sorting (click header updates URL with sort/dir params, indicator shown), empty state not visible when data exists, and 404 for non-existent tables. Login helper uses waitForLoadState('networkidle') and waitForResponse for reliable hydration-aware auth. No circular deps. Typecheck 0 errors. No regressions.
