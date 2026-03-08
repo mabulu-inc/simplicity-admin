@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-033
-Next eligible task: T-034
+Last completed task: T-034
+Next eligible task: T-035
 Blockers: none
-Test suite status: 398 passed
+Test suite status: 413 passed
 
 ---
 
@@ -491,4 +491,17 @@ Format for each entry:
 - packages/ui/tests/components/fields.test.ts (31 tests)
 **Test results**: 398 passed, 0 failed
 **Review**: All 10 form field components implemented as Svelte 5 components using $props() and $bindable() runes. TextInput renders labeled text input with value binding. NumberInput renders type="number" with numeric value binding. Toggle renders checkbox with boolean checked binding via aria-label for accessibility. Select renders <select> with string options and value binding. DatePicker renders type="date", DateTimePicker renders type="datetime-local". RelationPicker renders text input for UUID FK values (will be enhanced with lookup in later tasks). JSONEditor renders textarea with monospace styling for JSON content. TagInput renders tag chips with Enter-to-add and remove buttons, using internal inputValue state. TextArea renders multiline textarea. All components support label, value, required, disabled, and error props. Error messages render as inline "This field is required" text. All use id={label} and for={label} for label-input association (Toggle uses aria-label within label wrapper). 31 tests cover: rendering with label/value, value binding on input/change, required error display, and disabled state. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-034: AutoForm component
+**Status**: DONE
+**Commit**: 5efca40
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/lib/components/AutoForm.svelte
+- packages/ui/src/lib/components/ConfirmDialog.svelte
+- packages/ui/src/lib/components/Toast.svelte
+- packages/ui/tests/components/auto-form.test.ts
+**Test results**: 413 passed, 0 failed
+**Review**: AutoForm generates correct field components from ColumnMeta[] via getFieldComponent() mapping (B-UI-009). Edit mode populates values into fields (B-UI-010). Required validation prevents submit when nullable:false + hasDefault:false fields are empty, showing inline "This field is required" error (B-UI-011). PK and generated/hasDefault columns hidden in create mode (B-UI-012). readOnlyColumns rendered but disabled in edit mode (B-UI-013). onSubmit called with form data on Save click (B-UI-014). Delete button shown only when onDelete provided; triggers callback (B-UI-015). ConfirmDialog renders title/message with Confirm/Cancel buttons, hidden when open=false. Toast renders message with type-based CSS class (success/error/warning/info), hidden when visible=false. All 3 components use Svelte 5 $props() runes. 15 tests cover all specified behaviors. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
