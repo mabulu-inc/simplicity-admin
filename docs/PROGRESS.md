@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-021
-Next eligible task: T-022
+Last completed task: T-022
+Next eligible task: T-023
 Blockers: none
-Test suite status: 279 passed
+Test suite status: 285 passed
 
 ---
 
@@ -317,4 +317,17 @@ Format for each entry:
 - packages/auth/package.json (added jsonwebtoken, @types/jsonwebtoken dependencies)
 **Test results**: 279 passed, 0 failed
 **Review**: jwtTokenProvider() returns a TokenProvider with name='jwt', version='0.0.1'. sign() produces valid JWT with tokenType='access' claim (B-AUTH-001). verify() decodes and returns correct TokenPayload (B-AUTH-002). verify() throws AuthError with AUTH_002 for expired tokens (B-AUTH-003). verify() throws AuthError with AUTH_003 for invalid signatures (B-AUTH-004). refresh() returns new TokenPair with fresh access and refresh tokens using separate TTLs (B-AUTH-005). refresh() throws AuthError with AUTH_004 for expired refresh tokens (B-AUTH-006). Access and refresh tokens are distinguishable via tokenType claim. Default TTLs: 15 min access, 7 days refresh. AuthError class supports code and cause chaining. All exported from @simplicity-admin/auth. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-022: Auth middleware
+**Status**: DONE
+**Commit**: c9fe972
+**Duration**: ~4 min
+**Files created/modified**:
+- packages/auth/src/middleware.ts (createAuthMiddleware(), HttpMiddleware type)
+- packages/auth/src/context.ts (AuthenticatedRequest type, getUserFromRequest())
+- packages/auth/src/index.ts (added middleware and context re-exports)
+- packages/auth/tests/middleware.test.ts (6 tests)
+**Test results**: 285 passed, 0 failed
+**Review**: createAuthMiddleware() returns HttpMiddleware that extracts Bearer token from Authorization header. Valid token → decodes payload via tokenProvider.verify(), populates req.user with userId, tenantId, roles, activeRole, superAdmin, calls next() (B-AUTH-010). Missing token or non-Bearer auth → req.user undefined, next() called for public route support (B-AUTH-011). Invalid/expired token → 401 response with JSON { error: "Invalid token" } (B-AUTH-012). AuthenticatedRequest extends IncomingMessage with optional user property. getUserFromRequest() safely extracts user from any IncomingMessage. All exported from @simplicity-admin/auth. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
