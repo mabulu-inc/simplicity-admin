@@ -4,3 +4,4 @@
 export { createPool } from './connection.js';
 export { DatabaseError, maskConnectionUrl } from './errors.js';
 export { listTables } from './introspect/tables.js';
+export { introspectColumns } from './introspect/columns.js';
