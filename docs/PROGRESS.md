@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-032
-Next eligible task: T-033
+Last completed task: T-033
+Next eligible task: T-034
 Blockers: none
-Test suite status: 367 passed
+Test suite status: 398 passed
 
 ---
 
@@ -472,3 +472,23 @@ Format for each entry:
 **Test results**: 367 passed, 0 failed
 **Review**: DataTable renders column headers from ColumnMeta[] with humanized labels (B-UI-001). Rows render with values in correct columns (B-UI-002). Sort click dispatches onSort with column name and toggling asc/desc direction (B-UI-003). Pagination shows "N–M of T" format with Previous/Next buttons, Previous disabled on page 1 (B-UI-004). onRowClick fires with row data (B-UI-005). Empty state shows "No records found" within table tbody (B-UI-006). Boolean columns display ✓/✗ via getDisplayFormatter (B-UI-007). Date columns show formatted dates via toLocaleDateString (B-UI-008). Component uses Svelte 5 $props(), $state(), $derived(), $effect() runes. Testing setup uses @testing-library/svelte with @sveltejs/vite-plugin-svelte and browser resolve conditions to avoid SSR mount errors. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: Added @testing-library/svelte and @testing-library/jest-dom for Svelte component testing infrastructure, reusable by future component tests.
+
+### 2026-03-08 — T-033: Form field components
+**Status**: DONE
+**Commit**: 0ecfeef
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/ui/src/lib/components/fields/TextInput.svelte
+- packages/ui/src/lib/components/fields/NumberInput.svelte
+- packages/ui/src/lib/components/fields/Toggle.svelte
+- packages/ui/src/lib/components/fields/Select.svelte
+- packages/ui/src/lib/components/fields/DatePicker.svelte
+- packages/ui/src/lib/components/fields/DateTimePicker.svelte
+- packages/ui/src/lib/components/fields/RelationPicker.svelte
+- packages/ui/src/lib/components/fields/JSONEditor.svelte
+- packages/ui/src/lib/components/fields/TagInput.svelte
+- packages/ui/src/lib/components/fields/TextArea.svelte
+- packages/ui/tests/components/fields.test.ts (31 tests)
+**Test results**: 398 passed, 0 failed
+**Review**: All 10 form field components implemented as Svelte 5 components using $props() and $bindable() runes. TextInput renders labeled text input with value binding. NumberInput renders type="number" with numeric value binding. Toggle renders checkbox with boolean checked binding via aria-label for accessibility. Select renders <select> with string options and value binding. DatePicker renders type="date", DateTimePicker renders type="datetime-local". RelationPicker renders text input for UUID FK values (will be enhanced with lookup in later tasks). JSONEditor renders textarea with monospace styling for JSON content. TagInput renders tag chips with Enter-to-add and remove buttons, using internal inputValue state. TextArea renders multiline textarea. All components support label, value, required, disabled, and error props. Error messages render as inline "This field is required" text. All use id={label} and for={label} for label-input association (Toggle uses aria-label within label wrapper). 31 tests cover: rendering with label/value, value binding on input/change, required error display, and disabled state. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
