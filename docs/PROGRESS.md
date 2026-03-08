@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-006
-Next eligible task: T-007
+Last completed task: T-007
+Next eligible task: T-008
 Blockers: none
-Test suite status: 123 passed
+Test suite status: 133 passed
 
 ---
 
@@ -114,4 +114,17 @@ Format for each entry:
 - packages/core/src/index.ts (added provider type and registry re-exports)
 **Test results**: 123 passed, 0 failed
 **Review**: All provider interfaces match spec exactly (Provider, DatabaseProvider, APIProvider, TokenProvider, AuthStrategy, UIProvider, ConnectionPool, etc.). ProviderRegistry implements register/get/has/initAll/shutdownAll per B-CORE-007/008/009. get() throws ProviderError with CORE_004 for unregistered types. initAll() wraps init failures in ProviderError with CORE_005 and cause chaining. initAll/shutdownAll skip providers without init/shutdown methods. createRegistry() returns new ProviderRegistry instance. All types and ProviderRegistry exported from @simplicity-admin/core. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-007: Core plugin types + manager
+**Status**: DONE
+**Commit**: (pending)
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/core/src/plugins/types.ts (Plugin, AppContext, RequestContext interfaces)
+- packages/core/src/plugins/manager.ts (PluginManager class with runHook)
+- packages/core/tests/plugins.test.ts (10 tests)
+- packages/core/src/index.ts (added plugin type and PluginManager re-exports)
+**Test results**: 133 passed, 0 failed
+**Review**: All plugin interfaces match spec exactly (Plugin with 5 lifecycle hooks, AppContext, RequestContext). PluginManager.runHook() executes hooks in registration order (B-CORE-010). onSchemaLoaded chains transformations — each plugin receives previous plugin's output (B-CORE-011). Plugins without a given hook are silently skipped. Hook failures wrapped in PluginError with CORE_006 code, plugin name, hook name, and cause chaining. All types and PluginManager exported from @simplicity-admin/core. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —

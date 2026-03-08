@@ -59,3 +59,11 @@ export type {
 } from './providers/types.js';
 
 export { ProviderRegistry, createRegistry } from './providers/registry.js';
+
+export type {
+  Plugin,
+  AppContext,
+  RequestContext,
+} from './plugins/types.js';
+
+export { PluginManager } from './plugins/manager.js';
