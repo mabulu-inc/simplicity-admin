@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-031
-Next eligible task: T-032
+Last completed task: T-032
+Next eligible task: T-033
 Blockers: none
-Test suite status: 360 passed
+Test suite status: 367 passed
 
 ---
 
@@ -459,3 +459,16 @@ Format for each entry:
 **Test results**: 360 passed, 0 failed
 **Review**: getFieldComponent() maps all ColumnTypes to correct FieldComponent values per B-UI-025: text→TextArea, varchar/char→TextInput, all numeric types→NumberInput, boolean→Toggle, enum→Select, date→DatePicker, timestamp/timestamptz→DateTimePicker, json/jsonb→JSONEditor, array→TagInput, uuid with _id suffix (FK heuristic)→RelationPicker, uuid (plain)→TextInput, time/timetz→TextInput, unknown→TextInput (fallback per error handling spec). getDisplayFormatter() returns formatters: booleans→✓/✗ (B-UI-007), dates→locale string via toLocaleDateString (B-UI-008), enums→title case with underscore-to-space, nulls/undefined→em dash "—", all others→String(). Both functions exported from @simplicity-admin/ui. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
+
+### 2026-03-08 — T-032: DataTable component
+**Status**: DONE
+**Commit**: 115bcf9
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/lib/components/DataTable.svelte (metadata-driven table with sort, pagination, formatting)
+- packages/ui/tests/components/data-table.test.ts (7 tests)
+- packages/ui/vitest.config.ts (added svelte vite plugin + browser resolve conditions for component testing)
+- packages/ui/package.json (added @testing-library/svelte, @testing-library/jest-dom devDependencies)
+**Test results**: 367 passed, 0 failed
+**Review**: DataTable renders column headers from ColumnMeta[] with humanized labels (B-UI-001). Rows render with values in correct columns (B-UI-002). Sort click dispatches onSort with column name and toggling asc/desc direction (B-UI-003). Pagination shows "N–M of T" format with Previous/Next buttons, Previous disabled on page 1 (B-UI-004). onRowClick fires with row data (B-UI-005). Empty state shows "No records found" within table tbody (B-UI-006). Boolean columns display ✓/✗ via getDisplayFormatter (B-UI-007). Date columns show formatted dates via toLocaleDateString (B-UI-008). Component uses Svelte 5 $props(), $state(), $derived(), $effect() runes. Testing setup uses @testing-library/svelte with @sveltejs/vite-plugin-svelte and browser resolve conditions to avoid SSR mount errors. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: Added @testing-library/svelte and @testing-library/jest-dom for Svelte component testing infrastructure, reusable by future component tests.
