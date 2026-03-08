@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-036
-Next eligible task: T-037
+Last completed task: T-037
+Next eligible task: T-038
 Blockers: none
-Test suite status: 436 passed
+Test suite status: 436 passed, 5 E2E passed
 
 ---
 
@@ -530,3 +530,32 @@ Format for each entry:
 **Test results**: 436 passed, 0 failed
 **Review**: All 5 query builder functions implemented per B-CRUD-019/020 and PostGraphile V5 naming conventions. buildListQuery() generates paginated queries with allTableName(first:, offset:, orderBy:) pattern, supports column filtering for RBAC (third optional parameter). buildDetailQuery() generates single-record queries via tableByRowId(rowId:) with one-to-many relation subqueries (dealsByContactId pattern). buildCreateMutation() uses createTable(input:) pattern. buildUpdateMutation() uses updateTableByRowId(input:) pattern. buildDeleteMutation() uses deleteTableByRowId(input:) pattern. All functions correctly convert snake_case column names to camelCase (PostGraphile convention) and table names to PascalCase. Singularize helper handles common English pluralization patterns. Column filtering works for RBAC — only specified columns appear in selection set. All types and functions exported from @simplicity-admin/ui. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
+
+### 2026-03-08 — T-037: Admin app — SvelteKit entry point + auth gate
+**Status**: DONE
+**Commit**: 6ad2340
+**Duration**: ~10 min
+**Files created/modified**:
+- packages/ui/src/app.html (SvelteKit HTML template)
+- packages/ui/src/app.d.ts (App.Locals type with user session)
+- packages/ui/src/hooks.server.ts (JWT cookie verification via handle hook)
+- packages/ui/src/routes/+layout.svelte (root layout with title)
+- packages/ui/src/routes/+layout.server.ts (passes user to all pages)
+- packages/ui/src/routes/(auth)/login/+page.svelte (login form with email/password, error handling)
+- packages/ui/src/routes/(app)/+layout.svelte (Shell wrapper with sidebar, topbar, logout)
+- packages/ui/src/routes/(app)/+layout.server.ts (auth gate — redirects to /login if unauthenticated)
+- packages/ui/src/routes/(app)/+page.svelte (admin home page)
+- packages/ui/src/routes/api/auth/login/+server.ts (login API — verifies password, resolves roles/tenant, issues JWT)
+- packages/ui/src/routes/api/auth/session/+server.ts (session cookie management — set/delete HttpOnly cookies)
+- packages/ui/playwright.config.ts (Playwright config with webServer)
+- packages/ui/tests/e2e/auth-gate.spec.ts (5 E2E tests)
+- packages/ui/tests/e2e/global-setup.ts (bootstraps test DB before E2E)
+- packages/ui/svelte.config.js (added adapter-node)
+- packages/ui/vite.config.ts (switched to sveltekit plugin)
+- packages/ui/tsconfig.json (extends .svelte-kit/tsconfig.json, skipLibCheck for vite version conflict)
+- packages/ui/tests/components/auto-form.test.ts (fixed ColumnMeta test fixtures with missing required properties)
+- packages/ui/package.json (added @simplicity-admin/auth, @simplicity-admin/db, @sveltejs/adapter-node, @sveltejs/kit, @playwright/test)
+- pnpm-lock.yaml
+**Test results**: 436 passed (vitest), 5 passed (Playwright E2E)
+**Review**: SvelteKit app boots with auth gate per task spec. hooks.server.ts reads access_token cookie and verifies JWT via jwtTokenProvider (B-AUTH-010/011/012). (app) route group has layout.server.ts that redirects unauthenticated users to /login (302). Login page renders email/password form with data-testid attributes for E2E testing. Login flow: POST /api/auth/login verifies password against DB, resolves user roles/tenant/super_admin status, issues JWT token pair. POST /api/auth/session sets HttpOnly cookies (access_token 15min, refresh_token 7d) with secure flag in production. DELETE /api/auth/session clears cookies for logout. (app) layout wraps content in Shell component with sidebar and topbar. Admin home shows welcome message with user email and role. No email enumeration — same "Invalid credentials" for missing user and wrong password. All 5 E2E Playwright tests pass: unauthenticated redirect, login form renders, valid login succeeds, invalid login shows error, authenticated user sees shell. Typecheck passes (0 errors, 2 warnings from AutoForm). No circular deps. No regressions.
+**Notes**: Fixed pre-existing type issues: ColumnMeta test fixtures missing pgType/defaultValue/isPrimaryKey/comment fields, tsconfig extended SvelteKit generated config, added skipLibCheck for vite 5/6 type conflict in node_modules.
