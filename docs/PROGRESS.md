@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-005
-Next eligible task: T-006
+Last completed task: T-006
+Next eligible task: T-007
 Blockers: none
-Test suite status: 111 passed
+Test suite status: 123 passed
 
 ---
 
@@ -101,4 +101,17 @@ Format for each entry:
 - packages/core/src/index.ts (added metadata type and function re-exports)
 **Test results**: 111 passed, 0 failed
 **Review**: All metadata interfaces match spec exactly (ColumnMeta, TableMeta, RelationMeta, EnumMeta, SchemaMeta). ColumnType is a union type covering all specified values. mapPgType() maps all common PG types including aliases (character varying→varchar, int4→integer, float8→double, bool→boolean, timestamp with time zone→timestamptz, etc.). Array types detected via "[]" suffix and "ARRAY" keyword. Unknown types return 'unknown' per B-CORE-014. All types and mapPgType exported from @simplicity-admin/core. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-006: Core provider interfaces + registry
+**Status**: DONE
+**Commit**: 2d64c55
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/core/src/providers/types.ts (Provider, DatabaseProvider, APIProvider, TokenProvider, AuthStrategy, AuthResult, TableHooks, HookContext, TableAction, ActionContext, ActionResult, UIProvider, HttpHandler, TokenPayload, TokenPair, ConnectionPool, QueryResult, PoolClient, MigrationConfig, MigrationResult)
+- packages/core/src/providers/registry.ts (ProviderRegistry class, createRegistry())
+- packages/core/tests/registry.test.ts (12 tests)
+- packages/core/src/index.ts (added provider type and registry re-exports)
+**Test results**: 123 passed, 0 failed
+**Review**: All provider interfaces match spec exactly (Provider, DatabaseProvider, APIProvider, TokenProvider, AuthStrategy, UIProvider, ConnectionPool, etc.). ProviderRegistry implements register/get/has/initAll/shutdownAll per B-CORE-007/008/009. get() throws ProviderError with CORE_004 for unregistered types. initAll() wraps init failures in ProviderError with CORE_005 and cause chaining. initAll/shutdownAll skip providers without init/shutdown methods. createRegistry() returns new ProviderRegistry instance. All types and ProviderRegistry exported from @simplicity-admin/core. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
