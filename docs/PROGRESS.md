@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-017
-Next eligible task: T-018
+Last completed task: T-018
+Next eligible task: T-019
 Blockers: none
-Test suite status: 262 passed
+Test suite status: 268 passed
 
 ---
 
@@ -265,3 +265,15 @@ Format for each entry:
 **Test results**: 262 passed, 0 failed
 **Review**: bootstrap() creates complete system schema per B-DB-013/014/015/016. Creates 5 database roles (authenticator with login + 4 functional roles) with correct membership grants. Creates 4 functions (current_user_id, current_tenant_id, begin_session with SECURITY DEFINER, update_timestamp trigger). Creates 3 system tables (users, tenants, memberships) with all columns, constraints, and CHECK constraints matching YAML definitions. Timestamps mixin applied via BEFORE UPDATE triggers with OLD IS DISTINCT FROM NEW guard. All table grants match YAML specs (app_viewer/app_editor get column-level SELECT, app_admin gets full CRUD). Seeds default tenant ('Default', slug: 'default') and admin user (admin@localhost, bcrypt-hashed 'changeme', super_admin: true) with app_admin membership. Idempotent via IF NOT EXISTS, CREATE OR REPLACE, ON CONFLICT DO NOTHING. All 9 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: Added bcrypt as devDependency for password hashing in seed data. Will be moved to regular dependency or shared with auth package when T-020 (password utils) is implemented.
+
+### 2026-03-08 — T-018: DB provider (default DatabaseProvider)
+**Status**: DONE
+**Commit**: PENDING
+**Duration**: ~4 min
+**Files created/modified**:
+- packages/db/src/provider.ts (postgresProvider() factory returning DatabaseProvider)
+- packages/db/src/index.ts (added postgresProvider re-export)
+- packages/db/tests/provider.test.ts (6 integration tests)
+**Test results**: 268 passed, 0 failed
+**Review**: postgresProvider() returns a DatabaseProvider with name='postgres', version='0.0.1'. connect() wraps createPool() and verifies connectivity with a SELECT 1 query. introspect() delegates to introspectSchema(). migrate() delegates to bootstrap() for system schema setup (full schema-flow diff/apply to be added later). generate() is a no-op placeholder for B-DB-017 (schema-flow YAML generation from DB). All 4 DatabaseProvider methods implemented. Provider is stateless — each call to postgresProvider() creates a fresh instance. All 6 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: migrate() currently wraps bootstrap() only. Full schema-flow migration (diff + apply) will be implemented when schema-flow engine is built.
