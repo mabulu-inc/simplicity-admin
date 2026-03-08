@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-010
-Next eligible task: T-011
+Last completed task: T-011
+Next eligible task: T-012
 Blockers: none
-Test suite status: 161 passed
+Test suite status: 169 passed
 
 ---
 
@@ -166,3 +166,15 @@ Format for each entry:
 **Test results**: 161 passed, 0 failed
 **Review**: createPool() returns ConnectionPool interface backed by pg.Pool (B-DB-001). Lazy connection — first query triggers connect. Query failures wrapped in DatabaseError with DB_002 code. Connection failures wrapped with DB_001 code. Passwords masked in all error messages via maskConnectionUrl(). pool.end() cleanly closes connections (B-DB-003). withClient() acquires client, runs function, releases client. Idle pool errors handled silently. All integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: Had to create simplicity_admin database — compose.yaml volume persisted old data with different DB name.
+
+### 2026-03-08 — T-011: DB introspection — list tables
+**Status**: DONE
+**Commit**: f75e8eb
+**Duration**: ~4 min
+**Files created/modified**:
+- packages/db/src/introspect/tables.ts (listTables() function)
+- packages/db/tests/introspect.test.ts (8 integration tests)
+- packages/db/src/index.ts (added listTables re-export)
+**Test results**: 169 passed, 0 failed
+**Review**: listTables() queries pg_catalog.pg_class for user tables (relkind='r') in the given schema, excluding pg_* tables (B-DB-004). Schema filter works correctly via parameterized query on pg_namespace (B-DB-005). Table comments retrieved via obj_description(). Returns TableMeta[] with name, schema, comment populated; columns and primaryKey left empty for introspectColumns to fill. Defaults to 'public' schema. Introspection failures wrapped in DatabaseError with DB_003 code. All 8 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
