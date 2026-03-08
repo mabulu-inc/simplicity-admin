@@ -334,7 +334,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-023: Login/logout/refresh routes
 **Status**: DONE
-**Commit**: (pending)
+**Commit**: 9917d6f
 **Duration**: ~8 min
 **Files created/modified**:
 - packages/auth/src/routes/helpers.ts (parseBody, json, token revocation helpers)
