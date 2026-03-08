@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-019
-Next eligible task: T-020
+Last completed task: T-020
+Next eligible task: T-021
 Blockers: none
-Test suite status: 269 passed
+Test suite status: 273 passed
 
 ---
 
@@ -290,4 +290,17 @@ Format for each entry:
 - packages/auth/tests/smoke.test.ts (1 test)
 **Test results**: 269 passed, 0 failed
 **Review**: Package follows same structure as core and db. Depends on @simplicity-admin/core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
+**Notes**: —
+
+### 2026-03-08 — T-020: Password utilities
+**Status**: DONE
+**Commit**: ab83ce0
+**Duration**: ~3 min
+**Files created/modified**:
+- packages/auth/src/strategies/password.ts (hashPassword, verifyPassword with bcrypt cost 12)
+- packages/auth/src/index.ts (added password utility re-exports)
+- packages/auth/tests/password.test.ts (4 tests)
+- packages/auth/package.json (added bcrypt, @types/bcrypt dependencies)
+**Test results**: 273 passed, 0 failed
+**Review**: hashPassword() uses bcrypt with SALT_ROUNDS=12 (≥12 per spec). Returns $2b$ prefixed hash (B-AUTH-007). verifyPassword() returns true for correct password (B-AUTH-008), false for wrong password (B-AUTH-009). Both functions exported from @simplicity-admin/auth. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
