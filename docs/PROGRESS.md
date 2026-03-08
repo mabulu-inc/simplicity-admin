@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-025
-Next eligible task: T-026
+Last completed task: T-026
+Next eligible task: T-027
 Blockers: none
-Test suite status: 302 passed
+Test suite status: 304 passed
 
 ---
 
@@ -370,4 +370,16 @@ Format for each entry:
 - packages/api/tests/smoke.test.ts (1 test)
 **Test results**: 302 passed, 0 failed
 **Review**: Package follows same structure as core, db, and auth. Depends on @simplicity-admin/core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
+**Notes**: —
+
+### 2026-03-08 — T-026: pgSettings mapper
+**Status**: DONE
+**Commit**: 12e1ee7
+**Duration**: ~3 min
+**Files created/modified**:
+- packages/api/src/graphql/pg-settings.ts (createPgSettingsFromToken function)
+- packages/api/tests/pg-settings.test.ts (2 tests)
+- packages/api/src/index.ts (added export)
+**Test results**: 304 passed, 0 failed
+**Review**: createPgSettingsFromToken() maps TokenPayload to pgSettings per B-API-011/012. Sets `role` to activeRole, `app.user_id` to userId. Includes `app.tenant_id` only when tenantId is present (B-API-012). Exported from @simplicity-admin/api. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
