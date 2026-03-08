@@ -9,3 +9,15 @@ export {
   HookError,
   ActionError,
 } from './errors.js';
+
+export type {
+  ProjectConfig,
+  APIConfig,
+  AuthConfig,
+  AuthStrategyConfig,
+  TenancyConfig,
+  ProviderOverrides,
+} from './config/types.js';
+
+export { DEFAULT_CONFIG } from './config/defaults.js';
+export { defineConfig } from './config/schema.js';
