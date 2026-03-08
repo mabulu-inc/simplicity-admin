@@ -27,7 +27,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-001: Initialize monorepo structure
 **Status**: DONE
-**Commit**: (pending)
+**Commit**: 3bef93c
 **Duration**: ~5 min
 **Files created/modified**:
 - package.json (root workspace config)
