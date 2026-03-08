@@ -18,15 +18,25 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@dataplan/pg": "1.0.0-rc.5",
+    "@dataplan/json": "1.0.0-rc.5",
+    "@dataplan/pg": "1.0.0-rc.7",
+    "@envelop/core": "^5.0.0",
     "@simplicity-admin/core": "workspace:*",
+    "grafast": "1.0.0-rc.8",
     "grafserv": "1.0.0-rc.6",
+    "graphile-build": "5.0.0-rc.5",
+    "graphile-build-pg": "5.0.0-rc.7",
     "graphile-config": "1.0.0-rc.5",
     "graphql": "^16.9.0",
-    "postgraphile": "5.0.0-rc.5"
+    "pg": "^8.16.0",
+    "pg-sql2": "5.0.0-rc.4",
+    "postgraphile": "5.0.0-rc.9",
+    "tamedevil": "0.1.0-rc.5"
   },
   "devDependencies": {
+    "@simplicity-admin/db": "workspace:*",
     "@types/node": "^25.3.5",
+    "@types/pg": "^8.15.4",
     "typescript": "^5.5.0",
     "vitest": "^2.0.0"
   }
