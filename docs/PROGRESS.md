@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-003
-Next eligible task: T-004
+Last completed task: T-004
+Next eligible task: T-005
 Blockers: none
-Test suite status: 50 passed
+Test suite status: 65 passed
 
 ---
 
@@ -75,3 +75,17 @@ Format for each entry:
 **Test results**: 50 passed, 0 failed
 **Review**: All config types match spec interfaces. defineConfig() validates with Zod v4, applies all defaults per B-CORE-001/002/003/004/004b. Missing database → CORE_001 ConfigError, invalid types → CORE_002 ConfigError. Explicitly set values preserved over defaults. Forward-declared provider/plugin types use `type = object` (will be replaced by full interfaces in later tasks). No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
+
+### 2026-03-08 — T-004: Core config loader
+**Status**: DONE
+**Commit**: cb225ef
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/core/src/config/loader.ts (loadConfig(), resolveConfig(), env var mapping)
+- packages/core/tests/config-loader.test.ts (15 tests)
+- packages/core/src/index.ts (added loadConfig, resolveConfig re-exports)
+- packages/core/package.json (added @types/node devDependency)
+- packages/core/tsconfig.json (added types: ["node"])
+**Test results**: 65 passed, 0 failed
+**Review**: loadConfig() loads TS/JS config files via dynamic import (B-CORE-005). resolveConfig() merges file config with env overrides using defaults < file < env resolution order (B-CORE-006). Missing file throws ConfigError with CORE_003 code and helpful message. Env var mapping covers DATABASE, SCHEMA, SYSTEM_SCHEMA, PORT, BASE_PATH, AUTH_SECRET with SIMPLICITY_ADMIN_ prefix. Config secrets never logged. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: Added @types/node as devDependency since loader uses node:fs, node:path, node:url.
