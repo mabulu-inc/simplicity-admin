@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-004
-Next eligible task: T-005
+Last completed task: T-005
+Next eligible task: T-006
 Blockers: none
-Test suite status: 65 passed
+Test suite status: 111 passed
 
 ---
 
@@ -89,3 +89,16 @@ Format for each entry:
 **Test results**: 65 passed, 0 failed
 **Review**: loadConfig() loads TS/JS config files via dynamic import (B-CORE-005). resolveConfig() merges file config with env overrides using defaults < file < env resolution order (B-CORE-006). Missing file throws ConfigError with CORE_003 code and helpful message. Env var mapping covers DATABASE, SCHEMA, SYSTEM_SCHEMA, PORT, BASE_PATH, AUTH_SECRET with SIMPLICITY_ADMIN_ prefix. Config secrets never logged. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: Added @types/node as devDependency since loader uses node:fs, node:path, node:url.
+
+### 2026-03-08 — T-005: Core metadata types + column type mapping
+**Status**: DONE
+**Commit**: 8bd3ca3
+**Duration**: ~4 min
+**Files created/modified**:
+- packages/core/src/metadata/types.ts (ColumnType, ColumnMeta, TableMeta, RelationMeta, EnumMeta, SchemaMeta)
+- packages/core/src/metadata/column-types.ts (ColumnType type, PG_TYPE_MAP, mapPgType())
+- packages/core/tests/column-types.test.ts (46 tests)
+- packages/core/src/index.ts (added metadata type and function re-exports)
+**Test results**: 111 passed, 0 failed
+**Review**: All metadata interfaces match spec exactly (ColumnMeta, TableMeta, RelationMeta, EnumMeta, SchemaMeta). ColumnType is a union type covering all specified values. mapPgType() maps all common PG types including aliases (character varying→varchar, int4→integer, float8→double, bool→boolean, timestamp with time zone→timestamptz, etc.). Array types detected via "[]" suffix and "ARRAY" keyword. Unknown types return 'unknown' per B-CORE-014. All types and mapPgType exported from @simplicity-admin/core. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
