@@ -268,7 +268,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-018: DB provider (default DatabaseProvider)
 **Status**: DONE
-**Commit**: PENDING
+**Commit**: 6780c00
 **Duration**: ~4 min
 **Files created/modified**:
 - packages/db/src/provider.ts (postgresProvider() factory returning DatabaseProvider)
