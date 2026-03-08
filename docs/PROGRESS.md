@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-027
-Next eligible task: T-028
+Last completed task: T-028
+Next eligible task: T-029
 Blockers: none
-Test suite status: 306 passed
+Test suite status: 320 passed
 
 ---
 
@@ -396,3 +396,19 @@ Format for each entry:
 **Test results**: 306 passed, 0 failed
 **Review**: createPreset() returns a valid PostGraphile V5 preset per B-API-001. Extends PostGraphileAmberPreset, configures pgServices with makePgService from @dataplan/pg/adaptors/pg targeting 'public' schema, and sets grafserv.graphiql from config. Updated postgraphile dependency from V4 (4.14.1) to V5 (5.0.0-rc.5) to match spec requirement. All 5 tests verify: preset has extends array, pgServices configuration, correct schema target, graphiql enabled/disabled. Exported from @simplicity-admin/api. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
+
+### 2026-03-08 — T-028: API server
+**Status**: DONE
+**Commit**: 3be119f
+**Duration**: ~10 min
+**Files created/modified**:
+- packages/api/src/server.ts (createAPIServer() with PostGraphile V5, grafserv, pgSettings from JWT)
+- packages/api/src/provider.ts (postgraphileProvider() default APIProvider)
+- packages/api/src/index.ts (added server and provider re-exports)
+- packages/api/tests/server.test.ts (6 integration tests)
+- packages/api/package.json (upgraded PostGraphile V5 packages to compatible rc versions)
+- packages/api/vitest.config.ts (added @simplicity-admin/db alias)
+- pnpm-lock.yaml (updated)
+**Test results**: 320 passed, 0 failed
+**Review**: createAPIServer() creates a full PostGraphile V5 GraphQL server per B-API-002. Uses postgraphile() + grafserv for Node.js HTTP handling. pgSettings are set from JWT payload via grafast context callback, mapping authenticated user to PostgreSQL role and session settings (B-API-011/012). GraphiQL enabled/disabled via config.api.graphiql (B-API-003). All 6 integration tests use real Postgres with a test schema containing a contacts table. Tests verify: GraphQL query returns data, create mutation works, list query returns created records, update mutation works (via updateContactByRowId in V5), delete mutation works (via deleteContactByRowId in V5), and GraphiQL serves HTML in dev mode. postgraphileProvider() wraps createAPIServer() as the default APIProvider with shutdown support. Fixed PostGraphile V5 package version incompatibility (grafast rc.7 → rc.8 to resolve markSyncAndSafe error). No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: Upgraded PostGraphile V5 RC packages for version compatibility: postgraphile→rc.9, grafast→rc.8, @dataplan/pg→rc.7. PostGraphile V5 uses `updateContactByRowId`/`deleteContactByRowId` naming convention instead of V4's `updateContactById`.
