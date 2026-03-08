@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-020
-Next eligible task: T-021
+Last completed task: T-021
+Next eligible task: T-022
 Blockers: none
-Test suite status: 273 passed
+Test suite status: 279 passed
 
 ---
 
@@ -303,4 +303,18 @@ Format for each entry:
 - packages/auth/package.json (added bcrypt, @types/bcrypt dependencies)
 **Test results**: 273 passed, 0 failed
 **Review**: hashPassword() uses bcrypt with SALT_ROUNDS=12 (≥12 per spec). Returns $2b$ prefixed hash (B-AUTH-007). verifyPassword() returns true for correct password (B-AUTH-008), false for wrong password (B-AUTH-009). Both functions exported from @simplicity-admin/auth. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-021: JWT token provider
+**Status**: DONE
+**Commit**: 70baaa6
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/auth/src/providers/jwt.ts (jwtTokenProvider() factory returning TokenProvider)
+- packages/auth/src/errors.ts (AuthError class with code property)
+- packages/auth/src/index.ts (added jwtTokenProvider, AuthError re-exports)
+- packages/auth/tests/jwt.test.ts (6 tests)
+- packages/auth/package.json (added jsonwebtoken, @types/jsonwebtoken dependencies)
+**Test results**: 279 passed, 0 failed
+**Review**: jwtTokenProvider() returns a TokenProvider with name='jwt', version='0.0.1'. sign() produces valid JWT with tokenType='access' claim (B-AUTH-001). verify() decodes and returns correct TokenPayload (B-AUTH-002). verify() throws AuthError with AUTH_002 for expired tokens (B-AUTH-003). verify() throws AuthError with AUTH_003 for invalid signatures (B-AUTH-004). refresh() returns new TokenPair with fresh access and refresh tokens using separate TTLs (B-AUTH-005). refresh() throws AuthError with AUTH_004 for expired refresh tokens (B-AUTH-006). Access and refresh tokens are distinguishable via tokenType claim. Default TTLs: 15 min access, 7 days refresh. AuthError class supports code and cause chaining. All exported from @simplicity-admin/auth. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
