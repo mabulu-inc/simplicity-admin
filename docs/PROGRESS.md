@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-016
-Next eligible task: T-017
+Last completed task: T-017
+Next eligible task: T-018
 Blockers: none
-Test suite status: 253 passed
+Test suite status: 262 passed
 
 ---
 
@@ -252,3 +252,16 @@ Format for each entry:
 **Test results**: 253 passed, 0 failed
 **Review**: All 14 schema-flow YAML files follow the documented YAML format reference. Tables: users has uuid PK, unique email, timestamps mixin; tenants has unique slug with regex check; memberships has composite unique index on (user_id, tenant_id, role) with FK constraints and role validity check. Roles: authenticator is login role with membership in all functional roles (anon, app_viewer, app_editor, app_admin) per ADR-005; functional roles are non-login with inherit. Functions: current_user_id/current_tenant_id return uuid from pgSettings; begin_session uses SECURITY DEFINER to SET LOCAL role and configure session variables; update_timestamp is the trigger function for timestamps mixin. Mixins: timestamps adds created_at/updated_at with auto-update trigger; tenant_scoped adds tenant_id with RLS policy matching B-TEN-011/018 (tenant isolation + super-admin bypass); auditable adds created_by/updated_by with FK to users. Grants on system tables restrict app_viewer/app_editor to SELECT on safe columns, app_admin gets full access. All 48 validation tests pass. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: Also created update_timestamp.yaml function (referenced by timestamps mixin trigger) which is not in the Produces list but is required for the mixin to work.
+
+### 2026-03-08 — T-017: DB bootstrap orchestrator
+**Status**: DONE
+**Commit**: (pending)
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/db/src/bootstrap.ts (bootstrap() orchestrator with roles, functions, tables, indexes, triggers, grants, seed data)
+- packages/db/tests/bootstrap.test.ts (9 integration tests)
+- packages/db/src/index.ts (added bootstrap re-export)
+- packages/db/package.json (added bcrypt, @types/bcrypt dependencies)
+**Test results**: 262 passed, 0 failed
+**Review**: bootstrap() creates complete system schema per B-DB-013/014/015/016. Creates 5 database roles (authenticator with login + 4 functional roles) with correct membership grants. Creates 4 functions (current_user_id, current_tenant_id, begin_session with SECURITY DEFINER, update_timestamp trigger). Creates 3 system tables (users, tenants, memberships) with all columns, constraints, and CHECK constraints matching YAML definitions. Timestamps mixin applied via BEFORE UPDATE triggers with OLD IS DISTINCT FROM NEW guard. All table grants match YAML specs (app_viewer/app_editor get column-level SELECT, app_admin gets full CRUD). Seeds default tenant ('Default', slug: 'default') and admin user (admin@localhost, bcrypt-hashed 'changeme', super_admin: true) with app_admin membership. Idempotent via IF NOT EXISTS, CREATE OR REPLACE, ON CONFLICT DO NOTHING. All 9 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: Added bcrypt as devDependency for password hashing in seed data. Will be moved to regular dependency or shared with auth package when T-020 (password utils) is implemented.
