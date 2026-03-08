@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-013
-Next eligible task: T-014
+Last completed task: T-014
+Next eligible task: T-015
 Blockers: none
-Test suite status: 191 passed
+Test suite status: 197 passed
 
 ---
 
@@ -201,4 +201,16 @@ Format for each entry:
 - packages/db/src/index.ts (added introspectRelations re-export)
 **Test results**: 191 passed, 0 failed
 **Review**: introspectRelations() queries pg_catalog.pg_constraint for FK constraints (contype='f') in the given schema (B-DB-009). For each FK, produces both many-to-one (from FK table to referenced table) and one-to-many (reverse direction) per B-DB-010. Handles self-referencing FKs (categories.parent_id -> categories.id). Includes constraint name on all RelationMeta objects. Column names extracted via ARRAY subquery with attname::text cast for proper pg driver array parsing. Multiple FKs from same table handled correctly. Defaults to 'public' schema. Returns empty array for schemas with no FKs. Errors wrapped in DatabaseError with DB_003 code. All 8 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: —
+
+### 2026-03-08 — T-014: DB introspection — enums
+**Status**: DONE
+**Commit**: 243b257
+**Duration**: ~3 min
+**Files created/modified**:
+- packages/db/src/introspect/enums.ts (introspectEnums() function)
+- packages/db/tests/introspect-enums.test.ts (6 integration tests)
+- packages/db/src/index.ts (added introspectEnums re-export)
+**Test results**: 197 passed, 0 failed
+**Review**: introspectEnums() queries pg_catalog.pg_type for enum types (typtype='e') in the given schema (B-DB-011). Enum values fetched via pg_enum ordered by enumsortorder for correct defined order. Schema qualification included on all EnumMeta objects. Defaults to 'public' schema. Returns empty array for schemas with no enums. Errors wrapped in DatabaseError with DB_003 code. All 6 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
