@@ -2,8 +2,8 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-055
-Next eligible task: T-056
+Last completed task: T-056
+Next eligible task: T-057
 Blockers: none
 Test suite status: 535 unit passed (5 skipped — DB integration), 16 E2E passed
 
@@ -799,4 +799,22 @@ Format for each entry:
 - packages/ui/tests/components/widgets.test.ts (11 unit tests: stat formatting, table rows, chart rendering, grid layout, error states)
 **Test results**: 535 passed, 5 skipped (DB integration), 0 failed
 **Review**: All components follow Svelte 5 runes pattern ($props) consistent with existing components (DataTable, Toast). DashboardGrid uses 12-column CSS grid matching B-DASH-007 spec. StatWidget handles B-DASH-003 (formatted number with title). TableWidget handles B-DASH-004 (rows with labeled columns). ChartWidget handles B-DASH-005 (bar chart rendering). Error handling per B-DASH-010 (widget shows error, others unaffected). No circular deps. Module boundaries respected — widget components only import from dashboards/types.ts.
+**Notes**: —
+
+### 2026-03-08 — T-056: Dashboard routes + builder UI
+**Status**: DONE
+**Commit**: 349835a
+**Duration**: ~10 min
+**Files created/modified**:
+- packages/ui/src/lib/dashboards/manager.ts (added getDashboardBySlug function)
+- packages/ui/src/routes/(app)/dashboard/+page.svelte (default dashboard view with welcome fallback)
+- packages/ui/src/routes/(app)/dashboard/+page.server.ts (loads default dashboard for user's role, executes widget queries)
+- packages/ui/src/routes/(app)/dashboard/[slug]/+page.svelte (named dashboard view)
+- packages/ui/src/routes/(app)/dashboard/[slug]/+page.server.ts (loads dashboard by slug, role-checks access, executes widget queries)
+- packages/ui/src/lib/components/DashboardBuilder.svelte (form UI for creating dashboards with widget management)
+- packages/ui/src/routes/(app)/dashboard/builder/+page.svelte (builder page wrapper)
+- packages/ui/src/routes/(app)/dashboard/builder/+page.server.ts (admin-only access, form action creates dashboard + widgets)
+- packages/ui/tests/e2e/dashboards.spec.ts (3 E2E tests: default dashboard renders, widgets display, builder creates dashboard)
+**Test results**: 535 passed, 5 skipped (DB integration), 0 failed
+**Review**: Routes follow existing (app) layout pattern — auth via locals.user, redirect to /login if missing. Default dashboard route (B-DASH-001) loads via getDefaultDashboard(role) with welcome fallback (B-DASH-002). Slug route enforces role access (B-DASH-008). Builder restricted to app_admin (B-DASH-006). Widget queries execute per-widget with error isolation (B-DASH-010). Tenant-scoped execution supported via tenantId passthrough (B-DASH-009). DashboardBuilder uses Svelte 5 runes, form actions for server-side persistence. No circular deps, module boundaries respected.
 **Notes**: —
