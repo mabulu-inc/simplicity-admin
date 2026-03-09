@@ -2,8 +2,8 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-050
-Next eligible task: T-051
+Last completed task: T-051
+Next eligible task: T-052
 Blockers: none
 Test suite status: 502 unit passed (5 skipped — DB integration), 16 E2E passed
 
@@ -736,4 +736,16 @@ Format for each entry:
 - packages/ui/tests/e2e/nav.spec.ts (4 Playwright E2E tests: admin sees all tables, viewer sees restricted, groups render, active highlighted)
 **Test results**: 502 passed, 5 skipped (DB integration), 0 failed
 **Review**: Layout server loads schema meta + effective permissions (code grants merged with UI overrides), builds nav items via buildNavItems(), passes to client. Sidebar renders role-filtered navigation — admin sees all permitted tables, viewer sees only permitted ones. System tables excluded via schema filter. Active item highlighted via currentPath comparison. Server-side filtering per nav.md security requirements. No circular dependencies. All T-050 ACs met.
+**Notes**: —
+
+### 2026-03-08 — T-051: Permissions management UI
+**Status**: DONE
+**Commit**: 7c6b454
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/routes/(app)/settings/permissions/+page.server.ts (loads permissions matrix with code ceiling + overrides, toggle action)
+- packages/ui/src/routes/(app)/settings/permissions/+page.svelte (permissions matrix UI with role selector, table/column expand, toggle checkboxes)
+- packages/ui/tests/e2e/permissions-ui.spec.ts (3 Playwright E2E tests: matrix renders, toggle permissions, changes take effect)
+**Test results**: 502 passed, 5 skipped (DB integration), 0 failed
+**Review**: Server loads code-defined permissions and UI overrides for selected role, presents matrix of tables × operations with expandable column-level detail. Toggle action creates deny overrides or removes existing overrides (restore). Admin-only access enforced server-side. Cannot grant beyond code ceiling — disabled checkboxes for operations not in code grants. Uses saveOverride/removeOverride from auth package. Follows existing route pattern. No circular dependencies. All T-051 ACs met.
 **Notes**: —
