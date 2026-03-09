@@ -1,0 +1,67 @@
+table: simplicity_notification_rules
+comment: "Notification rules — define triggers, conditions, templates, and delivery channels"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: name
+    type: text
+
+  - name: enabled
+    type: boolean
+    default: "true"
+
+  - name: trigger
+    type: text
+    comment: "record.created | record.updated | record.deleted | field.changed | schedule"
+
+  - name: "table"
+    type: text
+    comment: "Which table triggers this rule (for record events)"
+
+  - name: field
+    type: text
+    comment: "Which field (for field.changed trigger)"
+
+  - name: condition
+    type: text
+    comment: "Simple condition expression, e.g. status = 'urgent'"
+
+  - name: channels
+    type: jsonb
+    default: "'[\"in_app\"]'::jsonb"
+    comment: "Array of channels: in_app, email"
+
+  - name: template
+    type: jsonb
+    default: "'{}'::jsonb"
+    comment: "{ subject, body } with {{field}} interpolation"
+
+  - name: recipients
+    type: jsonb
+    default: "'{}'::jsonb"
+    comment: "{ type: roles|users|field, roles?, userIds?, field? }"
+
+  - name: schedule
+    type: text
+    comment: "Cron expression for schedule trigger"
+
+  - name: created_by
+    type: text
+
+checks:
+  - name: chk_notification_rules_trigger
+    expression: "trigger IN ('record.created', 'record.updated', 'record.deleted', 'field.changed', 'schedule')"
+
+grants:
+  - to: app_admin
+    privileges: [SELECT, INSERT, UPDATE, DELETE]
+  - to: app_editor
+    privileges: [SELECT]
+  - to: app_viewer
+    privileges: [SELECT]

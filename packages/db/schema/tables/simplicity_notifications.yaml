@@ -1,0 +1,68 @@
+table: simplicity_notifications
+comment: "User notifications — in-app and email delivery records"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: user_id
+    type: uuid
+    references:
+      table: users
+      column: id
+      on_delete: CASCADE
+
+  - name: channel
+    type: text
+    comment: "in_app | email"
+
+  - name: subject
+    type: text
+
+  - name: body
+    type: text
+
+  - name: read
+    type: boolean
+    default: "false"
+
+  - name: rule_id
+    type: uuid
+    references:
+      table: simplicity_notification_rules
+      column: id
+      on_delete: SET NULL
+
+  - name: record_id
+    type: text
+    comment: "ID of the record that triggered this notification"
+
+  - name: table_name
+    type: text
+    comment: "Table name of the triggering record"
+
+indexes:
+  - name: idx_notifications_user_unread
+    columns: [user_id, read]
+    comment: "Fast lookup for unread notifications"
+
+  - name: idx_notifications_rule
+    columns: [rule_id]
+
+checks:
+  - name: chk_notifications_channel
+    expression: "channel IN ('in_app', 'email')"
+
+grants:
+  - to: app_admin
+    privileges: [SELECT, INSERT, UPDATE, DELETE]
+  - to: app_editor
+    privileges: [SELECT, INSERT, UPDATE]
+  - to: app_viewer
+    privileges: [SELECT, UPDATE]
+    columns: [id, user_id, read]
+    comment: "Viewers can only read and mark their own notifications"

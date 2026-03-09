@@ -67,3 +67,24 @@ export type {
 } from './plugins/types.js';
 
 export { PluginManager } from './plugins/manager.js';
+
+// Notification types & engine
+export type {
+  NotificationChannel,
+  TriggerEvent,
+  NotificationRule,
+  NotificationTemplate,
+  RecipientConfig,
+  Notification,
+  DataEvent,
+  EmailProvider,
+} from './notifications/types.js';
+export { NotificationEngine } from './notifications/engine.js';
+export {
+  evaluateCondition,
+  interpolateTemplate,
+  createRule,
+  updateRule,
+  deleteRule,
+  listRules,
+} from './notifications/rules.js';
