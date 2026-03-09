@@ -117,3 +117,6 @@ export {
   evaluateCondition as evaluateWorkflowCondition,
   evaluateConditions as evaluateWorkflowConditions,
 } from './workflow/guards.js';
+
+export type { ActionExecutorContext, ActionExecutorResult } from './workflow/actions.js';
+export { executeHook, executeAction } from './workflow/actions.js';
