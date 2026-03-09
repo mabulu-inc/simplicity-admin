@@ -23,12 +23,13 @@
 
 ## Task Completion Criteria
 
-A task is DONE only when ALL five conditions hold:
+A task is DONE only when ALL six conditions hold:
 1. All files listed in task's "Produces" field exist
 2. All tests listed in task's "Tests" field pass
 3. `pnpm check` passes in the affected package(s) — this runs lint, typecheck, test, and build. Zero regressions tolerated.
 4. **Architectural review**: Verify the implementation aligns with ARCHITECTURE.md, respects module boundaries, follows the provider pattern, and does not introduce circular dependencies
 5. **Design & QA review**: Verify the implementation matches the spec's behavior specifications (B-XXX-NNN), handles all specified error cases, respects RBAC/tenancy/view-layer conventions, produces no regressions in related modules, and all new/modified tests are properly isolated (unique schema/data per test, no shared mutable state)
+6. **Security review**: Check new/modified code for OWASP top 10 vulnerabilities (SQL injection, XSS, command injection, etc.), secret leakage, unsafe deserialization, missing input validation at system boundaries, and overly permissive access controls. Verify that user input is never interpolated into SQL/HTML/shell commands without proper escaping or parameterization.
 
 The review should be documented in PROGRESS.md under the task entry with a brief summary of what was checked and any issues found/resolved before marking DONE.
 
