@@ -28,7 +28,7 @@ A task is DONE only when ALL five conditions hold:
 2. All tests listed in task's "Tests" field pass
 3. `pnpm check` passes in the affected package(s) — this runs lint, typecheck, test, and build. Zero regressions tolerated.
 4. **Architectural review**: Verify the implementation aligns with ARCHITECTURE.md, respects module boundaries, follows the provider pattern, and does not introduce circular dependencies
-5. **Design & QA review**: Verify the implementation matches the spec's behavior specifications (B-XXX-NNN), handles all specified error cases, respects RBAC/tenancy/view-layer conventions, and produces no regressions in related modules
+5. **Design & QA review**: Verify the implementation matches the spec's behavior specifications (B-XXX-NNN), handles all specified error cases, respects RBAC/tenancy/view-layer conventions, produces no regressions in related modules, and all new/modified tests are properly isolated (unique schema/data per test, no shared mutable state)
 
 The review should be documented in PROGRESS.md under the task entry with a brief summary of what was checked and any issues found/resolved before marking DONE.
 
@@ -52,6 +52,7 @@ The review should be documented in PROGRESS.md under the task entry with a brief
 ## Testing Policy
 
 - **NEVER mock PostgreSQL or GraphQL** — always use real instances
+- **Test isolation is mandatory** — every test must create its own unique schema/data (e.g. a uniquely-named Postgres schema per test or describe block) and clean up after itself. Tests must never depend on or be affected by shared database state. This prevents cross-test pollution and Turbo-cache-masked regressions.
 - Unit tests: pure functions, type mappings, config validation
 - Integration tests: require real Postgres (Docker Compose provides it)
 - E2E tests: Playwright against full running stack

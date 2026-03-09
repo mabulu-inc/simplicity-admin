@@ -1427,6 +1427,24 @@ If a task cannot be completed:
 - **Tests**: `packages/ui/tests/dashboards/manager.test.ts` — add test with malformed widget config from DB; existing dashboard tests still pass
 - **AC**: No `as unknown as T` double casts remain in dashboard code; invalid DB data is caught at runtime with clear errors
 
+### T-088: Enforce test isolation across all integration tests
+- **Status**: TODO
+- **Milestone**: M6
+- **Spec**: —
+- **Story**: —
+- **Depends**: none
+- **Produces**:
+  - Updated `packages/db/tests/introspect.test.ts` — uses unique per-test schema
+  - Updated `packages/db/tests/introspect-columns.test.ts` — uses unique per-test schema
+  - Updated `packages/db/tests/introspect-relations.test.ts` — uses unique per-test schema
+  - Updated `packages/db/tests/introspect-enums.test.ts` — uses unique per-test schema
+  - Updated `packages/db/tests/introspect-full.test.ts` — uses unique per-test schema
+  - Updated `packages/db/tests/bootstrap.test.ts` — uses unique per-test schema
+  - Updated `packages/db/tests/provider.test.ts` — uses unique per-test schema
+  - All other integration tests across packages audited and updated as needed
+- **Tests**: `pnpm check` passes with no shared mutable state between tests; tests pass regardless of execution order
+- **AC**: Every integration test creates its own uniquely-named Postgres schema (or equivalent isolated data) and cleans up after itself; no test depends on or is affected by state from other tests; all currently failing tests pass
+
 ---
 
 ## Summary
@@ -1438,5 +1456,5 @@ If a task cannot be completed:
 | M3: Intelligence | 8 | T-053 — T-060 |
 | M4: Automation | 8 | T-061 — T-068 |
 | M5: Security Hardening | 14 | T-069 — T-082 |
-| M6: Code Quality & Hardening | 5 | T-083 — T-087 |
-| **Total** | **87** | |
+| M6: Code Quality & Hardening | 6 | T-083 — T-088 |
+| **Total** | **88** | |
