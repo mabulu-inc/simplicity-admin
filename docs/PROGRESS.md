@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-038
-Next eligible task: T-039
+Last completed task: T-039
+Next eligible task: T-040
 Blockers: none
-Test suite status: 436 passed, 11 E2E passed
+Test suite status: 121 unit passed, 16 E2E passed
 
 ---
 
@@ -572,3 +572,18 @@ Format for each entry:
 - packages/ui/tests/e2e/global-setup.ts (added contacts table seeding for E2E tests)
 **Test results**: 436 passed (vitest), 11 passed (Playwright E2E: 5 auth-gate + 6 list-view)
 **Review**: Dynamic list view renders DataTable for any table via [table] route param (B-CRUD-001). +page.server.ts validates table exists in metadata (404 if not), parses page/pageSize/sort/dir from URL params, runs parallel COUNT and SELECT queries against PostgreSQL with proper schema qualification. Pagination defaults: page=1, pageSize=25, max 100 (B-CRUD-002/003). Sorting validates column exists in table schema, defaults to PK DESC (B-CRUD-004). +page.svelte renders DataTable with sort/pagination/rowClick handlers, shows empty state with "No records yet" message and Create button when totalCount===0 (B-CRUD-007). humanize() converts snake_case to Title Case for table name display. db.ts provides lazy-initialized connection pool and cached schema metadata via introspectSchema(). 6 E2E tests cover: DataTable with data, column headers match schema, pagination (pageSize=3 shows 1-3 of 10, Next navigates to 4-6), sorting (click header updates URL with sort/dir params, indicator shown), empty state not visible when data exists, and 404 for non-existent tables. Login helper uses waitForLoadState('networkidle') and waitForResponse for reliable hydration-aware auth. No circular deps. Typecheck 0 errors. No regressions.
+
+### 2026-03-08 — T-039: Admin app — dynamic create/edit/delete views
+**Status**: DONE
+**Commit**: f41ce16
+**Duration**: ~10 min
+**Files created/modified**:
+- packages/ui/src/routes/(app)/[table]/new/+page.server.ts (create action with INSERT, column filtering, redirect)
+- packages/ui/src/routes/(app)/[table]/new/+page.svelte (create form with AutoForm, error banner)
+- packages/ui/src/routes/(app)/[table]/[id]/+page.server.ts (detail loader, update/delete actions with parameterized SQL)
+- packages/ui/src/routes/(app)/[table]/[id]/+page.svelte (edit form with AutoForm, delete confirmation dialog)
+- packages/ui/src/lib/components/AutoForm.svelte (enhanced with onDelete prop, delete button, validation, field filtering)
+- packages/ui/src/lib/components/fields/*.svelte (all 10 field components updated with name/required/disabled/error props)
+- packages/ui/tests/e2e/crud-views.spec.ts (5 E2E tests)
+**Test results**: 121 passed (vitest), 16 passed (Playwright E2E: 5 auth-gate + 6 list-view + 5 crud-views)
+**Review**: Create view at /[table]/new renders AutoForm in create mode — PK and default/generated columns hidden (B-CRUD-009). Server action parses JSON from FormData _data field, filters to valid non-PK non-generated columns, skips empty values for columns with defaults, executes parameterized INSERT (B-CRUD-011). Edit view at /[table]/[id] loads record by PK, pre-populates AutoForm (B-CRUD-013). Update action builds SET clauses for non-PK columns only (B-CRUD-014). Delete action with FK constraint error handling returns friendly message (B-CRUD-016/017/018). Confirmation dialog with overlay/modal pattern. AutoForm validates required fields client-side (B-CRUD-010). Fixed unused `json` import lint error. All SQL uses parameterized queries preventing injection. Typecheck 0 errors. No regressions.
