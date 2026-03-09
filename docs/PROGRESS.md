@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-065
-Next eligible task: T-066
+Last completed task: T-066
+Next eligible task: T-067
 Blockers: none
-Test suite status: 640 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 648 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -941,4 +941,18 @@ Format for each entry:
 - packages/core/tests/workflow/automations.test.ts (12 tests: onCreate fires, condition match/no-match, disabled skip, create_record action, execution log, loop detection at depth 10, table mismatch, event type mismatch, multiple automations, onFieldChange trigger + field filtering)
 **Test results**: 640 passed, 5 skipped (DB integration), 0 failed
 **Review**: processEvent() maps DataEvent.type to AutomationTrigger.event via lookup table (record.created→onCreate, etc.). Filters automations by event type, table, and field (for onFieldChange). Evaluates conditions via evaluateConditions() from guards.ts. Executes actions via executeAction() from actions.ts. Loop detection enforced via depth parameter with MAX_AUTOMATION_DEPTH=10 (WF_004). Execution log entries written to simplicity_automation_log with automation ID, name, status, duration, and errors (B-WF-016). Logging failures are non-blocking. No circular dependencies. Aligns with ARCHITECTURE.md provider pattern.
+**Notes**: —
+
+### 2026-03-08 — T-066: Workflow UI — state badges + transition buttons
+**Status**: DONE
+**Commit**: 5000c5d
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/lib/components/workflow/StateBadge.svelte (new — renders colored badge with state label from StateDefinition[], falls back to state name if not found, defaults to gray color)
+- packages/ui/src/lib/components/workflow/TransitionButtons.svelte (new — renders transition buttons filtered by role, supports loading state, calls onTransition callback)
+- packages/ui/tests/components/workflow.test.ts (8 tests: StateBadge correct label, correct color class, default color, unknown state fallback; TransitionButtons renders buttons, click triggers callback, empty transitions renders nothing, disabled when loading)
+- packages/ui/src/routes/(app)/[table]/[id]/+page.svelte (updated — imports StateBadge + TransitionButtons, shows state badge in header, transition buttons below header, handles transition via form action)
+- packages/ui/src/routes/(app)/[table]/[id]/+page.server.ts (updated — loads state machine for table via getStateMachine, filters transitions by role and current state, adds transition server action)
+**Test results**: 648 passed, 5 skipped (DB integration), 0 failed
+**Review**: Components follow existing Svelte 5 rune patterns ($props, $derived). No scoped style blocks to match tested component convention. StateBadge uses data-testid for reliable querying. TransitionButtons renders nothing when empty (no DOM footprint). Server-side transition action validates role authorization and state machine existence. Detail page conditionally renders workflow UI only when state machine exists. No circular deps introduced. B-WF-017 (UI state badge) satisfied.
 **Notes**: —
