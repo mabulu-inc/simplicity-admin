@@ -13,3 +13,9 @@ export type {
   ColumnPermission,
   EffectivePermissions,
 } from './rbac/types.js';
+export {
+  canAccess,
+  canAccessColumn,
+  getAccessibleColumns,
+  getEffectivePermissions,
+} from './rbac/engine.js';

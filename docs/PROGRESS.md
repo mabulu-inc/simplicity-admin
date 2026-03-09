@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-045
-Next eligible task: T-046
+Last completed task: T-046
+Next eligible task: T-047
 Blockers: none
-Test suite status: 147 unit passed, 16 E2E passed
+Test suite status: 475 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -665,4 +665,16 @@ Format for each entry:
 - packages/auth/tests/rbac/types.test.ts (4 type smoke tests)
 **Test results**: 147 passed (vitest), 0 failed
 **Review**: Permission types match spec exactly (rbac.md §Public API §Permission Types). Operation is a string union of SELECT/INSERT/UPDATE/DELETE. ColumnPermission maps column→allowed operations. TablePermission groups table/schema/operations/columnPermissions. EffectivePermissions wraps role+tables. All types exported from @simplicity-admin/auth public API. 4 tests verify correct shapes. Typecheck, lint, build all pass. No circular deps. No regressions.
+**Notes**: —
+
+### 2026-03-08 — T-046: RBAC permission engine
+**Status**: DONE
+**Commit**: PENDING
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/auth/src/rbac/engine.ts (canAccess, canAccessColumn, getAccessibleColumns, getEffectivePermissions)
+- packages/auth/src/index.ts (re-export engine functions)
+- packages/auth/tests/rbac/engine.test.ts (13 unit tests + 5 integration tests)
+**Test results**: 475 passed, 5 skipped (DB integration), 0 failed
+**Review**: Engine implements all four functions per rbac.md spec. Pure functions (canAccess, canAccessColumn, getAccessibleColumns) operate on EffectivePermissions data structure — no DB dependency. getEffectivePermissions reads from information_schema.role_table_grants and role_column_grants, builds TablePermission with column-level detail, and handles both table-level and column-level PostgreSQL grants. For table-level grants, populates all columns from information_schema.columns. Schema filter supported. 13 unit tests cover all spec behaviors (B-RBAC-001 through B-RBAC-004). 5 integration tests verify DB reads (skipped without DB). All exported from @simplicity-admin/auth. Lint, typecheck, build pass. No regressions.
 **Notes**: —
