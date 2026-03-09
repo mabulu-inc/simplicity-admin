@@ -634,7 +634,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-043: CLI generate + migrate commands
 **Status**: DONE
-**Commit**: PENDING
+**Commit**: 48c3168
 **Duration**: ~5 min
 **Files created/modified**:
 - packages/cli/src/commands/generate.ts (runGenerate: loads config, connects via postgresProvider, delegates to provider.generate())
