@@ -118,9 +118,18 @@ importers:
 
   packages/cli:
     dependencies:
+      '@simplicity-admin/api':
+        specifier: workspace:*
+        version: link:../api
+      '@simplicity-admin/auth':
+        specifier: workspace:*
+        version: link:../auth
       '@simplicity-admin/core':
         specifier: workspace:*
         version: link:../core
+      '@simplicity-admin/db':
+        specifier: workspace:*
+        version: link:../db
     devDependencies:
       '@types/node':
         specifier: ^25.3.5

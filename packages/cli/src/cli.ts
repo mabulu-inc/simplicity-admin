@@ -61,6 +61,11 @@ async function main(): Promise<void> {
       runInit(commandArgs);
       break;
     }
+    case 'dev': {
+      const { runDev } = await import('./commands/dev.js');
+      await runDev(commandArgs);
+      break;
+    }
     default:
       process.stdout.write(`Command '${command}' is not yet implemented.\n`);
       break;

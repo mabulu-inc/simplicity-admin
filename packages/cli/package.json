@@ -21,7 +21,10 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@simplicity-admin/core": "workspace:*"
+    "@simplicity-admin/api": "workspace:*",
+    "@simplicity-admin/auth": "workspace:*",
+    "@simplicity-admin/core": "workspace:*",
+    "@simplicity-admin/db": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.3.5",

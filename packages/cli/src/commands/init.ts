@@ -5,11 +5,6 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATES_DIR = path.resolve(__dirname, '../templates');
 
-interface InitOptions {
-  dir: string;
-  port: number;
-}
-
 function renderTemplate(content: string, vars: Record<string, string>): string {
   let result = content;
   for (const [key, value] of Object.entries(vars)) {
