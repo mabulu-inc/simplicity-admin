@@ -2,8 +2,8 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-058
-Next eligible task: T-059
+Last completed task: T-059
+Next eligible task: T-060
 Blockers: none
 Test suite status: 568 unit passed (5 skipped — DB integration), 16 E2E passed
 
@@ -848,4 +848,24 @@ Format for each entry:
 - packages/ui/src/routes/(app)/settings/permissions/+page.server.ts (fixed pre-existing unused import lint)
 **Test results**: 568 passed, 5 skipped (DB integration), 0 failed
 **Review**: Email provider follows ADR-006 provider pattern — SmtpEmailProvider implements the core EmailProvider interface and is swappable. Nodemailer is lazily imported so consumers not using email don't need it. All delivery tests verify in-app storage+retrieval round-trip, markRead/markAllRead state transitions, email dispatch via provider, and email-skip when provider absent or channel is in_app. No circular dependencies. Module boundaries respected.
+**Notes**: —
+
+### 2026-03-08 — T-059: Notification UI
+**Status**: DONE
+**Commit**: 235b1f8
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/lib/components/notifications/NotificationBell.svelte (bell icon + unread badge)
+- packages/ui/src/lib/components/notifications/NotificationList.svelte (list with mark-read actions)
+- packages/ui/src/lib/components/Shell.svelte (added unreadCount prop passthrough)
+- packages/ui/src/lib/components/TopBar.svelte (integrated NotificationBell component)
+- packages/ui/src/routes/(app)/+layout.server.ts (fetches unread count via NotificationEngine)
+- packages/ui/src/routes/(app)/+layout.svelte (passes unreadCount to Shell)
+- packages/ui/src/routes/(app)/notifications/+page.svelte (notification list page)
+- packages/ui/src/routes/(app)/notifications/+page.server.ts (loads notifications, markRead/markAllRead actions)
+- packages/ui/src/routes/(app)/settings/notifications/+page.svelte (rule management CRUD UI)
+- packages/ui/src/routes/(app)/settings/notifications/+page.server.ts (rule CRUD server actions with RBAC)
+- packages/ui/tests/e2e/notifications.spec.ts (4 Playwright E2E tests)
+**Test results**: 568 passed, 5 skipped (DB integration), 0 failed
+**Review**: Components follow Svelte 5 runes pattern ($props, $state, $derived). TopBar integrates NotificationBell with unread count from layout. Notification pages use +page.server.ts for data loading and form actions. Rule management enforces RBAC (app_admin or superAdmin). All B-NOTIF behavior specs addressed: B-NOTIF-008 (bell unread count), B-NOTIF-009 (mark as read). E2E tests cover bell display, notification list, mark-as-read, and rule CRUD. No circular dependencies. Module boundaries respected.
 **Notes**: —
