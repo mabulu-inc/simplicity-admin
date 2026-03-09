@@ -788,7 +788,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-055: Dashboard widget components
 **Status**: DONE
-**Commit**: PENDING
+**Commit**: 9b532da
 **Duration**: ~8 min
 **Files created/modified**:
 - packages/ui/src/lib/components/widgets/StatWidget.svelte (stat card with number/currency/percent formatting, prefix/suffix, error state)
