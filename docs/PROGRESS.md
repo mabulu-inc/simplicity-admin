@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-060
-Next eligible task: T-061
+Last completed task: T-061
+Next eligible task: T-062
 Blockers: none
-Test suite status: 568 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 578 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -879,3 +879,15 @@ Format for each entry:
 **Test results**: 568 passed, 5 skipped (DB integration), 0 failed
 **Review**: Follows established milestone smoke test pattern (M1, M2). Single comprehensive test covering: login, dashboard page with widgets/welcome, notification rule creation via settings UI, record creation to trigger event, notification bell verification, mark-all-read, and cleanup. Uses same loginAs helper pattern as M2. All test-ids match implemented components. Completes M3 milestone.
 **Notes**: M3 milestone complete — all tasks T-053 through T-060 done.
+
+### 2026-03-08 — T-061: Workflow types
+**Status**: DONE
+**Commit**: 1ae7838
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/core/src/workflow/types.ts (StateMachine, Transition, Automation, and all related types)
+- packages/core/src/index.ts (re-export workflow types)
+- packages/core/tests/workflow/types-smoke.test.ts (10 type smoke tests)
+**Test results**: 578 passed, 5 skipped (DB integration), 0 failed
+**Review**: Types match workflow.md spec exactly. Imports NotificationTemplate and RecipientConfig from notifications module (no duplication). All 16 types exported from core index. No circular dependencies. Provider pattern respected — types are interface-only, no implementation coupling.
+**Notes**: First task of M4 (Automation milestone).
