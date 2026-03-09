@@ -2,8 +2,8 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-066
-Next eligible task: T-067
+Last completed task: T-067
+Next eligible task: T-068
 Blockers: none
 Test suite status: 648 unit passed (5 skipped — DB integration), 16 E2E passed
 
@@ -955,4 +955,18 @@ Format for each entry:
 - packages/ui/src/routes/(app)/[table]/[id]/+page.server.ts (updated — loads state machine for table via getStateMachine, filters transitions by role and current state, adds transition server action)
 **Test results**: 648 passed, 5 skipped (DB integration), 0 failed
 **Review**: Components follow existing Svelte 5 rune patterns ($props, $derived). No scoped style blocks to match tested component convention. StateBadge uses data-testid for reliable querying. TransitionButtons renders nothing when empty (no DOM footprint). Server-side transition action validates role authorization and state machine existence. Detail page conditionally renders workflow UI only when state machine exists. No circular deps introduced. B-WF-017 (UI state badge) satisfied.
+**Notes**: —
+
+### 2026-03-08 — T-067: Workflow management UI
+**Status**: DONE
+**Commit**: pending
+**Duration**: ~10 min
+**Files created/modified**:
+- packages/ui/src/routes/(app)/settings/workflow/+page.server.ts (new — load function lists state machines, actions for create/delete with admin role check)
+- packages/ui/src/routes/(app)/settings/workflow/+page.svelte (new — state machine management page with create form, list table, delete buttons)
+- packages/ui/src/routes/(app)/settings/automations/+page.server.ts (new — load function lists automations, actions for create/toggle/delete with admin role check)
+- packages/ui/src/routes/(app)/settings/automations/+page.svelte (new — automation management page with create form, list table, enable/disable toggle, delete buttons)
+- packages/ui/tests/e2e/workflow.spec.ts (new — Playwright E2E tests for state machine CRUD and automation CRUD)
+**Test results**: 648 passed, 5 skipped (DB integration), 0 failed
+**Review**: Both pages follow the established settings page pattern (notifications, permissions). Server-side enforces admin role (app_admin or superAdmin). Workflow page supports create with comma-separated states and JSON transitions, plus delete. Automations page supports create with trigger event/table/field/schedule, JSON conditions/actions, plus toggle enabled and delete. All form actions use fetch-based submission with page reload. Components use data-testid attributes for E2E testability. Typecheck passes (0 errors). No circular dependencies. Aligns with ARCHITECTURE.md module boundaries and spec file manifest.
 **Notes**: —
