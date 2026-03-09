@@ -669,7 +669,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-046: RBAC permission engine
 **Status**: DONE
-**Commit**: PENDING
+**Commit**: f140f85
 **Duration**: ~8 min
 **Files created/modified**:
 - packages/auth/src/rbac/engine.ts (canAccess, canAccessColumn, getAccessibleColumns, getEffectivePermissions)
