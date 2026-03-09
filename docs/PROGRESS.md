@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-049
-Next eligible task: T-050
+Last completed task: T-050
+Next eligible task: T-051
 Blockers: none
-Test suite status: 500 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 502 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -719,4 +719,21 @@ Format for each entry:
 - packages/ui/tests/nav/builder.test.ts (15 unit tests covering all B-NAV behaviors)
 **Test results**: 500 passed, 5 skipped (DB integration), 0 failed
 **Review**: Implementation follows nav.md spec exactly. All behavior specs B-NAV-001 through B-NAV-010 covered by tests. System schema filtering uses schema field on TableMeta. RBAC filtering uses EffectivePermissions from auth package. Config items with custom roles, grouping, ordering, labels, icons all work. Non-existent table references silently omitted per spec. No circular deps — ui imports from core and auth only.
+**Notes**: —
+
+### 2026-03-08 — T-050: Role-based navigation integration
+**Status**: DONE
+**Commit**: 12c31b5
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/ui/src/routes/(app)/+layout.server.ts (builds navItems from RBAC permissions using buildNavItems)
+- packages/ui/src/routes/(app)/+layout.svelte (passes server-provided navItems + currentPath to Shell)
+- packages/ui/src/lib/components/Shell.svelte (imports NavItem type from nav/types)
+- packages/ui/src/lib/components/Sidebar.svelte (imports NavItem type from nav/types)
+- packages/ui/src/lib/nav/builder.ts (added basePath parameter for configurable URL prefix)
+- packages/ui/src/lib/server/rbac.ts (removed unused import)
+- packages/ui/tests/components/layout.test.ts (updated test data with required order field)
+- packages/ui/tests/e2e/nav.spec.ts (4 Playwright E2E tests: admin sees all tables, viewer sees restricted, groups render, active highlighted)
+**Test results**: 502 passed, 5 skipped (DB integration), 0 failed
+**Review**: Layout server loads schema meta + effective permissions (code grants merged with UI overrides), builds nav items via buildNavItems(), passes to client. Sidebar renders role-filtered navigation — admin sees all permitted tables, viewer sees only permitted ones. System tables excluded via schema filter. Active item highlighted via currentPath comparison. Server-side filtering per nav.md security requirements. No circular dependencies. All T-050 ACs met.
 **Notes**: —
