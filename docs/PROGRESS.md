@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-040
-Next eligible task: T-041
+Last completed task: T-041
+Next eligible task: T-042
 Blockers: none
-Test suite status: 124 unit passed, 16 E2E passed
+Test suite status: 130 unit passed, 16 E2E passed
 
 ---
 
@@ -601,3 +601,19 @@ Format for each entry:
 - packages/cli/tests/cli.test.ts (3 tests: --help, --version, unknown command)
 **Test results**: 124 passed (vitest), 16 passed (Playwright E2E)
 **Review**: CLI binary runs via tsx with correct arg parsing. --help outputs usage with all commands (init, dev, build, start, generate, migrate, env) per B-CLI-012. --version reads package.json and outputs semver per B-CLI-013. Unknown commands exit with code 1 and show error with --help suggestion per CLI_005 error spec. Programmatic API exports createAdmin (returns HttpHandler) and startServer (returns Promise<Server>) matching spec signatures. Package uses ESM, bin entry points to dist/cli.js. No circular deps. Respects module boundaries — cli depends only on core. All 24 turbo tasks pass (lint, typecheck, test, build across all 6 packages). No regressions.
+
+### 2026-03-08 — T-041: CLI init command
+**Status**: DONE
+**Commit**: 64c51cb
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/cli/src/commands/init.ts (runInit function: scaffolds project directory with templates)
+- packages/cli/src/templates/package.json.tmpl (project name, @simplicity-admin/cli dependency)
+- packages/cli/src/templates/config.ts.tmpl (DATABASE_URL placeholder, port, auth config)
+- packages/cli/src/templates/compose.yaml.tmpl (PostgreSQL 16 with project-named DB)
+- packages/cli/src/templates/env.example.tmpl (placeholder values only)
+- packages/cli/src/templates/gitignore.tmpl (node_modules, dist, .env)
+- packages/cli/src/cli.ts (wired init command into switch, async main)
+- packages/cli/tests/init.test.ts (6 integration tests)
+**Test results**: 130 passed (vitest), 16 passed (Playwright E2E)
+**Review**: Init command creates expected file structure per B-CLI-001c (non-interactive defaults). Templates use {{VAR}} substitution. package.json includes @simplicity-admin/cli dependency. Config has DATABASE_URL placeholder. Rejects non-empty directories per B-CLI-002 (CLI_001 error). Supports "." for current directory per B-CLI-003. Prints success message with next steps per B-CLI-001g. .env.example contains only placeholders, no real credentials per security spec. No circular deps. Typecheck and build pass. No regressions.
