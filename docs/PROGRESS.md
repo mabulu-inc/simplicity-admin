@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-051
-Next eligible task: T-052
+Last completed task: T-054
+Next eligible task: T-055
 Blockers: none
-Test suite status: 502 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 524 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -748,4 +748,40 @@ Format for each entry:
 - packages/ui/tests/e2e/permissions-ui.spec.ts (3 Playwright E2E tests: matrix renders, toggle permissions, changes take effect)
 **Test results**: 502 passed, 5 skipped (DB integration), 0 failed
 **Review**: Server loads code-defined permissions and UI overrides for selected role, presents matrix of tables × operations with expandable column-level detail. Toggle action creates deny overrides or removes existing overrides (restore). Admin-only access enforced server-side. Cannot grant beyond code ceiling — disabled checkboxes for operations not in code grants. Uses saveOverride/removeOverride from auth package. Follows existing route pattern. No circular dependencies. All T-051 ACs met.
+**Notes**: —
+
+### 2026-03-08 — T-052: M2 end-to-end smoke test
+**Status**: DONE
+**Commit**: c9b1e8e
+**Duration**: ~3 min
+**Files created/modified**:
+- tests/e2e/m2-smoke.spec.ts (full M2 journey: admin login → full nav → viewer login → restricted nav → restricted columns → admin permissions UI → viewer sees restrictions)
+**Test results**: 502 passed, 5 skipped (DB integration), 0 failed
+**Review**: E2E smoke test covers the full M2 access control journey: admin sees full navigation, viewer sees restricted navigation (no system tables), viewer sees restricted columns in list view, admin can access permissions management UI and view matrix for app_viewer, and viewer maintains proper access state. Follows M1 smoke test pattern. All T-052 ACs met.
+**Notes**: M2 milestone complete — all tasks T-037 through T-052 done.
+
+### 2026-03-08 — T-053: Dashboard types + storage
+**Status**: DONE
+**Commit**: 1fec67d
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/lib/dashboards/types.ts (Dashboard, Widget, WidgetLayout, StatConfig, TableConfig, ChartConfig interfaces)
+- packages/ui/src/lib/dashboards/manager.ts (CRUD for dashboards and widgets with role-based filtering)
+- packages/db/schema/tables/simplicity_dashboards.yaml (system table for dashboards)
+- packages/db/schema/tables/simplicity_widgets.yaml (system table for widgets)
+- packages/ui/tests/dashboards/manager.test.ts (13 integration tests)
+- packages/ui/vitest.config.ts (added @simplicity-admin/db alias)
+**Test results**: 515 passed, 5 skipped (DB integration), 0 failed
+**Review**: Types match spec interfaces exactly. Manager implements all CRUD functions from spec signature. listDashboards correctly filters by role (includes dashboards with matching role or empty roles array). getDefaultDashboard returns first default dashboard matching role. System table YAMLs follow existing conventions (timestamps mixin, uuid PK, grants by role). Integration tests verify all CRUD operations, role filtering, and default dashboard lookup. No circular dependencies. All T-053 ACs met.
+**Notes**: First M3 task — begins dashboards milestone.
+
+### 2026-03-08 — T-054: Widget execution engine
+**Status**: DONE
+**Commit**: pending
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/lib/dashboards/manager.ts (added executeWidgetQuery with SELECT-only validation, tenant context via set_config, result formatting per widget type)
+- packages/ui/tests/dashboards/widgets.test.ts (9 integration tests: stat/table/chart queries, RLS tenant isolation, non-SELECT rejection)
+**Test results**: 524 passed, 5 skipped (DB integration), 0 failed
+**Review**: Implementation aligns with dashboards.md spec — executeWidgetQuery signature matches spec, SELECT-only enforcement per security section, tenant context set via set_config('app.tenant_id') within transaction for RLS. No circular deps. All widget types return correctly shaped data (stat→single object, table→row array, chart→label/value pairs). Non-SELECT statements (INSERT/UPDATE/DELETE/DROP) are rejected.
 **Notes**: —

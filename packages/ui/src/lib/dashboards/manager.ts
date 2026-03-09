@@ -1,7 +1,7 @@
 // packages/ui/src/lib/dashboards/manager.ts — CRUD for dashboards and widgets
 
 import type { ConnectionPool } from '@simplicity-admin/core';
-import type { Dashboard, Widget, WidgetLayout } from './types.js';
+import type { Dashboard, Widget, WidgetLayout, StatConfig, TableConfig, ChartConfig } from './types.js';
 
 // ── Row types for DB mapping ────────────────────────────────────
 
@@ -210,4 +210,79 @@ export async function updateWidget(
 
 export async function deleteWidget(pool: ConnectionPool, id: string): Promise<void> {
 	await pool.query('DELETE FROM simplicity_widgets WHERE id = $1', [id]);
+}
+
+// ── Widget Query Execution ──────────────────────────────────────
+
+const SELECT_RE = /^\s*select\b/i;
+const FORBIDDEN_RE = /^\s*(insert|update|delete|drop|alter|create|truncate|grant|revoke)\b/i;
+
+function extractQuery(widget: Widget): string {
+	return (widget.config as StatConfig | TableConfig | ChartConfig).query;
+}
+
+function validateSelectOnly(query: string): void {
+	if (FORBIDDEN_RE.test(query) || !SELECT_RE.test(query)) {
+		throw new Error('Widget queries allow only SELECT statements');
+	}
+}
+
+export async function executeWidgetQuery(
+	pool: ConnectionPool,
+	widget: Widget,
+	tenantId?: string,
+): Promise<unknown> {
+	const query = extractQuery(widget);
+	validateSelectOnly(query);
+
+	if (tenantId) {
+		return pool.withClient(async (client) => {
+			const pgClient = client as { query: (sql: string, params?: unknown[]) => Promise<{ rows: Record<string, unknown>[] }> };
+			// Wrap in transaction so set_config with local=true persists for the query
+			await pgClient.query('BEGIN');
+			try {
+				await pgClient.query("SELECT set_config('app.tenant_id', $1, true)", [tenantId]);
+				const result = await pgClient.query(query);
+				await pgClient.query('COMMIT');
+				return formatResult(widget, result.rows);
+			} catch (err) {
+				await pgClient.query('ROLLBACK');
+				throw err;
+			}
+		});
+	}
+
+	const result = await pool.query(query);
+	return formatResult(widget, result.rows);
+}
+
+function formatResult(widget: Widget, rows: Record<string, unknown>[]): unknown {
+	switch (widget.type) {
+		case 'stat': {
+			// Return the first row as a single-value object, coercing counts to numbers
+			const row = rows[0] ?? {};
+			const out: Record<string, unknown> = {};
+			for (const [key, val] of Object.entries(row)) {
+				out[key] = typeof val === 'string' && /^\d+$/.test(val) ? Number(val) : val;
+			}
+			return out;
+		}
+		case 'table': {
+			return rows.map((row) => {
+				const out: Record<string, unknown> = {};
+				for (const [key, val] of Object.entries(row)) {
+					out[key] = val;
+				}
+				return out;
+			});
+		}
+		case 'chart': {
+			return rows.map((row) => ({
+				label: row.label,
+				value: typeof row.value === 'string' && /^\d+$/.test(row.value) ? Number(row.value) : row.value,
+			}));
+		}
+		default:
+			throw new Error(`Unknown widget type: ${(widget as Widget).type}`);
+	}
 }
