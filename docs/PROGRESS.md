@@ -777,7 +777,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-054: Widget execution engine
 **Status**: DONE
-**Commit**: pending
+**Commit**: 31b67c0
 **Duration**: ~8 min
 **Files created/modified**:
 - packages/ui/src/lib/dashboards/manager.ts (added executeWidgetQuery with SELECT-only validation, tenant context via set_config, result formatting per widget type)
