@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-041
-Next eligible task: T-042
+Last completed task: T-042
+Next eligible task: T-043
 Blockers: none
-Test suite status: 130 unit passed, 16 E2E passed
+Test suite status: 134 unit passed, 16 E2E passed
 
 ---
 
@@ -617,3 +617,17 @@ Format for each entry:
 - packages/cli/tests/init.test.ts (6 integration tests)
 **Test results**: 130 passed (vitest), 16 passed (Playwright E2E)
 **Review**: Init command creates expected file structure per B-CLI-001c (non-interactive defaults). Templates use {{VAR}} substitution. package.json includes @simplicity-admin/cli dependency. Config has DATABASE_URL placeholder. Rejects non-empty directories per B-CLI-002 (CLI_001 error). Supports "." for current directory per B-CLI-003. Prints success message with next steps per B-CLI-001g. .env.example contains only placeholders, no real credentials per security spec. No circular deps. Typecheck and build pass. No regressions.
+
+### 2026-03-08 — T-042: CLI dev command
+**Status**: DONE
+**Commit**: 2c32c24
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/cli/src/commands/dev.ts (runDev: loads config, connects DB, bootstraps, starts API+auth server with routing)
+- packages/cli/src/cli.ts (wired dev command into switch)
+- packages/cli/package.json (added @simplicity-admin/api, auth, db dependencies)
+- packages/cli/src/commands/init.ts (removed unused InitOptions interface — lint fix)
+- packages/cli/tests/dev.test.ts (4 integration tests)
+- pnpm-lock.yaml (updated workspace links)
+**Test results**: 134 passed (vitest), 16 passed (Playwright E2E)
+**Review**: Dev command implements B-CLI-004 (full stack start: config → DB connect → bootstrap → API server → auth routes → HTTP handler). B-CLI-005 banner prints all URLs (Admin UI, GraphQL, GraphiQL, default login). B-CLI-006 handles DB connection failure with clear message. B-CLI-007 handles missing config file with init suggestion. Auth routes (login/logout/refresh) mounted before auth middleware. GraphiQL enabled in dev mode. Graceful shutdown on SIGINT/SIGTERM. Port 0 for test isolation. All imports verified against package exports. No circular deps. Lint, typecheck, build all pass. No regressions.
