@@ -3,9 +3,9 @@
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
 Last completed task: T-068
-Next eligible task: T-069 (Server-side RBAC enforcement on mutations)
+Next eligible task: T-069 (Bootstrap via schema-flow programmatic API)
 Blockers: none
-Note: M5 Security Hardening milestone added (T-069 — T-081) based on adversarial security audit. T-069, T-070, T-071, T-072, T-073, T-074, T-075, T-078, T-079, T-080 are all eligible (depend only on T-068).
+Note: M5 tasks renumbered — bootstrap refactor added as T-069 (depends only on T-017, immediately eligible). Old T-069–T-081 shifted to T-070–T-082. Old T-082 (parameterize SQL) superseded and removed. Eligible tasks: T-069 (depends T-017), T-070–T-076, T-079–T-080 (depend T-068).
 Test suite status: 648 unit passed (5 skipped — DB integration), 17 E2E passed, 2 pre-existing DB test failures (contacts table in public schema from E2E setup conflicts with introspection tests)
 
 ---

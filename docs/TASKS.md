@@ -1147,7 +1147,21 @@ If a task cannot be completed:
 
 ## M5: Security Hardening
 
-### T-069: Server-side RBAC enforcement on mutations
+### T-069: Bootstrap via schema-flow programmatic API
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/db.md
+- **Story**: US-002
+- **Depends**: T-017
+- **Produces**:
+  - Updated `packages/db/src/bootstrap.ts` — replaces raw SQL with `resolveConfig()` + `runMigrate()` from `@mabulu-inc/schema-flow`; only `seedDefaults()` remains as custom code (bcrypt hashing)
+  - Updated `packages/db/src/provider.ts` — `migrate()` calls schema-flow directly instead of wrapping `bootstrap()`
+- **Tests**: `packages/db/tests/bootstrap.test.ts` — existing bootstrap integration tests still pass (same end state, different mechanism)
+  - Fresh DB: schema-flow applies all YAML, seed data created
+  - Existing DB: schema-flow diffs and applies only changes (idempotent)
+- **AC**: Zero hand-written DDL in `bootstrap.ts`; all schema objects are defined exclusively in `packages/db/schema/*.yaml`; single source of truth for system schema
+
+### T-070: Server-side RBAC enforcement on mutations
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-002)
@@ -1164,7 +1178,7 @@ If a task cannot be completed:
   - Unauthenticated POST returns 401
 - **AC**: All mutation endpoints enforce RBAC server-side, not just via UI
 
-### T-070: JWT secret validation and production guard
+### T-071: JWT secret validation and production guard
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-001)
@@ -1181,7 +1195,7 @@ If a task cannot be completed:
   - GraphiQL defaults to false
 - **AC**: Application refuses to start with weak secrets in production
 
-### T-071: SQL identifier escaping utility
+### T-072: SQL identifier escaping utility
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-003)
@@ -1189,7 +1203,6 @@ If a task cannot be completed:
 - **Depends**: T-068
 - **Produces**:
   - `packages/db/src/escape.ts` — `escapeIdentifier()` utility
-  - Updated `packages/db/src/bootstrap.ts` — uses shared utility
   - Updated `packages/ui/src/routes/(app)/[table]/+page.server.ts` — uses shared utility
   - Updated `packages/ui/src/routes/(app)/[table]/[id]/+page.server.ts` — uses shared utility
   - Updated `packages/ui/src/routes/(app)/[table]/new/+page.server.ts` — uses shared utility
@@ -1198,9 +1211,9 @@ If a task cannot be completed:
   - Escapes SQL reserved words
   - Handles unicode identifiers
   - Handles empty string edge case
-- **AC**: All SQL identifier interpolation uses the shared utility
+- **AC**: All SQL identifier interpolation in UI routes uses the shared utility
 
-### T-072: Rate limiting on auth endpoints
+### T-073: Rate limiting on auth endpoints
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-004)
@@ -1217,7 +1230,7 @@ If a task cannot be completed:
   - Returns Retry-After header
 - **AC**: Auth endpoints are rate-limited with configurable thresholds
 
-### T-073: Request body size limiting
+### T-074: Request body size limiting
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-005)
@@ -1231,7 +1244,7 @@ If a task cannot be completed:
   - Configurable limit works
 - **AC**: Auth endpoints reject oversized request bodies
 
-### T-074: Error message sanitization
+### T-075: Error message sanitization
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-006)
@@ -1248,7 +1261,7 @@ If a task cannot be completed:
   - Original error is not exposed to client
 - **AC**: No raw database error messages are returned to the client
 
-### T-075: Timing-safe login
+### T-076: Timing-safe login
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-009)
@@ -1262,28 +1275,28 @@ If a task cannot be completed:
   - Both cases return identical 401 response
 - **AC**: Login endpoint does not leak user existence via timing
 
-### T-076: Token revocation persistence
+### T-077: Token revocation persistence
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-007)
 - **Story**: —
-- **Depends**: T-071
+- **Depends**: T-069, T-072
 - **Produces**:
-  - Updated `packages/db/src/bootstrap.ts` — `revoked_tokens` table in system schema
+  - `packages/db/schema/tables/revoked_tokens.yaml` — revoked_tokens table in system schema
   - Updated `packages/auth/src/routes/helpers.ts` — DB-backed revocation
   - `packages/auth/src/revocation.ts` — revocation store with SHA-256 hashing
 - **Tests**: `packages/auth/tests/revocation.test.ts`
   - Revoked token is rejected after restart (DB-backed)
   - Token hash is stored, not raw token
   - Expired entries are cleaned up
-- **AC**: Token revocation survives server restarts
+- **AC**: Token revocation survives server restarts; table defined in schema-flow YAML
 
-### T-077: Refresh token rotation
+### T-078: Refresh token rotation
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-010)
 - **Story**: —
-- **Depends**: T-076
+- **Depends**: T-077
 - **Produces**:
   - Updated `packages/auth/src/routes/refresh.ts` — revoke old token on refresh
   - Updated `packages/auth/src/providers/jwt.ts` — support for user-level revocation
@@ -1292,7 +1305,7 @@ If a task cannot be completed:
   - Reuse of revoked refresh token revokes all user tokens
 - **AC**: Refresh tokens are single-use; reuse triggers security response
 
-### T-078: Security headers
+### T-079: Security headers
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-011)
@@ -1307,7 +1320,7 @@ If a task cannot be completed:
   - HSTS header present when NODE_ENV=production
 - **AC**: All responses include standard security headers
 
-### T-079: GraphQL depth limiting
+### T-080: GraphQL depth limiting
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-012)
@@ -1322,26 +1335,26 @@ If a task cannot be completed:
   - Default depth limit is 10
 - **AC**: Deeply nested GraphQL queries are rejected
 
-### T-080: `begin_session` role validation
+### T-081: `begin_session` role validation
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md (B-SEC-013)
 - **Story**: —
-- **Depends**: T-068
+- **Depends**: T-068, T-069
 - **Produces**:
-  - Updated `packages/db/src/bootstrap.ts` — role whitelist in `begin_session` function
+  - Updated `packages/db/schema/functions/begin_session.yaml` — role whitelist in `begin_session` function
 - **Tests**: `packages/db/tests/begin-session-validation.test.ts`
   - Known roles (anon, app_viewer, app_editor, app_admin) are accepted
   - Unknown roles raise an exception
   - EXECUTE grant is restricted to authenticator only
-- **AC**: `begin_session` cannot be used for privilege escalation
+- **AC**: `begin_session` cannot be used for privilege escalation; function defined in schema-flow YAML
 
-### T-081: M5 security integration test
+### T-082: M5 security integration test
 - **Status**: TODO
 - **Milestone**: M5
 - **Spec**: docs/specs/security.md
 - **Story**: —
-- **Depends**: T-069, T-070, T-071, T-072, T-073, T-074, T-075, T-076, T-077, T-078, T-079, T-080
+- **Depends**: T-069, T-070, T-071, T-072, T-073, T-074, T-075, T-076, T-077, T-078, T-079, T-080, T-081
 - **Produces**:
   - `tests/e2e/m5-security.spec.ts`
 - **Tests**: Full security journey — login with weak secret fails in prod mode → login rate limiting triggers → RBAC blocks unauthorized mutation → error messages are sanitized → security headers present → GraphQL depth limit enforced
@@ -1350,17 +1363,6 @@ If a task cannot be completed:
 ---
 
 ## M6: Code Quality & Hardening
-
-### T-082: Parameterize SQL in DB bootstrap
-- **Status**: TODO
-- **Milestone**: M6
-- **Spec**: —
-- **Story**: —
-- **Depends**: T-017
-- **Produces**:
-  - Updated `packages/db/src/bootstrap.ts` — all SQL uses parameterized queries or `ident()`, no string-interpolated values
-- **Tests**: `packages/db/tests/bootstrap.test.ts` — existing bootstrap tests still pass; add test confirming role names with special characters are handled safely
-- **AC**: Zero raw `${...}` interpolation inside SQL strings in `packages/db/`
 
 ### T-083: Replace z.any() with typed schemas in core config
 - **Status**: TODO
@@ -1435,6 +1437,6 @@ If a task cannot be completed:
 | M2: Access Control | 8 | T-045 — T-052 |
 | M3: Intelligence | 8 | T-053 — T-060 |
 | M4: Automation | 8 | T-061 — T-068 |
-| M5: Security Hardening | 13 | T-069 — T-081 |
-| M6: Code Quality & Hardening | 6 | T-082 — T-087 |
+| M5: Security Hardening | 14 | T-069 — T-082 |
+| M6: Code Quality & Hardening | 5 | T-083 — T-087 |
 | **Total** | **87** | |
