@@ -1349,6 +1349,84 @@ If a task cannot be completed:
 
 ---
 
+## M6: Code Quality & Hardening
+
+### T-082: Parameterize SQL in DB bootstrap
+- **Status**: TODO
+- **Milestone**: M6
+- **Spec**: —
+- **Story**: —
+- **Depends**: T-017
+- **Produces**:
+  - Updated `packages/db/src/bootstrap.ts` — all SQL uses parameterized queries or `ident()`, no string-interpolated values
+- **Tests**: `packages/db/tests/bootstrap.test.ts` — existing bootstrap tests still pass; add test confirming role names with special characters are handled safely
+- **AC**: Zero raw `${...}` interpolation inside SQL strings in `packages/db/`
+
+### T-083: Replace z.any() with typed schemas in core config
+- **Status**: TODO
+- **Milestone**: M6
+- **Spec**: docs/specs/core.md
+- **Story**: —
+- **Depends**: T-003
+- **Produces**:
+  - Updated `packages/core/src/config/schema.ts` — `strategy`, `hooks`, `actions`, and `plugins` fields use specific Zod schemas instead of `z.any()`
+- **Tests**: `packages/core/tests/config.test.ts` — add cases that reject invalid hook/action/plugin shapes; existing config tests still pass
+- **AC**: No `z.any()` remains in config schema; invalid configs are rejected at parse time
+
+### T-084: Add justifying comments to all `as any` casts
+- **Status**: TODO
+- **Milestone**: M6
+- **Spec**: —
+- **Story**: —
+- **Depends**: none
+- **Produces**:
+  - Updated `packages/api/src/server.ts` — `as any` cast has justifying comment
+  - Updated `packages/api/src/provider.ts` — `as any` cast has justifying comment
+  - Updated `packages/api/src/graphql/preset.ts` — `as any` cast has justifying comment or is replaced with proper typing
+- **Tests**: `pnpm check` passes in `packages/api`
+- **AC**: Every `as any` cast in the codebase has an adjacent `// justification: ...` comment per project conventions; where possible, casts are replaced with proper types
+
+### T-085: Validate JSON-parsed user input with Zod
+- **Status**: TODO
+- **Milestone**: M6
+- **Spec**: —
+- **Story**: —
+- **Depends**: T-067
+- **Produces**:
+  - Updated `packages/ui/src/routes/(app)/settings/automations/+page.server.ts` — JSON.parse results validated with Zod before use
+  - Updated `packages/ui/src/routes/(app)/settings/workflow/+page.server.ts` — JSON.parse results validated with Zod before use
+- **Tests**: Add tests confirming malformed JSON and structurally invalid payloads return 400 errors instead of 500s
+- **AC**: All JSON.parse of user-submitted form data is followed by Zod validation; invalid payloads produce clear 400 responses
+
+### T-086: Extract shared admin auth check helper
+- **Status**: TODO
+- **Milestone**: M6
+- **Spec**: —
+- **Story**: —
+- **Depends**: T-051, T-067
+- **Produces**:
+  - `packages/ui/src/lib/server/require-admin.ts` — shared helper that throws 401/403 for non-admin users
+  - Updated `packages/ui/src/routes/(app)/settings/automations/+page.server.ts` — uses shared helper
+  - Updated `packages/ui/src/routes/(app)/settings/permissions/+page.server.ts` — uses shared helper
+  - Updated `packages/ui/src/routes/(app)/settings/workflow/+page.server.ts` — uses shared helper
+- **Tests**: `packages/ui/tests/server/require-admin.test.ts` — unit tests for the helper; existing settings page tests still pass
+- **AC**: No duplicated admin auth check boilerplate in settings routes; single source of truth for admin-only access control
+
+### T-087: Replace unsafe double type casts with runtime validation
+- **Status**: TODO
+- **Milestone**: M6
+- **Spec**: —
+- **Story**: —
+- **Depends**: T-053
+- **Produces**:
+  - Updated `packages/ui/src/lib/dashboards/manager.ts` — `as unknown as Widget['config']` replaced with Zod parse or type guard
+  - Updated `packages/ui/src/routes/(app)/dashboard/[slug]/+page.server.ts` — same
+  - Updated `packages/ui/src/routes/(app)/dashboard/+page.server.ts` — same
+- **Tests**: `packages/ui/tests/dashboards/manager.test.ts` — add test with malformed widget config from DB; existing dashboard tests still pass
+- **AC**: No `as unknown as T` double casts remain in dashboard code; invalid DB data is caught at runtime with clear errors
+
+---
+
 ## Summary
 
 | Milestone | Tasks | Range |
@@ -1358,4 +1436,5 @@ If a task cannot be completed:
 | M3: Intelligence | 8 | T-053 — T-060 |
 | M4: Automation | 8 | T-061 — T-068 |
 | M5: Security Hardening | 13 | T-069 — T-081 |
-| **Total** | **81** | |
+| M6: Code Quality & Hardening | 6 | T-082 — T-087 |
+| **Total** | **87** | |
