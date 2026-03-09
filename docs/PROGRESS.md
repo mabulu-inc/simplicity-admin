@@ -959,7 +959,7 @@ Format for each entry:
 
 ### 2026-03-08 — T-067: Workflow management UI
 **Status**: DONE
-**Commit**: pending
+**Commit**: 121f508
 **Duration**: ~10 min
 **Files created/modified**:
 - packages/ui/src/routes/(app)/settings/workflow/+page.server.ts (new — load function lists state machines, actions for create/delete with admin role check)
