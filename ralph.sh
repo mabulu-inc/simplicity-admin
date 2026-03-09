@@ -319,7 +319,13 @@ while true; do
   echo ""
   echo -e "${BOLD}[$(timestamp)] === Iteration $iteration/$([ "$MAX_ITERATIONS" -eq 0 ] && echo '∞' || echo "$MAX_ITERATIONS") — Target: $next_task ===${RESET}"
 
-  PROMPT="You are in Ralph Loop iteration $iteration. Follow the Ralph Loop Boot Sequence exactly as defined in CLAUDE.md. Read PROGRESS.md first, then TASKS.md, then execute the next eligible task using red/green TDD. When done, commit, push to origin, and update PROGRESS.md. If blocked, update PROGRESS.md and exit."
+  # Detect unstaged changes from a previous iteration that ran out of turns
+  if ! git -C "$PROJECT_DIR" diff --quiet 2>/dev/null; then
+    UNSTAGED_FILES=$(git -C "$PROJECT_DIR" diff --name-only 2>/dev/null | tr '\n' ', ')
+    PROMPT="You are in Ralph Loop iteration $iteration. There are UNSTAGED CHANGES from a previous iteration in: $UNSTAGED_FILES — A previous iteration started this work but ran out of turns before committing. Do NOT start over. Instead: (1) Read PROGRESS.md to identify the target task, (2) review the unstaged diff to understand what was done, (3) run tests to verify, (4) fix any failures, (5) commit and update PROGRESS.md and TASKS.md. Prioritize FINISHING over exploring. Do NOT push to origin — the loop handles that."
+  else
+    PROMPT="You are in Ralph Loop iteration $iteration. Follow the Ralph Loop Boot Sequence exactly as defined in CLAUDE.md. Read PROGRESS.md first, then TASKS.md, then execute the next eligible task using red/green TDD. When done, commit and update PROGRESS.md. Do NOT push to origin — the loop handles that. If blocked, update PROGRESS.md and exit."
+  fi
 
   if $VERBOSE; then
     # Stream JSON to both terminal and log file

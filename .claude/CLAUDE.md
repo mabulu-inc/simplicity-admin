@@ -6,13 +6,24 @@
 
 1. Read `docs/PROGRESS.md` — check "Current State" for last task, next task, blockers
 2. Read `docs/TASKS.md` — find the next eligible task (lowest-numbered TODO with all deps DONE)
-3. Read the task's referenced spec file (`docs/specs/*.md`) for exact interfaces and behaviors
+3. **If unstaged changes exist from a previous iteration**, skip to step 4 — the work is already started, just verify and commit. Otherwise, read the task's referenced spec file (`docs/specs/*.md`) for exact interfaces and behaviors.
 4. Execute the task using red/green TDD:
    a. Write failing tests (red)
    b. Implement until tests pass (green)
    c. Run full test suite: `pnpm test`
    d. If all pass: commit, update PROGRESS.md, set task to DONE
    e. If blocked: update PROGRESS.md with blocker, move to next eligible task
+
+## Turn Efficiency Rules (MANDATORY)
+
+These rules prevent wasting turns in the stateless Ralph Loop:
+
+- **Do NOT use TodoWrite** — it wastes turns and provides no value in a stateless loop where context is discarded between iterations
+- **Do NOT explore library internals** (node_modules, package source code) unless a specific error message requires it
+- **Do NOT push to origin** — ralph.sh handles pushing after each iteration
+- **Prioritize finishing**: implement → test → fix → commit → update docs. Never explore without a clear purpose.
+- **If tests pass, commit immediately.** Do not do extra exploration, refactoring, or cleanup beyond what the task requires.
+- **Keep reviews brief**: The architectural/design/security reviews (Task Completion Criteria steps 4-6) should be a quick mental check documented in 1-2 sentences, not a deep multi-file exploration.
 
 ## Task Selection Algorithm
 
