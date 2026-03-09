@@ -92,3 +92,22 @@ export {
 // Email provider
 export type { SmtpConfig } from './notifications/email/types.js';
 export { SmtpEmailProvider } from './notifications/email/provider.js';
+
+// Workflow types
+export type {
+  StateMachine,
+  StateDefinition,
+  Transition,
+  TransitionGuard,
+  TransitionHook,
+  NotificationHookConfig,
+  WebhookHookConfig,
+  UpdateFieldHookConfig,
+  Automation,
+  AutomationTrigger,
+  AutomationCondition,
+  AutomationAction,
+  TransitionResult,
+  TransitionLogEntry,
+  AutomationResult,
+} from './workflow/types.js';
