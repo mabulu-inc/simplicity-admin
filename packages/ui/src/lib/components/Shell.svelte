@@ -15,6 +15,7 @@
     tenants?: { id: string; name: string }[];
     currentTenantId?: string | null;
     onTenantChange?: (tenantId: string | null) => void;
+    unreadCount?: number;
     onLogout?: () => void;
     children?: Snippet;
   }
@@ -30,6 +31,7 @@
     tenants,
     currentTenantId,
     onTenantChange,
+    unreadCount,
     onLogout,
     children,
   }: ShellProps = $props();
@@ -47,6 +49,7 @@
       {tenants}
       {currentTenantId}
       {onTenantChange}
+      {unreadCount}
       {onLogout}
     />
     <main data-testid="content" class="content">

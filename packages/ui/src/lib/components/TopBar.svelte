@@ -1,4 +1,6 @@
 <script lang="ts">
+  import NotificationBell from './notifications/NotificationBell.svelte';
+
   interface TopBarProps {
     user: { email: string; displayName: string; avatarUrl?: string };
     roles: string[];
@@ -8,6 +10,7 @@
     tenants?: { id: string; name: string }[];
     currentTenantId?: string | null;
     onTenantChange?: (tenantId: string | null) => void;
+    unreadCount?: number;
     onLogout?: () => void;
   }
 
@@ -20,6 +23,7 @@
     tenants,
     currentTenantId,
     onTenantChange,
+    unreadCount,
     onLogout,
   }: TopBarProps = $props();
 
@@ -77,6 +81,8 @@
         </select>
       {/if}
     </div>
+
+    <NotificationBell unreadCount={unreadCount ?? 0} />
 
     <div data-testid="user-menu">
       <span>

@@ -15,6 +15,7 @@
 			};
 			navItems: NavItem[];
 			currentPath: string;
+			unreadCount: number;
 		};
 		children: Snippet;
 	}
@@ -34,6 +35,7 @@
 	roles={data.user.roles}
 	activeRole={data.user.activeRole}
 	superAdmin={data.user.superAdmin}
+	unreadCount={data.unreadCount}
 	onLogout={handleLogout}
 >
 	{@render children()}
