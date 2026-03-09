@@ -30,7 +30,7 @@ If a task cannot be completed:
 ## M1: Foundation
 
 ### T-001: Initialize monorepo structure
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/core.md
 - **Story**: US-001
@@ -55,7 +55,7 @@ If a task cannot be completed:
   - `pnpm test` passes with 1 smoke test
 
 ### T-002: Core error classes
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/core.md
 - **Story**: —
@@ -66,7 +66,7 @@ If a task cannot be completed:
 - **AC**: All error classes exported from `@simplicity-admin/core`
 
 ### T-003: Core config types + Zod schema
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/core.md
 - **Story**: —
@@ -84,7 +84,7 @@ If a task cannot be completed:
 - **AC**: `defineConfig()` and `ProjectConfig` type exported from `@simplicity-admin/core`
 
 ### T-004: Core config loader
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/core.md
 - **Story**: —
@@ -99,7 +99,7 @@ If a task cannot be completed:
 - **AC**: `loadConfig(path?)` exported from `@simplicity-admin/core`
 
 ### T-005: Core metadata types + column type mapping
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/core.md
 - **Story**: —
@@ -114,7 +114,7 @@ If a task cannot be completed:
 - **AC**: All metadata types and `mapPgType()` exported from `@simplicity-admin/core`
 
 ### T-006: Core provider interfaces + registry
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/core.md
 - **Story**: —
@@ -132,7 +132,7 @@ If a task cannot be completed:
 - **AC**: All provider interfaces and `ProviderRegistry` exported
 
 ### T-007: Core plugin types + manager
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/core.md
 - **Story**: —
@@ -148,7 +148,7 @@ If a task cannot be completed:
 - **AC**: `PluginManager` and plugin types exported
 
 ### T-008: Core index — re-export all public API
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/core.md
 - **Story**: —
@@ -161,7 +161,7 @@ If a task cannot be completed:
 - **AC**: Single import path works: `import { defineConfig, mapPgType, ProviderRegistry } from '@simplicity-admin/core'`
 
 ### T-009: Initialize @simplicity-admin/db package
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md
 - **Story**: US-002
@@ -174,7 +174,7 @@ If a task cannot be completed:
 - **AC**: Package builds and imports
 
 ### T-010: DB connection manager
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md
 - **Story**: US-002
@@ -189,7 +189,7 @@ If a task cannot be completed:
 - **AC**: `createPool(url)` returns working `ConnectionPool`
 
 ### T-011: DB introspection — list tables
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md
 - **Story**: US-002
@@ -204,7 +204,7 @@ If a task cannot be completed:
 - **AC**: `listTables(pool, schema?)` returns `TableMeta[]`
 
 ### T-012: DB introspection — columns
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md
 - **Story**: US-002
@@ -220,7 +220,7 @@ If a task cannot be completed:
 - **AC**: `introspectColumns(pool, tableName, schema?)` returns `ColumnMeta[]`
 
 ### T-013: DB introspection — relations
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md
 - **Story**: US-002
@@ -235,7 +235,7 @@ If a task cannot be completed:
 - **AC**: `introspectRelations(pool, schema?)` returns `RelationMeta[]`
 
 ### T-014: DB introspection — enums
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md
 - **Story**: US-002
@@ -249,7 +249,7 @@ If a task cannot be completed:
 - **AC**: `introspectEnums(pool, schema?)` returns `EnumMeta[]`
 
 ### T-015: DB introspection — full schema assembly
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md
 - **Story**: US-002
@@ -264,7 +264,7 @@ If a task cannot be completed:
 - **AC**: `introspectSchema(pool, schema?)` returns complete `SchemaMeta`
 
 ### T-016: System schema YAML (schema-flow)
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md, docs/specs/tenancy.md
 - **Story**: US-002
@@ -290,7 +290,7 @@ If a task cannot be completed:
 - **AC**: All system schema YAML files are valid schema-flow definitions
 
 ### T-017: DB bootstrap orchestrator
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md
 - **Story**: US-002
@@ -305,7 +305,7 @@ If a task cannot be completed:
 - **AC**: `bootstrap(pool, config)` creates all system objects
 
 ### T-018: DB provider (default DatabaseProvider)
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/db.md
 - **Story**: —
@@ -321,7 +321,7 @@ If a task cannot be completed:
 - **AC**: `postgresProvider()` exported from `@simplicity-admin/db`
 
 ### T-019: Initialize @simplicity-admin/auth package
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/auth.md
 - **Story**: US-003
@@ -334,7 +334,7 @@ If a task cannot be completed:
 - **AC**: Package builds
 
 ### T-020: Password utilities
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/auth.md
 - **Story**: US-003
@@ -349,7 +349,7 @@ If a task cannot be completed:
 - **AC**: Password utilities exported from `@simplicity-admin/auth`
 
 ### T-021: JWT provider
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/auth.md
 - **Story**: US-003
@@ -366,7 +366,7 @@ If a task cannot be completed:
 - **AC**: `jwtProvider()` implements `AuthProvider` interface
 
 ### T-022: Auth middleware
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/auth.md
 - **Story**: US-003
@@ -381,7 +381,7 @@ If a task cannot be completed:
 - **AC**: Auth middleware exported from `@simplicity-admin/auth`
 
 ### T-023: Login/logout/refresh routes
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/auth.md
 - **Story**: US-003
@@ -402,7 +402,7 @@ If a task cannot be completed:
 - **AC**: Auth routes handle complete login lifecycle
 
 ### T-024: Auth index — re-export all public API
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/auth.md
 - **Story**: —
@@ -414,7 +414,7 @@ If a task cannot be completed:
 - **AC**: Single import path works
 
 ### T-025: Initialize @simplicity-admin/api package
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/api.md
 - **Story**: US-006
@@ -427,7 +427,7 @@ If a task cannot be completed:
 - **AC**: Package builds
 
 ### T-026: pgSettings mapper
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/api.md
 - **Story**: US-006
@@ -440,7 +440,7 @@ If a task cannot be completed:
 - **AC**: pgSettings mapper exported
 
 ### T-027: PostGraphile preset
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/api.md
 - **Story**: US-006
@@ -454,7 +454,7 @@ If a task cannot be completed:
 - **AC**: `createPreset(config, pool)` returns valid GraphileConfig.Preset
 
 ### T-028: API server
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/api.md
 - **Story**: US-006
@@ -471,7 +471,7 @@ If a task cannot be completed:
 - **AC**: Full GraphQL API server works end-to-end
 
 ### T-029: Initialize @simplicity-admin/ui package
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/ui.md
 - **Story**: US-004, US-005
@@ -486,7 +486,7 @@ If a task cannot be completed:
 - **AC**: SvelteKit library package initializes
 
 ### T-030: Design tokens + theming
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/ui.md
 - **Story**: —
@@ -504,7 +504,7 @@ If a task cannot be completed:
 - **AC**: Theme system works with light/dark themes
 
 ### T-031: Field type mapping
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/ui.md
 - **Story**: US-005
@@ -518,7 +518,7 @@ If a task cannot be completed:
 - **AC**: Field mapping functions exported
 
 ### T-032: DataTable component
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/ui.md
 - **Story**: US-004
@@ -536,7 +536,7 @@ If a task cannot be completed:
 - **AC**: DataTable component renders metadata-driven tables
 
 ### T-033: Form field components
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/ui.md
 - **Story**: US-005
@@ -559,7 +559,7 @@ If a task cannot be completed:
 - **AC**: All form field components render and bind values
 
 ### T-034: AutoForm component
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/ui.md
 - **Story**: US-005
@@ -579,7 +579,7 @@ If a task cannot be completed:
 - **AC**: AutoForm generates create/edit forms from metadata
 
 ### T-035: Layout components (Shell, Sidebar, TopBar)
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/ui.md
 - **Story**: US-004
@@ -598,7 +598,7 @@ If a task cannot be completed:
 - **AC**: Layout components render admin shell
 
 ### T-036: GraphQL query builder
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/crud.md
 - **Story**: US-004, US-005
@@ -616,7 +616,7 @@ If a task cannot be completed:
 - **AC**: GraphQL query builder generates correct queries/mutations for any table shape
 
 ### T-037: Admin app — SvelteKit entry point + auth gate
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/crud.md, docs/specs/auth.md
 - **Story**: US-003, US-004
@@ -636,7 +636,7 @@ If a task cannot be completed:
 - **AC**: Admin UI boots with login gate and shell layout
 
 ### T-038: Admin app — dynamic list view
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/crud.md
 - **Story**: US-004
@@ -653,7 +653,7 @@ If a task cannot be completed:
 - **AC**: Any table gets an auto-generated list view
 
 ### T-039: Admin app — dynamic create/edit/delete views
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/crud.md
 - **Story**: US-005
@@ -672,7 +672,7 @@ If a task cannot be completed:
 - **AC**: Full CRUD through auto-generated forms
 
 ### T-040: Initialize @simplicity-admin/cli package
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/cli.md
 - **Story**: US-001, US-007
@@ -689,7 +689,7 @@ If a task cannot be completed:
 - **AC**: CLI binary runs, help and version work
 
 ### T-041: CLI init command
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/cli.md
 - **Story**: US-001
@@ -706,7 +706,7 @@ If a task cannot be completed:
 - **AC**: `npx simplicity-admin init my-admin` creates working starter project
 
 ### T-042: CLI dev command
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/cli.md
 - **Story**: US-007
@@ -722,7 +722,7 @@ If a task cannot be completed:
 - **AC**: `npx simplicity-admin dev` starts full dev environment
 
 ### T-043: CLI generate + migrate commands
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: docs/specs/cli.md
 - **Story**: US-002
@@ -736,7 +736,7 @@ If a task cannot be completed:
 - **AC**: Generate and migrate commands delegate to schema-flow
 
 ### T-044: M1 end-to-end smoke test
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M1
 - **Spec**: all M1 specs
 - **Story**: all M1 stories
@@ -752,7 +752,7 @@ If a task cannot be completed:
 ## M2: Access Control
 
 ### T-045: RBAC permission types
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M2
 - **Spec**: docs/specs/rbac.md
 - **Story**: US-008
@@ -763,7 +763,7 @@ If a task cannot be completed:
 - **AC**: Permission types exported
 
 ### T-046: RBAC permission engine
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M2
 - **Spec**: docs/specs/rbac.md
 - **Story**: US-008
@@ -779,7 +779,7 @@ If a task cannot be completed:
 - **AC**: Permission engine reads and evaluates database grants
 
 ### T-047: RBAC UI overrides
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M2
 - **Spec**: docs/specs/rbac.md
 - **Story**: US-009
@@ -795,7 +795,7 @@ If a task cannot be completed:
 - **AC**: UI can restrict (never expand) permissions beyond code ceiling
 
 ### T-048: RBAC integration into CRUD views
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M2
 - **Spec**: docs/specs/rbac.md, docs/specs/crud.md
 - **Story**: US-008
@@ -810,7 +810,7 @@ If a task cannot be completed:
 - **AC**: CRUD views respect column-level RBAC
 
 ### T-049: Navigation builder
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M2
 - **Spec**: docs/specs/nav.md
 - **Story**: US-010
@@ -829,7 +829,7 @@ If a task cannot be completed:
 - **AC**: Navigation builder produces role-filtered, customizable nav
 
 ### T-050: Role-based navigation integration
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M2
 - **Spec**: docs/specs/nav.md
 - **Story**: US-010
@@ -845,7 +845,7 @@ If a task cannot be completed:
 - **AC**: Sidebar navigation adapts to user's role
 
 ### T-051: Permissions management UI
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M2
 - **Spec**: docs/specs/rbac.md
 - **Story**: US-009
@@ -860,7 +860,7 @@ If a task cannot be completed:
 - **AC**: Permission management UI allows admins to customize RBAC
 
 ### T-052: M2 end-to-end smoke test
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M2
 - **Spec**: all M2 specs
 - **Story**: all M2 stories
@@ -876,7 +876,7 @@ If a task cannot be completed:
 ## M3: Intelligence
 
 ### T-053: Dashboard types + storage
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M3
 - **Spec**: docs/specs/dashboards.md
 - **Story**: US-011
@@ -893,7 +893,7 @@ If a task cannot be completed:
 - **AC**: Dashboard management persists to database
 
 ### T-054: Widget execution engine
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M3
 - **Spec**: docs/specs/dashboards.md
 - **Story**: US-011
@@ -909,7 +909,7 @@ If a task cannot be completed:
 - **AC**: Widget queries execute safely with RLS
 
 ### T-055: Dashboard widget components
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M3
 - **Spec**: docs/specs/dashboards.md
 - **Story**: US-011
@@ -928,7 +928,7 @@ If a task cannot be completed:
 - **AC**: Dashboard widget components render data
 
 ### T-056: Dashboard routes + builder UI
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M3
 - **Spec**: docs/specs/dashboards.md
 - **Story**: US-011
@@ -948,7 +948,7 @@ If a task cannot be completed:
 - **AC**: Dashboards render and are configurable
 
 ### T-057: Notification types + engine
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M3
 - **Spec**: docs/specs/notifications.md
 - **Story**: US-012
@@ -968,7 +968,7 @@ If a task cannot be completed:
 - **AC**: Notification engine processes events and creates notifications
 
 ### T-058: Notification delivery (in-app + email)
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M3
 - **Spec**: docs/specs/notifications.md
 - **Story**: US-012
@@ -986,7 +986,7 @@ If a task cannot be completed:
 - **AC**: Notifications delivered via in-app and email channels
 
 ### T-059: Notification UI
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M3
 - **Spec**: docs/specs/notifications.md
 - **Story**: US-012
@@ -1006,7 +1006,7 @@ If a task cannot be completed:
 - **AC**: Notification UI shows alerts and allows rule management
 
 ### T-060: M3 end-to-end smoke test
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M3
 - **Spec**: all M3 specs
 - **Story**: all M3 stories
@@ -1021,7 +1021,7 @@ If a task cannot be completed:
 ## M4: Automation
 
 ### T-061: Workflow types
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M4
 - **Spec**: docs/specs/workflow.md
 - **Story**: US-013, US-014
@@ -1032,7 +1032,7 @@ If a task cannot be completed:
 - **AC**: Workflow types exported from core
 
 ### T-062: Workflow guard evaluation
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M4
 - **Spec**: docs/specs/workflow.md
 - **Story**: US-013
@@ -1046,7 +1046,7 @@ If a task cannot be completed:
 - **AC**: Guard evaluation works for all operators
 
 ### T-063: Workflow action executors
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M4
 - **Spec**: docs/specs/workflow.md
 - **Story**: US-013, US-014
@@ -1062,7 +1062,7 @@ If a task cannot be completed:
 - **AC**: All action types execute correctly
 
 ### T-064: Workflow engine — state machines
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M4
 - **Spec**: docs/specs/workflow.md
 - **Story**: US-013
@@ -1083,7 +1083,7 @@ If a task cannot be completed:
 - **AC**: State machine transitions work with guards, role checks, and hooks
 
 ### T-065: Workflow engine — event automations
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M4
 - **Spec**: docs/specs/workflow.md
 - **Story**: US-014
@@ -1101,7 +1101,7 @@ If a task cannot be completed:
 - **AC**: Event-driven automations fire with conditions and actions
 
 ### T-066: Workflow UI — state badges + transition buttons
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M4
 - **Spec**: docs/specs/workflow.md
 - **Story**: US-013
@@ -1117,7 +1117,7 @@ If a task cannot be completed:
 - **AC**: Record detail view shows workflow state and transition actions
 
 ### T-067: Workflow management UI
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M4
 - **Spec**: docs/specs/workflow.md
 - **Story**: US-013, US-014
@@ -1133,7 +1133,7 @@ If a task cannot be completed:
 - **AC**: Workflow and automation management through admin UI
 
 ### T-068: M4 end-to-end smoke test
-- **Status**: TODO
+- **Status**: DONE
 - **Milestone**: M4
 - **Spec**: all M4 specs
 - **Story**: all M4 stories
