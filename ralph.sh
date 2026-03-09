@@ -327,7 +327,9 @@ while true; do
     echo -e "${GREEN}[$(timestamp)] All tasks are DONE. Ralph is finished.${RESET}"
     break
   fi
-  log_file="$PROJECT_DIR/$LOG_DIR/iteration-$(printf '%03d' "$iteration").jsonl"
+  # Extract task ID (e.g. "T-069") from next_task for log filename
+  task_id=$(echo "$next_task" | grep -oE 'T-[0-9]+' | head -1 || echo "unknown")
+  log_file="$PROJECT_DIR/$LOG_DIR/${task_id}-$(date '+%Y%m%d-%H%M%S').jsonl"
   iter_start=$(date +%s)
 
   echo ""

@@ -20,6 +20,7 @@ These rules prevent wasting turns in the stateless Ralph Loop:
 
 - **Do NOT use TodoWrite** — it wastes turns and provides no value in a stateless loop where context is discarded between iterations
 - **Do NOT explore library internals** (node_modules, package source code) unless a specific error message requires it
+- **Do NOT modify code outside this repository** — if a dependency has a bug, work around it or document the blocker. Never edit files in sibling repos or node_modules.
 - **Do NOT push to origin** — ralph.sh handles pushing after each iteration
 - **Prioritize finishing**: implement → test → fix → commit → update docs. Never explore without a clear purpose.
 - **If tests pass, commit immediately.** Do not do extra exploration, refactoring, or cleanup beyond what the task requires.
