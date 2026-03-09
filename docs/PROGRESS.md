@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-056
-Next eligible task: T-057
+Last completed task: T-057
+Next eligible task: T-058
 Blockers: none
-Test suite status: 535 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 558 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -817,4 +817,20 @@ Format for each entry:
 - packages/ui/tests/e2e/dashboards.spec.ts (3 E2E tests: default dashboard renders, widgets display, builder creates dashboard)
 **Test results**: 535 passed, 5 skipped (DB integration), 0 failed
 **Review**: Routes follow existing (app) layout pattern — auth via locals.user, redirect to /login if missing. Default dashboard route (B-DASH-001) loads via getDefaultDashboard(role) with welcome fallback (B-DASH-002). Slug route enforces role access (B-DASH-008). Builder restricted to app_admin (B-DASH-006). Widget queries execute per-widget with error isolation (B-DASH-010). Tenant-scoped execution supported via tenantId passthrough (B-DASH-009). DashboardBuilder uses Svelte 5 runes, form actions for server-side persistence. No circular deps, module boundaries respected.
+**Notes**: —
+
+### 2026-03-08 — T-057: Notification types + engine
+**Status**: DONE
+**Commit**: 2c5011c
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/core/src/notifications/types.ts (NotificationChannel, TriggerEvent, NotificationRule, NotificationTemplate, RecipientConfig, Notification, DataEvent, EmailProvider)
+- packages/core/src/notifications/rules.ts (evaluateCondition, interpolateTemplate, createRule, updateRule, deleteRule, listRules)
+- packages/core/src/notifications/engine.ts (NotificationEngine class: processEvent, send, getUnread, markRead, markAllRead)
+- packages/core/src/index.ts (added notification re-exports)
+- packages/core/tests/notifications/engine.test.ts (23 unit tests)
+- packages/db/schema/tables/simplicity_notification_rules.yaml (system table for rules)
+- packages/db/schema/tables/simplicity_notifications.yaml (system table for notifications)
+**Test results**: 558 passed, 5 skipped (DB integration), 0 failed
+**Review**: Notification module follows core package conventions — types in types.ts, logic separated into rules.ts and engine.ts. All types match spec exactly. evaluateCondition supports =, !=, >, <, >=, <= operators. Template interpolation handles missing fields with empty string per spec. NotificationEngine.processEvent fetches enabled rules, matches by trigger type/table/condition, resolves recipients (users/roles/field), and creates notifications. field.changed trigger correctly compares old/new values. System table YAML follows existing schema-flow format with proper foreign keys, indexes, checks, and grants. No circular dependencies. All 23 notification tests pass. Lint, typecheck, build all clean.
 **Notes**: —
