@@ -8,6 +8,7 @@ export default defineConfig({
 		alias: {
 			'@simplicity-admin/ui': path.resolve(__dirname, 'src/lib/index.ts'),
 			'@simplicity-admin/core': path.resolve(__dirname, '../core/src/index.ts'),
+			'@simplicity-admin/db': path.resolve(__dirname, '../db/src/index.ts'),
 		},
 		conditions: ['browser'],
 	},

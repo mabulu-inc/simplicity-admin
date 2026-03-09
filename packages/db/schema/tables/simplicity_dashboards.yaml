@@ -1,0 +1,45 @@
+table: simplicity_dashboards
+comment: "Dashboard definitions — customizable landing pages with widget layouts"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: name
+    type: text
+
+  - name: slug
+    type: text
+    unique: true
+
+  - name: roles
+    type: text[]
+    default: "'{}'::text[]"
+
+  - name: is_default
+    type: boolean
+    default: "false"
+
+  - name: layout
+    type: jsonb
+    default: "'[]'::jsonb"
+
+  - name: created_by
+    type: text
+
+indexes:
+  - name: idx_dashboards_slug
+    columns: [slug]
+    unique: true
+
+grants:
+  - to: app_admin
+    privileges: [SELECT, INSERT, UPDATE, DELETE]
+  - to: app_editor
+    privileges: [SELECT]
+  - to: app_viewer
+    privileges: [SELECT]

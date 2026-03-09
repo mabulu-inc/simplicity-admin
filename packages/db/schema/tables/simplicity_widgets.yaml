@@ -1,0 +1,32 @@
+table: simplicity_widgets
+comment: "Widget definitions — data-driven UI components for dashboards"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: type
+    type: text
+
+  - name: title
+    type: text
+
+  - name: config
+    type: jsonb
+    default: "'{}'::jsonb"
+
+indexes:
+  - name: idx_widgets_type
+    columns: [type]
+
+grants:
+  - to: app_admin
+    privileges: [SELECT, INSERT, UPDATE, DELETE]
+  - to: app_editor
+    privileges: [SELECT]
+  - to: app_viewer
+    privileges: [SELECT]
