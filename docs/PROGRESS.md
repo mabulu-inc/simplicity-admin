@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-039
-Next eligible task: T-040
+Last completed task: T-040
+Next eligible task: T-041
 Blockers: none
-Test suite status: 121 unit passed, 16 E2E passed
+Test suite status: 124 unit passed, 16 E2E passed
 
 ---
 
@@ -587,3 +587,17 @@ Format for each entry:
 - packages/ui/tests/e2e/crud-views.spec.ts (5 E2E tests)
 **Test results**: 121 passed (vitest), 16 passed (Playwright E2E: 5 auth-gate + 6 list-view + 5 crud-views)
 **Review**: Create view at /[table]/new renders AutoForm in create mode — PK and default/generated columns hidden (B-CRUD-009). Server action parses JSON from FormData _data field, filters to valid non-PK non-generated columns, skips empty values for columns with defaults, executes parameterized INSERT (B-CRUD-011). Edit view at /[table]/[id] loads record by PK, pre-populates AutoForm (B-CRUD-013). Update action builds SET clauses for non-PK columns only (B-CRUD-014). Delete action with FK constraint error handling returns friendly message (B-CRUD-016/017/018). Confirmation dialog with overlay/modal pattern. AutoForm validates required fields client-side (B-CRUD-010). Fixed unused `json` import lint error. All SQL uses parameterized queries preventing injection. Typecheck 0 errors. No regressions.
+
+### 2026-03-08 — T-040: Initialize @simplicity-admin/cli package
+**Status**: DONE
+**Commit**: 69f6094
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/cli/package.json (bin entry for simplicity-admin CLI, workspace dep on core)
+- packages/cli/tsconfig.json (extends base, src → dist)
+- packages/cli/vitest.config.ts (aliases for cli and core)
+- packages/cli/src/cli.ts (CLI entry with arg parser: --help, --version, command routing)
+- packages/cli/src/index.ts (programmatic API: createAdmin, startServer stubs)
+- packages/cli/tests/cli.test.ts (3 tests: --help, --version, unknown command)
+**Test results**: 124 passed (vitest), 16 passed (Playwright E2E)
+**Review**: CLI binary runs via tsx with correct arg parsing. --help outputs usage with all commands (init, dev, build, start, generate, migrate, env) per B-CLI-012. --version reads package.json and outputs semver per B-CLI-013. Unknown commands exit with code 1 and show error with --help suggestion per CLI_005 error spec. Programmatic API exports createAdmin (returns HttpHandler) and startServer (returns Promise<Server>) matching spec signatures. Package uses ESM, bin entry points to dist/cli.js. No circular deps. Respects module boundaries — cli depends only on core. All 24 turbo tasks pass (lint, typecheck, test, build across all 6 packages). No regressions.
