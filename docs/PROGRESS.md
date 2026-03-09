@@ -2,8 +2,8 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-047
-Next eligible task: T-048
+Last completed task: T-048
+Next eligible task: T-049
 Blockers: none
 Test suite status: 485 unit passed (5 skipped — DB integration), 16 E2E passed
 
@@ -690,4 +690,21 @@ Format for each entry:
 - packages/db/schema/tables/permission_overrides.yaml (system table for UI overrides)
 **Test results**: 485 passed, 5 skipped (DB integration), 0 failed
 **Review**: Implementation follows spec B-RBAC-005 through B-RBAC-009. Deny-only constraint enforced — saveOverride() rejects denied:false with RBAC_003. mergeOverrides() is a pure function that removes denied operations from code permissions without mutation. System table YAML defines simplicity_permission_overrides with unique index on (role, table_name, column_name, operation). Only app_admin has CRUD access to the overrides table. No circular dependencies introduced.
+**Notes**: —
+
+### 2026-03-08 — T-048: RBAC integration into CRUD views
+**Status**: DONE
+**Commit**: a487dda
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/ui/src/lib/server/rbac.ts (getTableRbacInfo helper — bridges auth RBAC engine to UI)
+- packages/ui/src/routes/(app)/[table]/+page.server.ts (filter columns by SELECT permission, pass canInsert/canDelete)
+- packages/ui/src/routes/(app)/[table]/+page.svelte (conditionally show create button based on canInsert)
+- packages/ui/src/routes/(app)/[table]/[id]/+page.server.ts (filter columns, pass readOnlyColumns/hiddenColumns/canUpdate/canDelete)
+- packages/ui/src/routes/(app)/[table]/[id]/+page.svelte (pass readOnlyColumns/hiddenColumns to AutoForm, conditional submit/delete)
+- packages/auth/src/rbac/overrides.ts (added mergeOverrides, schema-qualified table names)
+- packages/ui/tests/e2e/rbac-crud.spec.ts (3 Playwright E2E tests for RBAC CRUD)
+- packages/ui/tests/e2e/global-setup.ts (seed viewer/editor users and column-level grants)
+**Test results**: 485 passed, 5 skipped (DB integration), 0 failed
+**Review**: List view filters columns by role's SELECT permission (app_viewer sees only id, first_name, last_name, email — not created_at). Create button hidden when canInsert is false. Edit view marks non-UPDATE columns as readOnly. Delete button hidden when canDelete is false. Server-side RBAC helper merges code permissions with UI overrides. AutoForm already supports readOnlyColumns/hiddenColumns props. No circular dependencies. RBAC is read-only in UI — PostgreSQL grants remain the enforcement layer per ADR-001.
 **Notes**: —
