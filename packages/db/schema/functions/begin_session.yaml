@@ -3,7 +3,17 @@ language: plpgsql
 returns: void
 replace: true
 security: definer
-args: "p_role text, p_user_id text, p_tenant_id text DEFAULT '', p_is_super_admin text DEFAULT 'false'"
+args:
+  - name: p_role
+    type: text
+  - name: p_user_id
+    type: text
+  - name: p_tenant_id
+    type: text
+    default: "''"
+  - name: p_is_super_admin
+    type: text
+    default: "'false'"
 body: |
   BEGIN
     EXECUTE format('set local role %I', p_role);
