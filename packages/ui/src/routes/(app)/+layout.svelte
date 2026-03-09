@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import Shell from '$lib/components/Shell.svelte';
+	import type { NavItem } from '$lib/nav/types.js';
 
 	interface AppLayoutProps {
 		data: {
@@ -12,17 +13,13 @@
 				activeRole: string;
 				superAdmin: boolean;
 			};
+			navItems: NavItem[];
+			currentPath: string;
 		};
 		children: Snippet;
 	}
 
 	let { data, children }: AppLayoutProps = $props();
-
-	const sidebarItems = $derived([
-		{ label: 'Dashboard', href: '/', group: 'Main' },
-	]);
-
-	const currentPath = $derived(typeof window !== 'undefined' ? window.location.pathname : '/');
 
 	async function handleLogout() {
 		await fetch('/api/auth/session', { method: 'DELETE' });
@@ -31,8 +28,8 @@
 </script>
 
 <Shell
-	{sidebarItems}
-	{currentPath}
+	sidebarItems={data.navItems}
+	currentPath={data.currentPath}
 	user={{ email: data.user.email ?? '', displayName: data.user.email ?? 'Admin' }}
 	roles={data.user.roles}
 	activeRole={data.user.activeRole}

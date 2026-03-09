@@ -1,11 +1,5 @@
 <script lang="ts">
-  interface NavItem {
-    label: string;
-    href: string;
-    icon?: string;
-    group?: string;
-    badge?: number;
-  }
+  import type { NavItem } from '$lib/nav/types.js';
 
   interface SidebarProps {
     items: NavItem[];

@@ -11,7 +11,7 @@ describe('Shell', () => {
   it('renders sidebar and content area', () => {
     const { container } = render(Shell, {
       props: {
-        sidebarItems: [{ label: 'Contacts', href: '/admin/contacts' }],
+        sidebarItems: [{ label: 'Contacts', href: '/admin/contacts', order: 0 }],
         currentPath: '/admin/contacts',
         user: { email: 'alice@ex.com', displayName: 'Alice' },
         roles: ['app_admin'],
@@ -26,8 +26,8 @@ describe('Shell', () => {
 
 describe('Sidebar', () => {
   const items = [
-    { label: 'Contacts', href: '/admin/contacts' },
-    { label: 'Deals', href: '/admin/deals' },
+    { label: 'Contacts', href: '/admin/contacts', order: 0 },
+    { label: 'Deals', href: '/admin/deals', order: 1 },
   ];
 
   it('renders navigation items', () => {
@@ -50,9 +50,9 @@ describe('Sidebar', () => {
 
   it('groups items under section headers', () => {
     const groupedItems = [
-      { label: 'Contacts', href: '/admin/contacts', group: 'CRM' },
-      { label: 'Deals', href: '/admin/deals', group: 'CRM' },
-      { label: 'Users', href: '/admin/users', group: 'Settings' },
+      { label: 'Contacts', href: '/admin/contacts', group: 'CRM', order: 0 },
+      { label: 'Deals', href: '/admin/deals', group: 'CRM', order: 1 },
+      { label: 'Users', href: '/admin/users', group: 'Settings', order: 2 },
     ];
     render(Sidebar, { props: { items: groupedItems, currentPath: '/' } });
     expect(screen.getByText('CRM')).toBeTruthy();

@@ -2,14 +2,7 @@
   import type { Snippet } from 'svelte';
   import Sidebar from './Sidebar.svelte';
   import TopBar from './TopBar.svelte';
-
-  interface NavItem {
-    label: string;
-    href: string;
-    icon?: string;
-    group?: string;
-    badge?: number;
-  }
+  import type { NavItem } from '$lib/nav/types.js';
 
   interface ShellProps {
     sidebarItems: NavItem[];

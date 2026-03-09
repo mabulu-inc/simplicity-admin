@@ -8,7 +8,7 @@ import {
 	listOverrides,
 	mergeOverrides,
 } from '@simplicity-admin/auth';
-import type { EffectivePermissions, Operation } from '@simplicity-admin/auth';
+import type { EffectivePermissions } from '@simplicity-admin/auth';
 
 export interface TableRbacInfo {
 	/** Columns the user can SELECT (visible in list/detail views) */

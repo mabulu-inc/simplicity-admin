@@ -20,25 +20,28 @@ export function humanizeTableName(tableName: string): string {
 
 /**
  * Builds a list of NavItems based on schema metadata, optional config, and user permissions.
+ * @param basePath - URL prefix for table routes (default: '/admin')
  */
 export function buildNavItems(
   meta: SchemaMeta,
   config: NavConfig | undefined,
   permissions: EffectivePermissions,
+  basePath = '/admin',
 ): NavItem[] {
   const permittedTables = new Set(permissions.tables.map((tp) => tp.table));
   const appTables = meta.tables.filter((t) => !SYSTEM_SCHEMAS.has(t.schema));
 
   if (config?.items && config.items.length > 0) {
-    return buildFromConfig(config.items, appTables, permittedTables, permissions.role, config.defaultIcon);
+    return buildFromConfig(config.items, appTables, permittedTables, permissions.role, basePath, config.defaultIcon);
   }
 
-  return buildAutoNav(appTables, permittedTables, config?.defaultIcon);
+  return buildAutoNav(appTables, permittedTables, basePath, config?.defaultIcon);
 }
 
 function buildAutoNav(
   tables: SchemaMeta['tables'],
   permittedTables: Set<string>,
+  basePath: string,
   defaultIcon?: string,
 ): NavItem[] {
   return tables
@@ -46,7 +49,7 @@ function buildAutoNav(
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((t, index) => ({
       label: humanizeTableName(t.name),
-      href: `/admin/${t.name}`,
+      href: `${basePath}/${t.name}`,
       order: index,
       ...(defaultIcon ? { icon: defaultIcon } : {}),
     }));
@@ -57,13 +60,14 @@ function buildFromConfig(
   appTables: SchemaMeta['tables'],
   permittedTables: Set<string>,
   currentRole: string,
+  basePath: string,
   defaultIcon?: string,
 ): NavItem[] {
   const tableNames = new Set(appTables.map((t) => t.name));
   const result: NavItem[] = [];
 
   for (const item of items) {
-    const navItem = resolveConfigItem(item, tableNames, permittedTables, currentRole, defaultIcon);
+    const navItem = resolveConfigItem(item, tableNames, permittedTables, currentRole, basePath, defaultIcon);
     if (navItem) {
       result.push(navItem);
     }
@@ -80,6 +84,7 @@ function resolveConfigItem(
   tableNames: Set<string>,
   permittedTables: Set<string>,
   currentRole: string,
+  basePath: string,
   defaultIcon?: string,
 ): NavItem | null {
   // Non-table item (custom href)
@@ -116,7 +121,7 @@ function resolveConfigItem(
     const icon = item.icon ?? defaultIcon;
     return {
       label: item.label ?? humanizeTableName(item.table),
-      href: `/admin/${item.table}`,
+      href: `${basePath}/${item.table}`,
       order: item.order ?? 0,
       ...(icon ? { icon } : {}),
       ...(item.group ? { group: item.group } : {}),
