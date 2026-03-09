@@ -2,8 +2,8 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-043
-Next eligible task: T-044
+Last completed task: T-044
+Next eligible task: T-045
 Blockers: none
 Test suite status: 143 unit passed, 16 E2E passed
 
@@ -643,3 +643,14 @@ Format for each entry:
 - packages/cli/tests/generate.test.ts (9 integration tests)
 **Test results**: 143 passed (vitest), 0 failed
 **Review**: Generate command implements B-CLI-010 (schema generation from DB, delegates to DatabaseProvider.generate()). Migrate command implements B-CLI-011 (migration plan+apply, delegates to DatabaseProvider.migrate()). Both commands follow the same pattern as dev.ts: load config → connect DB → delegate → clean up pool. Error handling for missing config (CLI_002) and DB connection failure (CLI_003) matches spec. Supports --output-dir/--schema-dir/--schema/--allow-destructive flags. Provider methods are currently stubs (generate is a no-op, migrate delegates to bootstrap) — full schema-flow integration deferred to when @mabulu-inc/schema-flow is available. No circular deps. Typecheck clean. All tests pass with zero regressions.
+
+### 2026-03-08 — T-044: M1 end-to-end smoke test
+**Status**: DONE
+**Commit**: db23840
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/ui/tests/e2e/m1-smoke.spec.ts (full M1 user journey E2E test)
+- tests/e2e/m1-smoke.spec.ts (re-export stub)
+**Test results**: 143 passed (vitest), 16 passed (Playwright E2E)
+**Review**: Full M1 user journey smoke test covers: start dev server → login with default admin → see auto-generated nav → navigate to table list → create record → edit record → delete record → logout. All E2E tests pass. No regressions.
+**Notes**: —

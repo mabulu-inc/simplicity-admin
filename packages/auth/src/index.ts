@@ -7,3 +7,9 @@ export { getUserFromRequest, type AuthenticatedRequest } from './context.js';
 export { createLoginHandler } from './routes/login.js';
 export { createLogoutHandler } from './routes/logout.js';
 export { createRefreshHandler } from './routes/refresh.js';
+export type {
+  Operation,
+  TablePermission,
+  ColumnPermission,
+  EffectivePermissions,
+} from './rbac/types.js';
