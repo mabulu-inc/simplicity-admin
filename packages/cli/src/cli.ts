@@ -33,7 +33,7 @@ Options:
   process.stdout.write(help);
 }
 
-function main(): void {
+async function main(): Promise<void> {
   const args = process.argv.slice(2);
 
   if (args.includes('--help') || args.includes('-h') || args.length === 0) {
@@ -53,8 +53,18 @@ function main(): void {
     process.exit(1);
   }
 
-  // Commands will be implemented in subsequent tasks
-  process.stdout.write(`Command '${command}' is not yet implemented.\n`);
+  const commandArgs = args.slice(1);
+
+  switch (command) {
+    case 'init': {
+      const { runInit } = await import('./commands/init.js');
+      runInit(commandArgs);
+      break;
+    }
+    default:
+      process.stdout.write(`Command '${command}' is not yet implemented.\n`);
+      break;
+  }
 }
 
 main();

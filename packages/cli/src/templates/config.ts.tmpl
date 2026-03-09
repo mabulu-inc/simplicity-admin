@@ -1,0 +1,17 @@
+import type { ProjectConfig } from '@simplicity-admin/core';
+
+const config: Partial<ProjectConfig> = {
+  database: {
+    connectionString: process.env.DATABASE_URL ?? 'postgres://localhost:5432/{{PROJECT_NAME}}',
+    schemas: ['public'],
+  },
+  server: {
+    port: {{PORT}},
+  },
+  auth: {
+    secret: process.env.AUTH_SECRET ?? 'change-me-in-production',
+    issuer: '{{PROJECT_NAME}}',
+  },
+};
+
+export default config;
