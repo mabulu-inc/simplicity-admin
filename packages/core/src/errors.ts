@@ -57,3 +57,13 @@ export class ActionError extends Error {
     this.code = code;
   }
 }
+
+export class WorkflowError extends Error {
+  readonly code: string;
+
+  constructor(message: string, code: string, cause?: Error) {
+    super(message, { cause });
+    this.name = 'WorkflowError';
+    this.code = code;
+  }
+}

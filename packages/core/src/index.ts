@@ -8,6 +8,7 @@ export {
   ValidationError,
   HookError,
   ActionError,
+  WorkflowError,
 } from './errors.js';
 
 export type {
@@ -120,3 +121,17 @@ export {
 
 export type { ActionExecutorContext, ActionExecutorResult } from './workflow/actions.js';
 export { executeHook, executeAction } from './workflow/actions.js';
+
+// Workflow engine & management
+export { WorkflowEngine } from './workflow/engine.js';
+export {
+  createStateMachine,
+  updateStateMachine,
+  deleteStateMachine,
+  getStateMachine,
+  listStateMachines,
+  createAutomation,
+  updateAutomation,
+  deleteAutomation,
+  listAutomations,
+} from './workflow/management.js';

@@ -1,0 +1,40 @@
+table: simplicity_state_machines
+comment: "State machine definitions — one per table/column combination"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: table_name
+    type: text
+    comment: "Table this state machine governs"
+
+  - name: column_name
+    type: text
+    comment: "Column that holds the state value"
+
+  - name: states
+    type: jsonb
+    comment: "Array of StateDefinition objects"
+
+  - name: transitions
+    type: jsonb
+    comment: "Array of Transition objects with roles, guards, hooks"
+
+indexes:
+  - name: idx_state_machines_table
+    columns: [table_name]
+    unique: true
+    comment: "One state machine per table"
+
+grants:
+  - to: app_admin
+    privileges: [SELECT, INSERT, UPDATE, DELETE]
+  - to: app_editor
+    privileges: [SELECT]
+  - to: app_viewer
+    privileges: [SELECT]

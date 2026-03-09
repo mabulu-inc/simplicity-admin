@@ -1,0 +1,52 @@
+table: simplicity_transition_log
+comment: "Audit log for state machine transitions"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: table_name
+    type: text
+    comment: "Table where the transition occurred"
+
+  - name: record_id
+    type: text
+    comment: "ID of the record that transitioned"
+
+  - name: from_state
+    type: text
+
+  - name: to_state
+    type: text
+
+  - name: user_id
+    type: uuid
+    references:
+      table: users
+      column: id
+      on_delete: SET NULL
+
+  - name: comment
+    type: text
+    comment: "Optional comment provided during transition"
+
+indexes:
+  - name: idx_transition_log_record
+    columns: [table_name, record_id]
+    comment: "Fast lookup for transition history by record"
+
+  - name: idx_transition_log_created
+    columns: [created_at]
+    comment: "Chronological ordering"
+
+grants:
+  - to: app_admin
+    privileges: [SELECT, INSERT]
+  - to: app_editor
+    privileges: [SELECT, INSERT]
+  - to: app_viewer
+    privileges: [SELECT]
