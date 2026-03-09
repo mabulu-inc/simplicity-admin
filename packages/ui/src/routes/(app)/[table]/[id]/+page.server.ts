@@ -213,6 +213,14 @@ export const actions: Actions = {
 				`UPDATE ${qualifiedTable} SET "${machine.column}" = $1 WHERE "${pk}" = $2`,
 				[toState, recordId],
 			);
+
+			// Write to audit log
+			const userId = locals.user?.id ?? null;
+			await pool.query(
+				`INSERT INTO public.simplicity_transition_log (table_name, record_id, from_state, to_state, user_id)
+				 VALUES ($1, $2, $3, $4, $5)`,
+				[tableName, recordId, currentState, toState, userId],
+			);
 		} catch (err: unknown) {
 			const message = err instanceof Error ? err.message : 'Unknown error';
 			return { error: message };

@@ -23,8 +23,14 @@ async function seedTestData(pool: ReturnType<typeof createPool>) {
 			first_name text NOT NULL,
 			last_name text NOT NULL,
 			email text NOT NULL,
+			status text NOT NULL DEFAULT 'draft',
 			created_at timestamptz NOT NULL DEFAULT now()
 		);
+	`);
+
+	// Ensure status column exists (idempotent for pre-existing tables)
+	await pool.query(`
+		ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS status text NOT NULL DEFAULT 'draft';
 	`);
 
 	// Seed test contacts (idempotent)
@@ -45,6 +51,69 @@ async function seedTestData(pool: ReturnType<typeof createPool>) {
 		) AS t(first_name, last_name, email)
 		WHERE NOT EXISTS (SELECT 1 FROM public.contacts LIMIT 1);
 	`);
+
+	// Create workflow tables (state machines, transition log, automations, automation log)
+	await pool.query(`
+		CREATE TABLE IF NOT EXISTS public.simplicity_state_machines (
+			id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			table_name text NOT NULL,
+			column_name text NOT NULL,
+			states jsonb NOT NULL DEFAULT '[]',
+			transitions jsonb NOT NULL DEFAULT '[]',
+			created_at timestamptz NOT NULL DEFAULT now(),
+			updated_at timestamptz NOT NULL DEFAULT now()
+		);
+		CREATE UNIQUE INDEX IF NOT EXISTS idx_state_machines_table ON public.simplicity_state_machines (table_name);
+	`);
+
+	await pool.query(`
+		CREATE TABLE IF NOT EXISTS public.simplicity_transition_log (
+			id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			table_name text NOT NULL,
+			record_id text NOT NULL,
+			from_state text NOT NULL,
+			to_state text NOT NULL,
+			user_id uuid,
+			comment text,
+			created_at timestamptz NOT NULL DEFAULT now()
+		);
+		CREATE INDEX IF NOT EXISTS idx_transition_log_record ON public.simplicity_transition_log (table_name, record_id);
+		CREATE INDEX IF NOT EXISTS idx_transition_log_created ON public.simplicity_transition_log (created_at);
+	`);
+
+	await pool.query(`
+		CREATE TABLE IF NOT EXISTS public.simplicity_automations (
+			id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			name text NOT NULL,
+			enabled boolean NOT NULL DEFAULT true,
+			trigger jsonb NOT NULL DEFAULT '{}',
+			conditions jsonb NOT NULL DEFAULT '[]',
+			actions jsonb NOT NULL DEFAULT '[]',
+			created_at timestamptz NOT NULL DEFAULT now(),
+			updated_at timestamptz NOT NULL DEFAULT now()
+		);
+	`);
+
+	await pool.query(`
+		CREATE TABLE IF NOT EXISTS public.simplicity_automation_log (
+			id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+			automation_id uuid,
+			automation_name text NOT NULL,
+			status text NOT NULL,
+			duration_ms integer,
+			errors jsonb,
+			created_at timestamptz NOT NULL DEFAULT now()
+		);
+	`);
+
+	// Grant workflow table access to roles
+	await pool.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON public.simplicity_state_machines TO app_admin`);
+	await pool.query(`GRANT SELECT ON public.simplicity_state_machines TO app_viewer, app_editor`);
+	await pool.query(`GRANT SELECT, INSERT ON public.simplicity_transition_log TO app_admin, app_editor`);
+	await pool.query(`GRANT SELECT ON public.simplicity_transition_log TO app_viewer`);
+	await pool.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON public.simplicity_automations TO app_admin`);
+	await pool.query(`GRANT SELECT ON public.simplicity_automations TO app_viewer, app_editor`);
+	await pool.query(`GRANT SELECT, INSERT ON public.simplicity_automation_log TO app_admin`);
 
 	// Grant public schema usage to roles
 	await pool.query(`GRANT USAGE ON SCHEMA public TO app_viewer, app_editor, app_admin`);
