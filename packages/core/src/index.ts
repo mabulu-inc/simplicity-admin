@@ -111,3 +111,9 @@ export type {
   TransitionLogEntry,
   AutomationResult,
 } from './workflow/types.js';
+
+export {
+  evaluateGuard,
+  evaluateCondition as evaluateWorkflowCondition,
+  evaluateConditions as evaluateWorkflowConditions,
+} from './workflow/guards.js';
