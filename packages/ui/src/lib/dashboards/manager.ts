@@ -147,6 +147,17 @@ export async function listDashboards(
 	return result.rows.map(toDashboard);
 }
 
+export async function getDashboardBySlug(
+	pool: ConnectionPool,
+	slug: string,
+): Promise<Dashboard | null> {
+	const result = await pool.query<DashboardRow>(
+		'SELECT * FROM simplicity_dashboards WHERE slug = $1',
+		[slug],
+	);
+	return result.rows.length > 0 ? toDashboard(result.rows[0]) : null;
+}
+
 export async function getDefaultDashboard(
 	pool: ConnectionPool,
 	role: string,
