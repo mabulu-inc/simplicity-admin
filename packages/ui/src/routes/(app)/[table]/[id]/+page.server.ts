@@ -2,6 +2,7 @@ import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
 import { getTableRbacInfo } from '$lib/server/rbac.js';
+import { getStateMachine } from '@simplicity-admin/core';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const tableName = params.table;
@@ -40,6 +41,43 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		throw error(404, 'Record not found');
 	}
 
+	// Load workflow state machine for this table (if one exists)
+	let workflow: {
+		states: { name: string; label: string; color?: string; isFinal?: boolean }[];
+		transitions: { from: string; to: string; label: string; roles: string[] }[];
+		column: string;
+	} | null = null;
+
+	try {
+		const machine = await getStateMachine(pool, tableName);
+		if (machine) {
+			const record = result.rows[0] as Record<string, unknown>;
+			const currentState = record[machine.column] as string | undefined;
+			// Filter transitions to those available from current state and for user's role
+			const available = currentState
+				? machine.transitions.filter(
+						(t) =>
+							t.from === currentState &&
+							(!role || t.roles.length === 0 || t.roles.includes(role)),
+					)
+				: [];
+			// Check if current state is final
+			const currentStateDef = machine.states.find((s) => s.name === currentState);
+			workflow = {
+				states: machine.states,
+				transitions: currentStateDef?.isFinal ? [] : available.map((t) => ({
+					from: t.from,
+					to: t.to,
+					label: t.label,
+					roles: t.roles,
+				})),
+				column: machine.column,
+			};
+		}
+	} catch {
+		// Workflow table may not exist yet — ignore
+	}
+
 	return {
 		table: {
 			...table,
@@ -50,6 +88,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		hiddenColumns: rbac?.hiddenColumns ?? [],
 		canUpdate: rbac?.canUpdate ?? true,
 		canDelete: rbac?.canDelete ?? true,
+		workflow,
 	};
 };
 
@@ -111,6 +150,75 @@ export const actions: Actions = {
 		}
 
 		throw redirect(303, `/${tableName}`);
+	},
+
+	transition: async ({ params, request, locals }) => {
+		const tableName = params.table;
+		const recordId = params.id;
+		const meta = await getSchemaMeta();
+		const table = getTableMeta(meta, tableName);
+
+		if (!table) {
+			throw error(404, `Table "${tableName}" not found`);
+		}
+
+		const pk = table.primaryKey[0];
+		if (!pk) {
+			throw error(400, `Table "${tableName}" has no primary key`);
+		}
+
+		const formData = await request.formData();
+		const toState = formData.get('toState');
+		if (!toState || typeof toState !== 'string') {
+			return { error: 'No target state provided' };
+		}
+
+		const pool = getPool();
+
+		try {
+			const machine = await getStateMachine(pool, tableName);
+			if (!machine) {
+				return { error: 'No state machine configured for this table' };
+			}
+
+			// Fetch current record state
+			const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
+			const result = await pool.query(
+				`SELECT "${machine.column}" FROM ${qualifiedTable} WHERE "${pk}" = $1`,
+				[recordId],
+			);
+
+			if (result.rows.length === 0) {
+				return { error: 'Record not found' };
+			}
+
+			const record = result.rows[0] as Record<string, unknown>;
+			const currentState = record[machine.column] as string;
+
+			// Validate transition exists and role is authorized
+			const role = locals.user?.activeRole;
+			const transition = machine.transitions.find(
+				(t) =>
+					t.from === currentState &&
+					t.to === toState &&
+					(!role || t.roles.length === 0 || t.roles.includes(role)),
+			);
+
+			if (!transition) {
+				return { error: 'Transition not allowed' };
+			}
+
+			// Execute the state change
+			await pool.query(
+				`UPDATE ${qualifiedTable} SET "${machine.column}" = $1 WHERE "${pk}" = $2`,
+				[toState, recordId],
+			);
+		} catch (err: unknown) {
+			const message = err instanceof Error ? err.message : 'Unknown error';
+			return { error: message };
+		}
+
+		throw redirect(303, `/${tableName}/${recordId}`);
 	},
 
 	delete: async ({ params }) => {
