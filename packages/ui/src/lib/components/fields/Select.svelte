@@ -1,6 +1,7 @@
 <script lang="ts">
   interface Props {
     label: string;
+    name?: string;
     value: string;
     options: string[];
     required?: boolean;
@@ -8,13 +9,14 @@
     error?: string;
   }
 
-  let { label, value = $bindable(''), options, required = false, disabled = false, error }: Props = $props();
+  let { label, name, value = $bindable(''), options, required = false, disabled = false, error }: Props = $props();
 </script>
 
 <div class="field">
   <label class="field-label" for={label}>{label}</label>
   <select
     id={label}
+    {name}
     bind:value
     {required}
     {disabled}

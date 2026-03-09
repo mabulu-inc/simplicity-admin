@@ -115,6 +115,7 @@
       {#if fieldType === 'TextInput'}
         <TextInput
           {label}
+          name={col.name}
           bind:value={formData[col.name] as string}
           {disabled}
           {error}
@@ -122,6 +123,7 @@
       {:else if fieldType === 'NumberInput'}
         <NumberInput
           {label}
+          name={col.name}
           bind:value={formData[col.name] as number}
           {disabled}
           {error}
@@ -129,6 +131,7 @@
       {:else if fieldType === 'Toggle'}
         <Toggle
           {label}
+          name={col.name}
           bind:value={formData[col.name] as boolean}
           {disabled}
           {error}
@@ -136,6 +139,7 @@
       {:else if fieldType === 'Select'}
         <Select
           {label}
+          name={col.name}
           bind:value={formData[col.name] as string}
           options={col.enumValues ?? []}
           {disabled}
@@ -144,6 +148,7 @@
       {:else if fieldType === 'DatePicker'}
         <DatePicker
           {label}
+          name={col.name}
           bind:value={formData[col.name] as string}
           {disabled}
           {error}
@@ -151,6 +156,7 @@
       {:else if fieldType === 'DateTimePicker'}
         <DateTimePicker
           {label}
+          name={col.name}
           bind:value={formData[col.name] as string}
           {disabled}
           {error}
@@ -158,6 +164,7 @@
       {:else if fieldType === 'RelationPicker'}
         <RelationPicker
           {label}
+          name={col.name}
           bind:value={formData[col.name] as string}
           {disabled}
           {error}
@@ -165,6 +172,7 @@
       {:else if fieldType === 'JSONEditor'}
         <JSONEditor
           {label}
+          name={col.name}
           bind:value={formData[col.name] as string}
           {disabled}
           {error}
@@ -172,6 +180,7 @@
       {:else if fieldType === 'TagInput'}
         <TagInput
           {label}
+          name={col.name}
           bind:value={formData[col.name] as string[]}
           {disabled}
           {error}
@@ -179,6 +188,7 @@
       {:else if fieldType === 'TextArea'}
         <TextArea
           {label}
+          name={col.name}
           bind:value={formData[col.name] as string}
           {disabled}
           {error}

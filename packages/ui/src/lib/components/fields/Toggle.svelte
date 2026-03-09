@@ -1,19 +1,21 @@
 <script lang="ts">
   interface Props {
     label: string;
+    name?: string;
     value: boolean;
     required?: boolean;
     disabled?: boolean;
     error?: string;
   }
 
-  let { label, value = $bindable(false), required = false, disabled = false, error }: Props = $props();
+  let { label, name, value = $bindable(false), required = false, disabled = false, error }: Props = $props();
 </script>
 
 <div class="field">
   <label class="field-label">
     <input
       type="checkbox"
+      {name}
       bind:checked={value}
       {required}
       {disabled}

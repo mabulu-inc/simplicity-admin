@@ -1,19 +1,21 @@
 <script lang="ts">
   interface Props {
     label: string;
+    name?: string;
     value: string;
     required?: boolean;
     disabled?: boolean;
     error?: string;
   }
 
-  let { label, value = $bindable(''), required = false, disabled = false, error }: Props = $props();
+  let { label, name, value = $bindable(''), required = false, disabled = false, error }: Props = $props();
 </script>
 
 <div class="field">
   <label class="field-label" for={label}>{label}</label>
   <input
     id={label}
+    {name}
     type="datetime-local"
     bind:value
     {required}

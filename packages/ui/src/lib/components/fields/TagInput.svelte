@@ -1,13 +1,14 @@
 <script lang="ts">
   interface Props {
     label: string;
+    name?: string;
     value: string[];
     required?: boolean;
     disabled?: boolean;
     error?: string;
   }
 
-  let { label, value = $bindable([]), required = false, disabled = false, error }: Props = $props();
+  let { label, name, value = $bindable([]), required = false, disabled = false, error }: Props = $props();
 
   let inputValue = $state('');
 
