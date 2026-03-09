@@ -1,20 +1,36 @@
-// packages/core/src/workflow/engine.ts — Workflow engine (state machine portion)
+// packages/core/src/workflow/engine.ts — Workflow engine (state machines + event automations)
 
 import type { ConnectionPool } from '../providers/types.js';
 import type { NotificationEngine } from '../notifications/engine.js';
+import type { DataEvent } from '../notifications/types.js';
 import type {
+	Automation,
+	AutomationResult,
 	StateMachine,
 	Transition,
 	TransitionResult,
 	TransitionLogEntry,
 } from './types.js';
-import { evaluateGuard } from './guards.js';
-import { executeHook } from './actions.js';
+import { evaluateGuard, evaluateConditions } from './guards.js';
+import { executeHook, executeAction } from './actions.js';
+
+/** Map DataEvent.type to AutomationTrigger.event */
+const EVENT_TYPE_MAP: Record<string, string> = {
+	'record.created': 'onCreate',
+	'record.updated': 'onUpdate',
+	'record.deleted': 'onDelete',
+	'field.changed': 'onFieldChange',
+	'schedule': 'onSchedule',
+};
+
+/** Maximum automation chain depth to prevent infinite loops (WF_004) */
+const MAX_AUTOMATION_DEPTH = 10;
 
 export class WorkflowEngine {
 	private readonly pool: ConnectionPool;
 	private readonly notificationEngine: NotificationEngine;
 	private readonly machines = new Map<string, StateMachine>();
+	private readonly automations: Automation[] = [];
 
 	constructor(pool: ConnectionPool, notificationEngine: NotificationEngine) {
 		this.pool = pool;
@@ -24,6 +40,11 @@ export class WorkflowEngine {
 	/** Register a state machine for a table */
 	registerStateMachine(machine: StateMachine): void {
 		this.machines.set(machine.table, machine);
+	}
+
+	/** Register an automation */
+	registerAutomation(automation: Automation): void {
+		this.automations.push(automation);
 	}
 
 	/** Attempt a state transition */
@@ -155,5 +176,99 @@ export class WorkflowEngine {
 				timestamp: r.created_at as Date,
 			};
 		});
+	}
+
+	/** Process a data event against registered automations */
+	async processEvent(event: DataEvent, depth = 0): Promise<AutomationResult[]> {
+		// Loop detection: stop at maximum depth (WF_004)
+		if (depth >= MAX_AUTOMATION_DEPTH) {
+			return [];
+		}
+
+		const mappedEvent = EVENT_TYPE_MAP[event.type];
+		if (!mappedEvent) return [];
+
+		// Filter automations that match the event type and table
+		const matching = this.automations.filter((a) => {
+			if (a.trigger.event !== mappedEvent) return false;
+			if (a.trigger.table && a.trigger.table !== event.table) return false;
+			// For onFieldChange, verify the trigger field was actually changed
+			if (a.trigger.event === 'onFieldChange' && a.trigger.field) {
+				if (!event.oldValues || !event.newValues) return false;
+				if (!(a.trigger.field in event.newValues)) return false;
+			}
+			return true;
+		});
+
+		const results: AutomationResult[] = [];
+
+		for (const automation of matching) {
+			const result: AutomationResult = {
+				automationId: automation.id,
+				automationName: automation.name,
+				triggered: false,
+				actionsExecuted: [],
+			};
+
+			// Skip disabled automations
+			if (!automation.enabled) {
+				results.push(result);
+				continue;
+			}
+
+			// Evaluate conditions against newValues (or oldValues for onDelete)
+			const record = event.newValues ?? event.oldValues ?? {};
+			if (automation.conditions.length > 0 && !evaluateConditions(automation.conditions, record)) {
+				results.push(result);
+				continue;
+			}
+
+			// All conditions passed — fire the automation
+			result.triggered = true;
+			const startTime = Date.now();
+
+			for (const action of automation.actions) {
+				const actionResult = await executeAction(action, {
+					pool: this.pool,
+					notificationEngine: this.notificationEngine,
+					record,
+					table: event.table,
+					recordId: event.recordId,
+					tenantId: event.tenantId,
+				});
+				result.actionsExecuted.push(actionResult);
+			}
+
+			const durationMs = Date.now() - startTime;
+
+			// Record execution log
+			await this.logAutomationExecution(automation, result, durationMs);
+
+			results.push(result);
+		}
+
+		return results;
+	}
+
+	/** Write an execution log entry for an automation run */
+	private async logAutomationExecution(
+		automation: Automation,
+		result: AutomationResult,
+		durationMs: number,
+	): Promise<void> {
+		try {
+			const status = result.actionsExecuted.every((a) => a.success) ? 'success' : 'partial_failure';
+			const errors = result.actionsExecuted
+				.filter((a) => !a.success && a.error)
+				.map((a) => a.error);
+
+			await this.pool.query(
+				`INSERT INTO "simplicity_automation_log" ("automation_id", "automation_name", "status", "duration_ms", "errors")
+				 VALUES ($1, $2, $3, $4, $5)`,
+				[automation.id, automation.name, status, durationMs, errors.length > 0 ? JSON.stringify(errors) : null],
+			);
+		} catch {
+			// Logging failures are non-blocking
+		}
 	}
 }
