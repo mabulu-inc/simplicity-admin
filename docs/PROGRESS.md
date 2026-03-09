@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-054
-Next eligible task: T-055
+Last completed task: T-055
+Next eligible task: T-056
 Blockers: none
-Test suite status: 524 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 535 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -784,4 +784,19 @@ Format for each entry:
 - packages/ui/tests/dashboards/widgets.test.ts (9 integration tests: stat/table/chart queries, RLS tenant isolation, non-SELECT rejection)
 **Test results**: 524 passed, 5 skipped (DB integration), 0 failed
 **Review**: Implementation aligns with dashboards.md spec — executeWidgetQuery signature matches spec, SELECT-only enforcement per security section, tenant context set via set_config('app.tenant_id') within transaction for RLS. No circular deps. All widget types return correctly shaped data (stat→single object, table→row array, chart→label/value pairs). Non-SELECT statements (INSERT/UPDATE/DELETE/DROP) are rejected.
+**Notes**: —
+
+### 2026-03-08 — T-055: Dashboard widget components
+**Status**: DONE
+**Commit**: PENDING
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/ui/src/lib/components/widgets/StatWidget.svelte (stat card with number/currency/percent formatting, prefix/suffix, error state)
+- packages/ui/src/lib/components/widgets/TableWidget.svelte (table with column headers, rows, empty/error states)
+- packages/ui/src/lib/components/widgets/ChartWidget.svelte (bar chart with proportional heights, fallback list for other chart types, error state)
+- packages/ui/src/lib/components/widgets/WidgetContainer.svelte (generic wrapper with title and error handling via snippets)
+- packages/ui/src/lib/components/DashboardGrid.svelte (12-column CSS grid layout, routes widget data to correct component by type, error passthrough)
+- packages/ui/tests/components/widgets.test.ts (11 unit tests: stat formatting, table rows, chart rendering, grid layout, error states)
+**Test results**: 535 passed, 5 skipped (DB integration), 0 failed
+**Review**: All components follow Svelte 5 runes pattern ($props) consistent with existing components (DataTable, Toast). DashboardGrid uses 12-column CSS grid matching B-DASH-007 spec. StatWidget handles B-DASH-003 (formatted number with title). TableWidget handles B-DASH-004 (rows with labeled columns). ChartWidget handles B-DASH-005 (bar chart rendering). Error handling per B-DASH-010 (widget shows error, others unaffected). No circular deps. Module boundaries respected — widget components only import from dashboards/types.ts.
 **Notes**: —
