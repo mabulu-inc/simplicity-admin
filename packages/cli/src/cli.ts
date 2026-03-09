@@ -66,6 +66,16 @@ async function main(): Promise<void> {
       await runDev(commandArgs);
       break;
     }
+    case 'generate': {
+      const { runGenerate } = await import('./commands/generate.js');
+      await runGenerate(commandArgs);
+      break;
+    }
+    case 'migrate': {
+      const { runMigrate } = await import('./commands/migrate.js');
+      await runMigrate(commandArgs);
+      break;
+    }
     default:
       process.stdout.write(`Command '${command}' is not yet implemented.\n`);
       break;

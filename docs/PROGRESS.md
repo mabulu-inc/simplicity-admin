@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-042
-Next eligible task: T-043
+Last completed task: T-043
+Next eligible task: T-044
 Blockers: none
-Test suite status: 134 unit passed, 16 E2E passed
+Test suite status: 143 unit passed, 16 E2E passed
 
 ---
 
@@ -631,3 +631,15 @@ Format for each entry:
 - pnpm-lock.yaml (updated workspace links)
 **Test results**: 134 passed (vitest), 16 passed (Playwright E2E)
 **Review**: Dev command implements B-CLI-004 (full stack start: config → DB connect → bootstrap → API server → auth routes → HTTP handler). B-CLI-005 banner prints all URLs (Admin UI, GraphQL, GraphiQL, default login). B-CLI-006 handles DB connection failure with clear message. B-CLI-007 handles missing config file with init suggestion. Auth routes (login/logout/refresh) mounted before auth middleware. GraphiQL enabled in dev mode. Graceful shutdown on SIGINT/SIGTERM. Port 0 for test isolation. All imports verified against package exports. No circular deps. Lint, typecheck, build all pass. No regressions.
+
+### 2026-03-08 — T-043: CLI generate + migrate commands
+**Status**: DONE
+**Commit**: PENDING
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/cli/src/commands/generate.ts (runGenerate: loads config, connects via postgresProvider, delegates to provider.generate())
+- packages/cli/src/commands/migrate.ts (runMigrate: loads config, connects via postgresProvider, delegates to provider.migrate())
+- packages/cli/src/cli.ts (wired generate and migrate commands into switch)
+- packages/cli/tests/generate.test.ts (9 integration tests)
+**Test results**: 143 passed (vitest), 0 failed
+**Review**: Generate command implements B-CLI-010 (schema generation from DB, delegates to DatabaseProvider.generate()). Migrate command implements B-CLI-011 (migration plan+apply, delegates to DatabaseProvider.migrate()). Both commands follow the same pattern as dev.ts: load config → connect DB → delegate → clean up pool. Error handling for missing config (CLI_002) and DB connection failure (CLI_003) matches spec. Supports --output-dir/--schema-dir/--schema/--allow-destructive flags. Provider methods are currently stubs (generate is a no-op, migrate delegates to bootstrap) — full schema-flow integration deferred to when @mabulu-inc/schema-flow is available. No circular deps. Typecheck clean. All tests pass with zero regressions.
