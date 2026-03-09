@@ -19,3 +19,10 @@ export {
   getAccessibleColumns,
   getEffectivePermissions,
 } from './rbac/engine.js';
+export type { PermissionOverride } from './rbac/overrides.js';
+export {
+  saveOverride,
+  removeOverride,
+  listOverrides,
+  mergeOverrides,
+} from './rbac/overrides.js';

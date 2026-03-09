@@ -1,0 +1,41 @@
+table: simplicity_permission_overrides
+comment: "UI-defined permission overrides — can only DENY, never exceed code ceiling"
+
+use: [timestamps]
+
+columns:
+  - name: id
+    type: uuid
+    primary_key: true
+    default: gen_random_uuid()
+
+  - name: role
+    type: text
+
+  - name: table_name
+    type: text
+
+  - name: column_name
+    type: text
+    nullable: true
+
+  - name: operation
+    type: text
+
+  - name: denied
+    type: boolean
+    default: "true"
+
+  - name: created_by
+    type: text
+
+indexes:
+  - name: idx_perm_overrides_role
+    columns: [role]
+  - name: idx_perm_overrides_unique
+    columns: [role, table_name, column_name, operation]
+    unique: true
+
+grants:
+  - to: app_admin
+    privileges: [SELECT, INSERT, UPDATE, DELETE]
