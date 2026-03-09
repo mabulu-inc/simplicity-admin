@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-057
-Next eligible task: T-058
+Last completed task: T-058
+Next eligible task: T-059
 Blockers: none
-Test suite status: 558 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 568 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -833,4 +833,19 @@ Format for each entry:
 - packages/db/schema/tables/simplicity_notifications.yaml (system table for notifications)
 **Test results**: 558 passed, 5 skipped (DB integration), 0 failed
 **Review**: Notification module follows core package conventions — types in types.ts, logic separated into rules.ts and engine.ts. All types match spec exactly. evaluateCondition supports =, !=, >, <, >=, <= operators. Template interpolation handles missing fields with empty string per spec. NotificationEngine.processEvent fetches enabled rules, matches by trigger type/table/condition, resolves recipients (users/roles/field), and creates notifications. field.changed trigger correctly compares old/new values. System table YAML follows existing schema-flow format with proper foreign keys, indexes, checks, and grants. No circular dependencies. All 23 notification tests pass. Lint, typecheck, build all clean.
+**Notes**: —
+
+### 2026-03-08 — T-058: Notification delivery (in-app + email)
+**Status**: DONE
+**Commit**: 09f3bba
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/core/src/notifications/email/types.ts (SmtpConfig interface, EmailProvider re-export)
+- packages/core/src/notifications/email/provider.ts (SmtpEmailProvider — SMTP via nodemailer, lazy import)
+- packages/core/tests/notifications/delivery.test.ts (10 tests: in-app store+retrieve, getUnread, markRead, markAllRead, email dispatch)
+- packages/core/src/index.ts (added SmtpConfig, SmtpEmailProvider exports)
+- packages/core/package.json (added @types/nodemailer dev dependency)
+- packages/ui/src/routes/(app)/settings/permissions/+page.server.ts (fixed pre-existing unused import lint)
+**Test results**: 568 passed, 5 skipped (DB integration), 0 failed
+**Review**: Email provider follows ADR-006 provider pattern — SmtpEmailProvider implements the core EmailProvider interface and is swappable. Nodemailer is lazily imported so consumers not using email don't need it. All delivery tests verify in-app storage+retrieval round-trip, markRead/markAllRead state transitions, email dispatch via provider, and email-skip when provider absent or channel is in_app. No circular dependencies. Module boundaries respected.
 **Notes**: —
