@@ -1,5 +1,6 @@
 import { createPool, bootstrap } from '@simplicity-admin/db';
 import { defineConfig } from '@simplicity-admin/core';
+import bcrypt from 'bcrypt';
 
 const TEST_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
 
@@ -43,5 +44,57 @@ async function seedTestData(pool: ReturnType<typeof createPool>) {
 			('Jack', 'Anderson', 'jack@example.com')
 		) AS t(first_name, last_name, email)
 		WHERE NOT EXISTS (SELECT 1 FROM public.contacts LIMIT 1);
+	`);
+
+	// Grant public schema usage to roles
+	await pool.query(`GRANT USAGE ON SCHEMA public TO app_viewer, app_editor, app_admin`);
+
+	// Grant app_admin full access on contacts
+	await pool.query(`GRANT SELECT, INSERT, UPDATE, DELETE ON public.contacts TO app_admin`);
+
+	// Grant app_viewer SELECT on specific columns only (no created_at)
+	await pool.query(`GRANT SELECT (id, first_name, last_name, email) ON public.contacts TO app_viewer`);
+
+	// Grant app_editor SELECT on all columns, INSERT/UPDATE on data columns (not created_at)
+	await pool.query(`GRANT SELECT ON public.contacts TO app_editor`);
+	await pool.query(`GRANT INSERT (first_name, last_name, email) ON public.contacts TO app_editor`);
+	await pool.query(`GRANT UPDATE (first_name, last_name, email) ON public.contacts TO app_editor`);
+
+	// Create test viewer and editor users (idempotent)
+	const passwordHash = await bcrypt.hash('changeme', 12);
+
+	await pool.query(`
+		INSERT INTO "simplicity_admin".users (email, password_hash, super_admin)
+		VALUES ('viewer@localhost', $1, false)
+		ON CONFLICT (email) DO NOTHING;
+	`, [passwordHash]);
+
+	await pool.query(`
+		INSERT INTO "simplicity_admin".users (email, password_hash, super_admin)
+		VALUES ('editor@localhost', $1, false)
+		ON CONFLICT (email) DO NOTHING;
+	`, [passwordHash]);
+
+	// Create memberships for viewer and editor (linked to default tenant)
+	await pool.query(`
+		INSERT INTO "simplicity_admin".memberships (user_id, tenant_id, role)
+		SELECT u.id, t.id, 'app_viewer'
+		FROM "simplicity_admin".users u, "simplicity_admin".tenants t
+		WHERE u.email = 'viewer@localhost' AND t.slug = 'default'
+		AND NOT EXISTS (
+			SELECT 1 FROM "simplicity_admin".memberships m
+			WHERE m.user_id = u.id AND m.tenant_id = t.id AND m.role = 'app_viewer'
+		);
+	`);
+
+	await pool.query(`
+		INSERT INTO "simplicity_admin".memberships (user_id, tenant_id, role)
+		SELECT u.id, t.id, 'app_editor'
+		FROM "simplicity_admin".users u, "simplicity_admin".tenants t
+		WHERE u.email = 'editor@localhost' AND t.slug = 'default'
+		AND NOT EXISTS (
+			SELECT 1 FROM "simplicity_admin".memberships m
+			WHERE m.user_id = u.id AND m.tenant_id = t.id AND m.role = 'app_editor'
+		);
 	`);
 }

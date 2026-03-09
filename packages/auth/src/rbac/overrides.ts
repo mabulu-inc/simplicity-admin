@@ -16,6 +16,13 @@ export interface PermissionOverride {
 /** Input type for creating an override (id and createdAt are auto-generated) */
 type NewOverride = Omit<PermissionOverride, 'id' | 'createdAt'>;
 
+/** Default system schema where permission overrides table lives */
+const DEFAULT_SYSTEM_SCHEMA = 'simplicity_admin';
+
+function overridesTable(systemSchema = DEFAULT_SYSTEM_SCHEMA): string {
+  return `"${systemSchema}"."simplicity_permission_overrides"`;
+}
+
 /**
  * Save a UI-defined permission override.
  * Only deny overrides are allowed — attempting to grant (denied: false)
@@ -24,6 +31,7 @@ type NewOverride = Omit<PermissionOverride, 'id' | 'createdAt'>;
 export async function saveOverride(
   pool: ConnectionPool,
   override: NewOverride,
+  systemSchema?: string,
 ): Promise<PermissionOverride> {
   // UI overrides can only DENY, never GRANT
   if (!override.denied) {
@@ -43,7 +51,7 @@ export async function saveOverride(
     created_by: string;
     created_at: Date;
   }>(
-    `INSERT INTO simplicity_permission_overrides
+    `INSERT INTO ${overridesTable(systemSchema)}
        (role, table_name, column_name, operation, denied, created_by)
      VALUES ($1, $2, $3, $4, $5, $6)
      RETURNING id, role, table_name, column_name, operation, denied, created_by, created_at`,
@@ -68,9 +76,10 @@ export async function saveOverride(
 export async function removeOverride(
   pool: ConnectionPool,
   overrideId: string,
+  systemSchema?: string,
 ): Promise<void> {
   await pool.query(
-    'DELETE FROM simplicity_permission_overrides WHERE id = $1',
+    `DELETE FROM ${overridesTable(systemSchema)} WHERE id = $1`,
     [overrideId],
   );
 }
@@ -81,6 +90,7 @@ export async function removeOverride(
 export async function listOverrides(
   pool: ConnectionPool,
   role: string,
+  systemSchema?: string,
 ): Promise<PermissionOverride[]> {
   const result = await pool.query<{
     id: string;
@@ -93,7 +103,7 @@ export async function listOverrides(
     created_at: Date;
   }>(
     `SELECT id, role, table_name, column_name, operation, denied, created_by, created_at
-     FROM simplicity_permission_overrides
+     FROM ${overridesTable(systemSchema)}
      WHERE role = $1
      ORDER BY table_name, column_name, operation`,
     [role],

@@ -96,8 +96,10 @@
 	<AutoForm
 		columns={data.table.columns}
 		values={data.record}
-		onSubmit={handleSubmit}
-		onDelete={handleDeleteClick}
+		readOnlyColumns={data.readOnlyColumns}
+		hiddenColumns={data.hiddenColumns}
+		onSubmit={data.canUpdate ? handleSubmit : undefined}
+		onDelete={data.canDelete ? handleDeleteClick : undefined}
 	/>
 
 	{#if showDeleteConfirm}

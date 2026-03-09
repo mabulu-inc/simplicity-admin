@@ -1,8 +1,9 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
+import { getTableRbacInfo } from '$lib/server/rbac.js';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, locals }) => {
 	const tableName = params.table;
 	const recordId = params.id;
 	const meta = await getSchemaMeta();
@@ -18,7 +19,16 @@ export const load: PageServerLoad = async ({ params }) => {
 	}
 
 	const pool = getPool();
-	const columnNames = table.columns.map((c) => `"${c.name}"`).join(', ');
+
+	// Get RBAC info for the current user's active role
+	const role = locals.user?.activeRole;
+	const rbac = role
+		? await getTableRbacInfo(pool, role, table, SCHEMA)
+		: null;
+
+	// Use RBAC-filtered columns if available, otherwise fall back to all columns
+	const columns = rbac ? rbac.visibleColumns : table.columns;
+	const columnNames = columns.map((c) => `"${c.name}"`).join(', ');
 	const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
 
 	const result = await pool.query(
@@ -31,8 +41,15 @@ export const load: PageServerLoad = async ({ params }) => {
 	}
 
 	return {
-		table,
+		table: {
+			...table,
+			columns,
+		},
 		record: result.rows[0] as Record<string, unknown>,
+		readOnlyColumns: rbac?.readOnlyColumns ?? [],
+		hiddenColumns: rbac?.hiddenColumns ?? [],
+		canUpdate: rbac?.canUpdate ?? true,
+		canDelete: rbac?.canDelete ?? true,
 	};
 };
 

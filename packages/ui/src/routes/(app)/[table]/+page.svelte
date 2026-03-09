@@ -43,9 +43,11 @@
 <div data-testid="list-view">
 	<div class="list-view-header">
 		<h1 data-testid="list-view-title">{humanize(data.table.name)}</h1>
-		<a href="/{data.table.name}/new" class="btn btn-primary" data-testid="create-button">
-			Create
-		</a>
+		{#if data.canInsert}
+			<a href="/{data.table.name}/new" class="btn btn-primary" data-testid="create-button">
+				Create
+			</a>
+		{/if}
 	</div>
 
 	{#if data.totalCount === 0 && data.rows.length === 0}

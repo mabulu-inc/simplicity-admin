@@ -1,8 +1,9 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
+import { getTableRbacInfo } from '$lib/server/rbac.js';
 
-export const load: PageServerLoad = async ({ params, url }) => {
+export const load: PageServerLoad = async ({ params, url, locals }) => {
 	const tableName = params.table;
 	const meta = await getSchemaMeta();
 	const table = getTableMeta(meta, tableName);
@@ -16,15 +17,25 @@ export const load: PageServerLoad = async ({ params, url }) => {
 	const sortColumn = url.searchParams.get('sort') ?? undefined;
 	const sortDirection = (url.searchParams.get('dir') === 'desc' ? 'desc' : 'asc') as 'asc' | 'desc';
 
-	const sort = sortColumn && table.columns.some((c) => c.name === sortColumn)
+	const pool = getPool();
+
+	// Get RBAC info for the current user's active role
+	const role = locals.user?.activeRole;
+	const rbac = role
+		? await getTableRbacInfo(pool, role, table, SCHEMA)
+		: null;
+
+	// Use RBAC-filtered columns if available, otherwise fall back to all columns
+	const columns = rbac ? rbac.visibleColumns : table.columns;
+
+	const sort = sortColumn && columns.some((c) => c.name === sortColumn)
 		? { column: sortColumn, direction: sortDirection }
 		: undefined;
 
 	const offset = (page - 1) * pageSize;
-	const pool = getPool();
 
-	// Build column list for SELECT (use all columns)
-	const columnNames = table.columns.map((c) => `"${c.name}"`).join(', ');
+	// Build column list for SELECT (only accessible columns)
+	const columnNames = columns.map((c) => `"${c.name}"`).join(', ');
 
 	// Build ORDER BY clause
 	let orderBy = '';
@@ -48,11 +59,16 @@ export const load: PageServerLoad = async ({ params, url }) => {
 	const totalCount = parseInt(countResult.rows[0]?.count ?? '0', 10);
 
 	return {
-		table,
+		table: {
+			...table,
+			columns,
+		},
 		rows: dataResult.rows as Record<string, unknown>[],
 		totalCount,
 		page,
 		pageSize,
 		sort,
+		canInsert: rbac?.canInsert ?? true,
+		canDelete: rbac?.canDelete ?? true,
 	};
 };
