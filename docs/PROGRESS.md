@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-046
-Next eligible task: T-047
+Last completed task: T-047
+Next eligible task: T-048
 Blockers: none
-Test suite status: 475 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 485 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -677,4 +677,17 @@ Format for each entry:
 - packages/auth/tests/rbac/engine.test.ts (13 unit tests + 5 integration tests)
 **Test results**: 475 passed, 5 skipped (DB integration), 0 failed
 **Review**: Engine implements all four functions per rbac.md spec. Pure functions (canAccess, canAccessColumn, getAccessibleColumns) operate on EffectivePermissions data structure — no DB dependency. getEffectivePermissions reads from information_schema.role_table_grants and role_column_grants, builds TablePermission with column-level detail, and handles both table-level and column-level PostgreSQL grants. For table-level grants, populates all columns from information_schema.columns. Schema filter supported. 13 unit tests cover all spec behaviors (B-RBAC-001 through B-RBAC-004). 5 integration tests verify DB reads (skipped without DB). All exported from @simplicity-admin/auth. Lint, typecheck, build pass. No regressions.
+**Notes**: —
+
+### 2026-03-08 — T-047: RBAC UI overrides
+**Status**: DONE
+**Commit**: c0019b1
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/auth/src/rbac/overrides.ts (saveOverride, removeOverride, listOverrides, mergeOverrides)
+- packages/auth/tests/rbac/overrides.test.ts (10 unit tests)
+- packages/auth/src/index.ts (re-export overrides functions + PermissionOverride type)
+- packages/db/schema/tables/permission_overrides.yaml (system table for UI overrides)
+**Test results**: 485 passed, 5 skipped (DB integration), 0 failed
+**Review**: Implementation follows spec B-RBAC-005 through B-RBAC-009. Deny-only constraint enforced — saveOverride() rejects denied:false with RBAC_003. mergeOverrides() is a pure function that removes denied operations from code permissions without mutation. System table YAML defines simplicity_permission_overrides with unique index on (role, table_name, column_name, operation). Only app_admin has CRUD access to the overrides table. No circular dependencies introduced.
 **Notes**: —
