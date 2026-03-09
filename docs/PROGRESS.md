@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-062
-Next eligible task: T-063
+Last completed task: T-063
+Next eligible task: T-064
 Blockers: none
-Test suite status: 601 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 615 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -902,4 +902,16 @@ Format for each entry:
 - packages/core/tests/workflow/guards.test.ts (23 tests)
 **Test results**: 601 passed, 5 skipped (DB integration), 0 failed
 **Review**: Guards module handles both TransitionGuard string conditions (SQL-like: "value > 1000") and structured AutomationCondition objects (all 8 operators: eq, neq, gt, lt, gte, lte, in, contains). Safe evaluation — no raw SQL execution, parameterized parsing. Missing/null fields return false gracefully per spec. Exported as evaluateWorkflowCondition/evaluateWorkflowConditions from core index to avoid name collision with notifications module's evaluateCondition. No circular dependencies. Aligns with ARCHITECTURE.md provider pattern.
+**Notes**: —
+
+### 2026-03-08 — T-063: Workflow action executors
+**Status**: DONE
+**Commit**: b7fce41
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/core/src/workflow/actions.ts (executeHook, executeAction — notification, webhook, update_field, create_record)
+- packages/core/src/index.ts (re-export action executor types and functions)
+- packages/core/tests/workflow/actions.test.ts (14 tests)
+**Test results**: 615 passed, 5 skipped (DB integration), 0 failed
+**Review**: Actions module provides two entry points: executeHook() for TransitionHook types (notification, webhook, update_field) and executeAction() for AutomationAction types (send_email, call_webhook, update_record, create_record). All executors are non-blocking per spec B-WF-005 — errors are caught and returned as `{ success: false, error: '...' }` instead of thrown. Template interpolation uses the existing interpolateTemplate() from notifications/rules.ts. SQL identifiers are validated with a whitelist regex to prevent injection. Webhook calls use fetch(). Notification hooks delegate to NotificationEngine.send(). No circular dependencies. Aligns with ARCHITECTURE.md provider pattern.
 **Notes**: —
