@@ -862,9 +862,53 @@ PostgreSQL                                            │    │
 Browser (rendered list view)
 ```
 
-## 13. Testing Architecture
+## 13. Security Architecture
 
-### 13a. Test Tiers
+### 13a. Authentication Security
+
+- **JWT secrets**: Must be at least 32 characters in production; the application refuses to start with the default `'development-secret'` when `NODE_ENV=production`
+- **Password hashing**: bcrypt with cost factor 12; timing-safe login prevents user enumeration
+- **Token lifecycle**: 15-minute access tokens, 7-day refresh tokens with single-use rotation
+- **Token revocation**: Database-backed (SHA-256 hashed) revocation store survives restarts and works across instances
+
+### 13b. Authorization Enforcement
+
+RBAC is enforced at **three independent layers** — all must agree:
+
+1. **PostgreSQL grants + RLS**: Database-level enforcement via `SET LOCAL role` and row-level security policies
+2. **Server-side action guards**: Every SvelteKit form action (create, update, delete, transition) checks RBAC permissions before executing. UI button visibility is a convenience, not a security boundary.
+3. **UI permission layer**: Hides inaccessible elements; can further restrict (never expand) code-defined permissions
+
+### 13c. Input Validation
+
+- **SQL identifiers**: All table/column names interpolated into SQL use `escapeIdentifier()` from `@simplicity-admin/db`
+- **SQL values**: All values use parameterized queries (`$1`, `$2`) — never interpolated
+- **Request bodies**: Size-limited (default 1 MB) to prevent memory exhaustion
+- **Error responses**: Database errors are sanitized before returning to clients; no internal schema details leaked
+
+### 13d. API Protection
+
+- **Rate limiting**: Auth endpoints (login, refresh) are rate-limited per IP (configurable)
+- **GraphQL depth limiting**: Queries exceeding configurable max depth (default: 10) are rejected
+- **GraphiQL**: Disabled by default; explicitly enabled by the CLI `dev` command for development
+
+### 13e. Security Headers
+
+All responses include: `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`. HSTS is added in production.
+
+### 13f. Production Deployment Checklist
+
+1. Set `SIMPLICITY_ADMIN_AUTH_SECRET` to a cryptographically random string (≥32 chars)
+2. Set `NODE_ENV=production`
+3. Change the default admin password (`admin@localhost` / `changeme`)
+4. Use strong, unique database credentials (not the compose.yaml defaults)
+5. Ensure `graphiql` is not explicitly set to `true`
+6. Run behind a reverse proxy with TLS termination
+7. Restrict PostgreSQL port access to application hosts only
+
+## 14. Testing Architecture
+
+### 14a. Test Tiers
 
 | Tier | Location | Requires | Runner |
 |------|----------|----------|--------|
@@ -872,7 +916,7 @@ Browser (rendered list view)
 | Integration | `tests/integration/*.test.ts` | Real Postgres (Docker) | Vitest |
 | E2E | `tests/e2e/*.spec.ts` | Full running stack | Playwright |
 
-### 13b. Test Database
+### 14b. Test Database
 
 `compose.yaml` provides a PostgreSQL container for development and testing:
 
@@ -890,7 +934,7 @@ services:
 
 Test connection: `postgres://admin:admin@localhost:5432/project_dev`
 
-### 13c. Test Utilities
+### 14c. Test Utilities
 
 `@simplicity-admin/core` exports test utilities:
 
@@ -898,7 +942,7 @@ Test connection: `postgres://admin:admin@localhost:5432/project_dev`
 import { createTestPool, seedTestData, cleanupTestData } from '@simplicity-admin/core/testing';
 ```
 
-### 13d. TDD Workflow
+### 14d. TDD Workflow
 
 Every feature follows red/green TDD:
 1. Write a failing test that describes the expected behavior

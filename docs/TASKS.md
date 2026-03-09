@@ -1145,6 +1145,210 @@ If a task cannot be completed:
 
 ---
 
+## M5: Security Hardening
+
+### T-069: Server-side RBAC enforcement on mutations
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-002)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - Updated `packages/ui/src/routes/(app)/[table]/[id]/+page.server.ts` — RBAC checks in `update`, `delete`, `transition` actions
+  - Updated `packages/ui/src/routes/(app)/[table]/new/+page.server.ts` — RBAC check in `default` action
+- **Tests**: `packages/ui/tests/security/rbac-mutations.test.ts`
+  - POST to update action without permission returns 403
+  - POST to delete action without permission returns 403
+  - POST to create action without permission returns 403
+  - POST to update action with read-only column is rejected
+  - Unauthenticated POST returns 401
+- **AC**: All mutation endpoints enforce RBAC server-side, not just via UI
+
+### T-070: JWT secret validation and production guard
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-001)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - Updated `packages/auth/src/providers/jwt.ts` — reject weak secrets in production
+  - Updated `packages/core/src/config/schema.ts` — min length on auth.secret
+  - Updated `packages/core/src/config/defaults.ts` — `graphiql: false` (B-SEC-008)
+- **Tests**: `packages/auth/tests/jwt-secret-validation.test.ts`
+  - Throws ConfigError when secret is 'development-secret' and NODE_ENV=production
+  - Throws ConfigError when secret is shorter than 32 chars in production
+  - Allows default secret in development (with warning)
+  - GraphiQL defaults to false
+- **AC**: Application refuses to start with weak secrets in production
+
+### T-071: SQL identifier escaping utility
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-003)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - `packages/db/src/escape.ts` — `escapeIdentifier()` utility
+  - Updated `packages/db/src/bootstrap.ts` — uses shared utility
+  - Updated `packages/ui/src/routes/(app)/[table]/+page.server.ts` — uses shared utility
+  - Updated `packages/ui/src/routes/(app)/[table]/[id]/+page.server.ts` — uses shared utility
+  - Updated `packages/ui/src/routes/(app)/[table]/new/+page.server.ts` — uses shared utility
+- **Tests**: `packages/db/tests/escape.test.ts`
+  - Escapes names containing double quotes
+  - Escapes SQL reserved words
+  - Handles unicode identifiers
+  - Handles empty string edge case
+- **AC**: All SQL identifier interpolation uses the shared utility
+
+### T-072: Rate limiting on auth endpoints
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-004)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - `packages/auth/src/rate-limit.ts` — in-memory rate limiter
+  - Updated `packages/auth/src/routes/login.ts` — rate limiting applied
+  - Updated `packages/auth/src/routes/refresh.ts` — rate limiting applied
+- **Tests**: `packages/auth/tests/rate-limit.test.ts`
+  - Allows requests under the limit
+  - Returns 429 after exceeding limit
+  - Resets after window expires
+  - Returns Retry-After header
+- **AC**: Auth endpoints are rate-limited with configurable thresholds
+
+### T-073: Request body size limiting
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-005)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - Updated `packages/auth/src/routes/helpers.ts` — body size limit in `parseBody()`
+- **Tests**: `packages/auth/tests/body-limit.test.ts`
+  - Accepts bodies under 1 MB
+  - Rejects bodies over 1 MB with 413 status
+  - Configurable limit works
+- **AC**: Auth endpoints reject oversized request bodies
+
+### T-074: Error message sanitization
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-006)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - `packages/db/src/sanitize-error.ts` — `sanitizeDbError()` utility
+  - Updated `packages/ui/src/routes/(app)/[table]/[id]/+page.server.ts` — sanitized errors
+  - Updated `packages/ui/src/routes/(app)/[table]/new/+page.server.ts` — sanitized errors
+- **Tests**: `packages/db/tests/sanitize-error.test.ts`
+  - Unique violation returns user-friendly message
+  - FK violation returns user-friendly message
+  - Unknown errors return generic message
+  - Original error is not exposed to client
+- **AC**: No raw database error messages are returned to the client
+
+### T-075: Timing-safe login
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-009)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - Updated `packages/auth/src/routes/login.ts` — dummy bcrypt on user-not-found
+  - Updated `packages/ui/src/routes/api/auth/login/+server.ts` — dummy bcrypt on user-not-found
+- **Tests**: `packages/auth/tests/timing-safe-login.test.ts`
+  - Login with non-existent user takes similar time to wrong-password login
+  - Both cases return identical 401 response
+- **AC**: Login endpoint does not leak user existence via timing
+
+### T-076: Token revocation persistence
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-007)
+- **Story**: —
+- **Depends**: T-071
+- **Produces**:
+  - Updated `packages/db/src/bootstrap.ts` — `revoked_tokens` table in system schema
+  - Updated `packages/auth/src/routes/helpers.ts` — DB-backed revocation
+  - `packages/auth/src/revocation.ts` — revocation store with SHA-256 hashing
+- **Tests**: `packages/auth/tests/revocation.test.ts`
+  - Revoked token is rejected after restart (DB-backed)
+  - Token hash is stored, not raw token
+  - Expired entries are cleaned up
+- **AC**: Token revocation survives server restarts
+
+### T-077: Refresh token rotation
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-010)
+- **Story**: —
+- **Depends**: T-076
+- **Produces**:
+  - Updated `packages/auth/src/routes/refresh.ts` — revoke old token on refresh
+  - Updated `packages/auth/src/providers/jwt.ts` — support for user-level revocation
+- **Tests**: `packages/auth/tests/token-rotation.test.ts`
+  - Old refresh token is invalid after refresh
+  - Reuse of revoked refresh token revokes all user tokens
+- **AC**: Refresh tokens are single-use; reuse triggers security response
+
+### T-078: Security headers
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-011)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - Updated `packages/ui/src/hooks.server.ts` — security headers in response
+- **Tests**: `packages/ui/tests/security/headers.test.ts`
+  - Response includes X-Content-Type-Options: nosniff
+  - Response includes X-Frame-Options: DENY
+  - Response includes Referrer-Policy header
+  - HSTS header present when NODE_ENV=production
+- **AC**: All responses include standard security headers
+
+### T-079: GraphQL depth limiting
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-012)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - Updated `packages/api/src/graphql/preset.ts` — depth limiting plugin
+  - Updated `packages/core/src/config/types.ts` — `api.maxQueryDepth` option
+- **Tests**: `packages/api/tests/depth-limit.test.ts`
+  - Query within depth limit succeeds
+  - Query exceeding depth limit is rejected with error
+  - Default depth limit is 10
+- **AC**: Deeply nested GraphQL queries are rejected
+
+### T-080: `begin_session` role validation
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md (B-SEC-013)
+- **Story**: —
+- **Depends**: T-068
+- **Produces**:
+  - Updated `packages/db/src/bootstrap.ts` — role whitelist in `begin_session` function
+- **Tests**: `packages/db/tests/begin-session-validation.test.ts`
+  - Known roles (anon, app_viewer, app_editor, app_admin) are accepted
+  - Unknown roles raise an exception
+  - EXECUTE grant is restricted to authenticator only
+- **AC**: `begin_session` cannot be used for privilege escalation
+
+### T-081: M5 security integration test
+- **Status**: TODO
+- **Milestone**: M5
+- **Spec**: docs/specs/security.md
+- **Story**: —
+- **Depends**: T-069, T-070, T-071, T-072, T-073, T-074, T-075, T-076, T-077, T-078, T-079, T-080
+- **Produces**:
+  - `tests/e2e/m5-security.spec.ts`
+- **Tests**: Full security journey — login with weak secret fails in prod mode → login rate limiting triggers → RBAC blocks unauthorized mutation → error messages are sanitized → security headers present → GraphQL depth limit enforced
+- **AC**: All security hardening measures work together end-to-end
+
+---
+
 ## Summary
 
 | Milestone | Tasks | Range |
@@ -1153,4 +1357,5 @@ If a task cannot be completed:
 | M2: Access Control | 8 | T-045 — T-052 |
 | M3: Intelligence | 8 | T-053 — T-060 |
 | M4: Automation | 8 | T-061 — T-068 |
-| **Total** | **68** | |
+| M5: Security Hardening | 13 | T-069 — T-081 |
+| **Total** | **81** | |

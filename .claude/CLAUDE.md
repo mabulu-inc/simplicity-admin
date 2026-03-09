@@ -66,6 +66,7 @@ The review should be documented in PROGRESS.md under the task entry with a brief
 - Super-admins (`super_admin: true` on user record) bypass tenant membership and can enter global mode for cross-tenant access
 - Users may hold multiple roles; the active role is switchable at runtime and drives all RBAC/UI behavior
 - RBAC permissions are defined code-first (schema-flow YAML), UI can further restrict but never exceed code-defined ceiling
+- RBAC must be enforced server-side on every mutation (create/update/delete), not just in UI rendering — see `docs/specs/security.md` B-SEC-002
 - PostGraphile V5 is the default GraphQL provider (swappable)
 - schema-flow handles all DDL and migration
 
@@ -73,7 +74,7 @@ The review should be documented in PROGRESS.md under the task entry with a brief
 
 - `docs/PRD.md` — Vision, requirements, user stories (US-NNN), acceptance criteria (AC-NNNx)
 - `docs/ARCHITECTURE.md` — System design, module boundaries, data flow
-- `docs/specs/*.md` — Per-module specifications with exact TypeScript interfaces (including `views.md` for the view layer)
+- `docs/specs/*.md` — Per-module specifications with exact TypeScript interfaces (including `views.md` for the view layer, `security.md` for hardening)
 - `docs/decisions/*.md` — Architecture Decision Records (ADRs)
 - `docs/TASKS.md` — Ordered task list with dependencies
 - `docs/PROGRESS.md` — Append-only progress log (read this first every iteration)
