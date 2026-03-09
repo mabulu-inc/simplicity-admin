@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-061
-Next eligible task: T-062
+Last completed task: T-062
+Next eligible task: T-063
 Blockers: none
-Test suite status: 578 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 601 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -891,3 +891,15 @@ Format for each entry:
 **Test results**: 578 passed, 5 skipped (DB integration), 0 failed
 **Review**: Types match workflow.md spec exactly. Imports NotificationTemplate and RecipientConfig from notifications module (no duplication). All 16 types exported from core index. No circular dependencies. Provider pattern respected — types are interface-only, no implementation coupling.
 **Notes**: First task of M4 (Automation milestone).
+
+### 2026-03-08 — T-062: Workflow guard evaluation
+**Status**: DONE
+**Commit**: 99ba255
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/core/src/workflow/guards.ts (evaluateGuard, evaluateCondition, evaluateConditions)
+- packages/core/src/index.ts (re-export guard functions)
+- packages/core/tests/workflow/guards.test.ts (23 tests)
+**Test results**: 601 passed, 5 skipped (DB integration), 0 failed
+**Review**: Guards module handles both TransitionGuard string conditions (SQL-like: "value > 1000") and structured AutomationCondition objects (all 8 operators: eq, neq, gt, lt, gte, lte, in, contains). Safe evaluation — no raw SQL execution, parameterized parsing. Missing/null fields return false gracefully per spec. Exported as evaluateWorkflowCondition/evaluateWorkflowConditions from core index to avoid name collision with notifications module's evaluateCondition. No circular dependencies. Aligns with ARCHITECTURE.md provider pattern.
+**Notes**: —
