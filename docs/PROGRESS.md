@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-063
-Next eligible task: T-064
+Last completed task: T-064
+Next eligible task: T-065
 Blockers: none
-Test suite status: 615 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 628 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -914,4 +914,20 @@ Format for each entry:
 - packages/core/tests/workflow/actions.test.ts (14 tests)
 **Test results**: 615 passed, 5 skipped (DB integration), 0 failed
 **Review**: Actions module provides two entry points: executeHook() for TransitionHook types (notification, webhook, update_field) and executeAction() for AutomationAction types (send_email, call_webhook, update_record, create_record). All executors are non-blocking per spec B-WF-005 — errors are caught and returned as `{ success: false, error: '...' }` instead of thrown. Template interpolation uses the existing interpolateTemplate() from notifications/rules.ts. SQL identifiers are validated with a whitelist regex to prevent injection. Webhook calls use fetch(). Notification hooks delegate to NotificationEngine.send(). No circular dependencies. Aligns with ARCHITECTURE.md provider pattern.
+**Notes**: —
+
+### 2026-03-08 — T-064: Workflow engine — state machines
+**Status**: DONE
+**Commit**: be14bcf
+**Duration**: ~10 min
+**Files created/modified**:
+- packages/core/src/workflow/engine.ts (WorkflowEngine class — registerStateMachine, transition, getAvailableTransitions, getTransitionHistory)
+- packages/core/src/workflow/management.ts (CRUD: createStateMachine, updateStateMachine, deleteStateMachine, getStateMachine, listStateMachines, createAutomation, updateAutomation, deleteAutomation, listAutomations)
+- packages/core/src/errors.ts (added WorkflowError class)
+- packages/core/src/index.ts (re-export WorkflowEngine, management functions, WorkflowError)
+- packages/core/tests/workflow/engine.test.ts (13 tests)
+- packages/db/schema/tables/simplicity_state_machines.yaml (system table for state machine definitions)
+- packages/db/schema/tables/simplicity_transition_log.yaml (audit log for state transitions)
+**Test results**: 628 passed, 5 skipped (DB integration), 0 failed
+**Review**: WorkflowEngine implements state machine transitions per specs B-WF-001 through B-WF-008. transition() validates: state machine exists, record found, valid transition path, role authorization, guard condition evaluation (delegates to evaluateGuard from guards.ts), then updates state, creates audit log entry, and executes hooks (non-blocking per B-WF-005). getAvailableTransitions() filters by current state, role, and isFinal flag. getTransitionHistory() returns chronological log from simplicity_transition_log table. Management module provides full CRUD for state machines and automations with JSON serialization for states/transitions/conditions. System tables use UUID primary keys, JSONB for complex data, and proper indexes. No circular dependencies. Respects module boundaries per ARCHITECTURE.md.
 **Notes**: —
