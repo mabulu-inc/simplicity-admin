@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-064
-Next eligible task: T-065
+Last completed task: T-065
+Next eligible task: T-066
 Blockers: none
-Test suite status: 628 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 640 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -930,4 +930,15 @@ Format for each entry:
 - packages/db/schema/tables/simplicity_transition_log.yaml (audit log for state transitions)
 **Test results**: 628 passed, 5 skipped (DB integration), 0 failed
 **Review**: WorkflowEngine implements state machine transitions per specs B-WF-001 through B-WF-008. transition() validates: state machine exists, record found, valid transition path, role authorization, guard condition evaluation (delegates to evaluateGuard from guards.ts), then updates state, creates audit log entry, and executes hooks (non-blocking per B-WF-005). getAvailableTransitions() filters by current state, role, and isFinal flag. getTransitionHistory() returns chronological log from simplicity_transition_log table. Management module provides full CRUD for state machines and automations with JSON serialization for states/transitions/conditions. System tables use UUID primary keys, JSONB for complex data, and proper indexes. No circular dependencies. Respects module boundaries per ARCHITECTURE.md.
+**Notes**: —
+
+### 2026-03-08 — T-065: Workflow engine — event automations
+**Status**: DONE
+**Commit**: 7ac03ec
+**Duration**: ~8 min
+**Files created/modified**:
+- packages/core/src/workflow/engine.ts (added registerAutomation, processEvent, logAutomationExecution — event automation engine with condition evaluation, action execution, loop detection, execution logging)
+- packages/core/tests/workflow/automations.test.ts (12 tests: onCreate fires, condition match/no-match, disabled skip, create_record action, execution log, loop detection at depth 10, table mismatch, event type mismatch, multiple automations, onFieldChange trigger + field filtering)
+**Test results**: 640 passed, 5 skipped (DB integration), 0 failed
+**Review**: processEvent() maps DataEvent.type to AutomationTrigger.event via lookup table (record.created→onCreate, etc.). Filters automations by event type, table, and field (for onFieldChange). Evaluates conditions via evaluateConditions() from guards.ts. Executes actions via executeAction() from actions.ts. Loop detection enforced via depth parameter with MAX_AUTOMATION_DEPTH=10 (WF_004). Execution log entries written to simplicity_automation_log with automation ID, name, status, duration, and errors (B-WF-016). Logging failures are non-blocking. No circular dependencies. Aligns with ARCHITECTURE.md provider pattern.
 **Notes**: —
