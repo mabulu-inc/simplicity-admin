@@ -1,0 +1,1 @@
+../../packages/ui/tests/e2e/m1-smoke.spec.ts
