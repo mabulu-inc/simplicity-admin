@@ -2,8 +2,8 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-059
-Next eligible task: T-060
+Last completed task: T-060
+Next eligible task: T-061
 Blockers: none
 Test suite status: 568 unit passed (5 skipped — DB integration), 16 E2E passed
 
@@ -869,3 +869,13 @@ Format for each entry:
 **Test results**: 568 passed, 5 skipped (DB integration), 0 failed
 **Review**: Components follow Svelte 5 runes pattern ($props, $state, $derived). TopBar integrates NotificationBell with unread count from layout. Notification pages use +page.server.ts for data loading and form actions. Rule management enforces RBAC (app_admin or superAdmin). All B-NOTIF behavior specs addressed: B-NOTIF-008 (bell unread count), B-NOTIF-009 (mark as read). E2E tests cover bell display, notification list, mark-as-read, and rule CRUD. No circular dependencies. Module boundaries respected.
 **Notes**: —
+
+### 2026-03-08 — T-060: M3 end-to-end smoke test
+**Status**: DONE
+**Commit**: 257550b
+**Duration**: ~5 min
+**Files created/modified**:
+- tests/e2e/m3-smoke.spec.ts (full M3 intelligence journey: dashboard → notification rule → trigger → bell)
+**Test results**: 568 passed, 5 skipped (DB integration), 0 failed
+**Review**: Follows established milestone smoke test pattern (M1, M2). Single comprehensive test covering: login, dashboard page with widgets/welcome, notification rule creation via settings UI, record creation to trigger event, notification bell verification, mark-all-read, and cleanup. Uses same loginAs helper pattern as M2. All test-ids match implemented components. Completes M3 milestone.
+**Notes**: M3 milestone complete — all tasks T-053 through T-060 done.
