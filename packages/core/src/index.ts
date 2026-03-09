@@ -88,3 +88,7 @@ export {
   deleteRule,
   listRules,
 } from './notifications/rules.js';
+
+// Email provider
+export type { SmtpConfig } from './notifications/email/types.js';
+export { SmtpEmailProvider } from './notifications/email/provider.js';
