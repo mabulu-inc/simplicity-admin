@@ -6,7 +6,7 @@
 
 1. Read `docs/PROGRESS.md` — check "Current State" for last task, next task, blockers
 2. Read `docs/TASKS.md` — find the next eligible task (lowest-numbered TODO with all deps DONE)
-3. **If unstaged changes exist from a previous iteration**, skip to step 4 — the work is already started, just verify and commit. Otherwise, read the task's referenced spec file (`docs/specs/*.md`) for exact interfaces and behaviors.
+3. Read the task's referenced spec file (`docs/specs/*.md`) for exact interfaces and behaviors
 4. Execute the task using red/green TDD:
    a. Write failing tests (red)
    b. Implement until tests pass (green)
