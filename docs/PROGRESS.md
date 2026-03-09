@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-048
-Next eligible task: T-049
+Last completed task: T-049
+Next eligible task: T-050
 Blockers: none
-Test suite status: 485 unit passed (5 skipped — DB integration), 16 E2E passed
+Test suite status: 500 unit passed (5 skipped — DB integration), 16 E2E passed
 
 ---
 
@@ -707,4 +707,16 @@ Format for each entry:
 - packages/ui/tests/e2e/global-setup.ts (seed viewer/editor users and column-level grants)
 **Test results**: 485 passed, 5 skipped (DB integration), 0 failed
 **Review**: List view filters columns by role's SELECT permission (app_viewer sees only id, first_name, last_name, email — not created_at). Create button hidden when canInsert is false. Edit view marks non-UPDATE columns as readOnly. Delete button hidden when canDelete is false. Server-side RBAC helper merges code permissions with UI overrides. AutoForm already supports readOnlyColumns/hiddenColumns props. No circular dependencies. RBAC is read-only in UI — PostgreSQL grants remain the enforcement layer per ADR-001.
+**Notes**: —
+
+### 2026-03-08 — T-049: Navigation builder
+**Status**: DONE
+**Commit**: 01a9de3
+**Duration**: ~5 min
+**Files created/modified**:
+- packages/ui/src/lib/nav/types.ts (NavItemConfig, NavConfig, NavItem interfaces)
+- packages/ui/src/lib/nav/builder.ts (buildNavItems, humanizeTableName)
+- packages/ui/tests/nav/builder.test.ts (15 unit tests covering all B-NAV behaviors)
+**Test results**: 500 passed, 5 skipped (DB integration), 0 failed
+**Review**: Implementation follows nav.md spec exactly. All behavior specs B-NAV-001 through B-NAV-010 covered by tests. System schema filtering uses schema field on TableMeta. RBAC filtering uses EffectivePermissions from auth package. Config items with custom roles, grouping, ordering, labels, icons all work. Non-existent table references silently omitted per spec. No circular deps — ui imports from core and auth only.
 **Notes**: —
