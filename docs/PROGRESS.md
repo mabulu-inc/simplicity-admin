@@ -2,10 +2,10 @@
 
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
-Last completed task: T-044
-Next eligible task: T-045
+Last completed task: T-045
+Next eligible task: T-046
 Blockers: none
-Test suite status: 143 unit passed, 16 E2E passed
+Test suite status: 147 unit passed, 16 E2E passed
 
 ---
 
@@ -653,4 +653,16 @@ Format for each entry:
 - tests/e2e/m1-smoke.spec.ts (re-export stub)
 **Test results**: 143 passed (vitest), 16 passed (Playwright E2E)
 **Review**: Full M1 user journey smoke test covers: start dev server → login with default admin → see auto-generated nav → navigate to table list → create record → edit record → delete record → logout. All E2E tests pass. No regressions.
+**Notes**: —
+
+### 2026-03-08 — T-045: RBAC permission types
+**Status**: DONE
+**Commit**: 37bf970
+**Duration**: ~3 min
+**Files created/modified**:
+- packages/auth/src/rbac/types.ts (Operation, ColumnPermission, TablePermission, EffectivePermissions)
+- packages/auth/src/index.ts (re-export RBAC types)
+- packages/auth/tests/rbac/types.test.ts (4 type smoke tests)
+**Test results**: 147 passed (vitest), 0 failed
+**Review**: Permission types match spec exactly (rbac.md §Public API §Permission Types). Operation is a string union of SELECT/INSERT/UPDATE/DELETE. ColumnPermission maps column→allowed operations. TablePermission groups table/schema/operations/columnPermissions. EffectivePermissions wraps role+tables. All types exported from @simplicity-admin/auth public API. 4 tests verify correct shapes. Typecheck, lint, build all pass. No circular deps. No regressions.
 **Notes**: —
