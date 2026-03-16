@@ -1,56 +1,32 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { ConnectionPool } from '@simplicity-admin/core';
 import { defineConfig } from '@simplicity-admin/core';
-import { createPool } from '@simplicity-admin/db';
 import { bootstrap } from '../src/bootstrap.js';
 import bcrypt from 'bcrypt';
-
-const TEST_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
 
 describe('bootstrap', () => {
-  let pool: ConnectionPool;
-  const testSchema = 'bootstrap_test';
-
-  const config = defineConfig({
-    database: TEST_URL,
-    schema: testSchema,
-    systemSchema: testSchema,
-  });
+  let testDb: TestDb;
+  const testSchema = 'public';
 
   beforeAll(async () => {
-    pool = createPool(TEST_URL);
+    testDb = await createTestDb();
 
-    // Clean slate
-    await pool.query(`DROP SCHEMA IF EXISTS ${testSchema} CASCADE`);
+    const config = defineConfig({
+      database: testDb.url,
+      schema: testSchema,
+      systemSchema: testSchema,
+    });
+
+    await bootstrap(testDb.pool, config);
   });
 
   afterAll(async () => {
-    await pool.query(`DROP SCHEMA IF EXISTS ${testSchema} CASCADE`);
-
-    // Clean up roles (ignore errors if they don't exist)
-    for (const role of ['app_admin', 'app_editor', 'app_viewer', 'anon', 'authenticator']) {
-      try {
-        await pool.query(`DROP ROLE IF EXISTS ${role}`);
-      } catch {
-        // Role may not exist or may be referenced elsewhere — ignore
-      }
-    }
-
-    await pool.end();
+    await destroyTestDb(testDb);
   });
 
-  it('creates system schema on fresh DB', async () => {
-    await bootstrap(pool, config);
-
-    // Verify schema exists
-    const schemas = await pool.query<{ schema_name: string }>(
-      `SELECT schema_name FROM information_schema.schemata WHERE schema_name = $1`,
-      [testSchema],
-    );
-    expect(schemas.rows.length).toBe(1);
-
-    // Verify tables exist
-    const tables = await pool.query<{ table_name: string }>(
+  it('creates system tables', async () => {
+    const tables = await testDb.pool.query<{ table_name: string }>(
       `SELECT table_name FROM information_schema.tables WHERE table_schema = $1 ORDER BY table_name`,
       [testSchema],
     );
@@ -61,7 +37,7 @@ describe('bootstrap', () => {
   });
 
   it('creates users table with correct columns', async () => {
-    const cols = await pool.query<{ column_name: string }>(
+    const cols = await testDb.pool.query<{ column_name: string }>(
       `SELECT column_name FROM information_schema.columns WHERE table_schema = $1 AND table_name = 'users' ORDER BY ordinal_position`,
       [testSchema],
     );
@@ -77,7 +53,7 @@ describe('bootstrap', () => {
   });
 
   it('creates tenants table with correct columns', async () => {
-    const cols = await pool.query<{ column_name: string }>(
+    const cols = await testDb.pool.query<{ column_name: string }>(
       `SELECT column_name FROM information_schema.columns WHERE table_schema = $1 AND table_name = 'tenants' ORDER BY ordinal_position`,
       [testSchema],
     );
@@ -90,7 +66,7 @@ describe('bootstrap', () => {
   });
 
   it('creates memberships table with correct columns', async () => {
-    const cols = await pool.query<{ column_name: string }>(
+    const cols = await testDb.pool.query<{ column_name: string }>(
       `SELECT column_name FROM information_schema.columns WHERE table_schema = $1 AND table_name = 'memberships' ORDER BY ordinal_position`,
       [testSchema],
     );
@@ -104,7 +80,7 @@ describe('bootstrap', () => {
   });
 
   it('creates database functions', async () => {
-    const funcs = await pool.query<{ routine_name: string }>(
+    const funcs = await testDb.pool.query<{ routine_name: string }>(
       `SELECT routine_name FROM information_schema.routines WHERE routine_schema = $1 ORDER BY routine_name`,
       [testSchema],
     );
@@ -116,7 +92,7 @@ describe('bootstrap', () => {
   });
 
   it('creates default tenant', async () => {
-    const tenants = await pool.query<{ name: string; slug: string }>(
+    const tenants = await testDb.pool.query<{ name: string; slug: string }>(
       `SELECT name, slug FROM ${testSchema}.tenants`,
     );
     expect(tenants.rows.length).toBeGreaterThanOrEqual(1);
@@ -126,7 +102,7 @@ describe('bootstrap', () => {
   });
 
   it('creates default admin user', async () => {
-    const users = await pool.query<{
+    const users = await testDb.pool.query<{
       email: string;
       password_hash: string;
       super_admin: boolean;
@@ -137,13 +113,12 @@ describe('bootstrap', () => {
     expect(admin).toBeDefined();
     expect(admin!.super_admin).toBe(true);
 
-    // Verify password is bcrypt hash of 'changeme'
     const passwordValid = await bcrypt.compare('changeme', admin!.password_hash);
     expect(passwordValid).toBe(true);
   });
 
   it('creates membership linking admin to default tenant', async () => {
-    const memberships = await pool.query<{ role: string; email: string; tenant_name: string }>(
+    const memberships = await testDb.pool.query<{ role: string; email: string; tenant_name: string }>(
       `SELECT m.role, u.email, t.name as tenant_name
        FROM ${testSchema}.memberships m
        JOIN ${testSchema}.users u ON m.user_id = u.id
@@ -158,16 +133,20 @@ describe('bootstrap', () => {
   });
 
   it('is idempotent — running twice is safe', async () => {
-    // bootstrap was already called in the first test; call again
-    await expect(bootstrap(pool, config)).resolves.not.toThrow();
+    const config = defineConfig({
+      database: testDb.url,
+      schema: testSchema,
+      systemSchema: testSchema,
+    });
 
-    // Still only one default tenant and one admin
-    const tenants = await pool.query<{ name: string }>(
+    await expect(bootstrap(testDb.pool, config)).resolves.not.toThrow();
+
+    const tenants = await testDb.pool.query<{ name: string }>(
       `SELECT name FROM ${testSchema}.tenants WHERE name = 'Default'`,
     );
     expect(tenants.rows.length).toBe(1);
 
-    const users = await pool.query<{ email: string }>(
+    const users = await testDb.pool.query<{ email: string }>(
       `SELECT email FROM ${testSchema}.users WHERE email = 'admin@localhost'`,
     );
     expect(users.rows.length).toBe(1);

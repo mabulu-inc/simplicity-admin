@@ -1,24 +1,17 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { IncomingMessage, ServerResponse, createServer, Server } from 'node:http';
+import { createServer, type Server } from 'node:http';
+import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { ConnectionPool, TokenProvider } from '@simplicity-admin/core';
 import { defineConfig } from '@simplicity-admin/core';
-import { createPool } from '../../db/src/connection.js';
 import { bootstrap } from '../../db/src/bootstrap.js';
 import { jwtTokenProvider } from '../src/providers/jwt.js';
 import { hashPassword } from '../src/strategies/password.js';
 import { createLoginHandler } from '../src/routes/login.js';
 import { createLogoutHandler } from '../src/routes/logout.js';
 import { createRefreshHandler } from '../src/routes/refresh.js';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
 
-const TEST_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
-const TEST_SCHEMA = 'auth_routes_test';
-
-/** Helper: role priority for determining highest-privilege role */
-const ROLE_PRIORITY: Record<string, number> = {
-  app_admin: 3,
-  app_editor: 2,
-  app_viewer: 1,
-};
+const TEST_SCHEMA = 'public';
 
 /** Helper to make HTTP requests to the test server */
 async function request(
@@ -51,28 +44,26 @@ async function request(
 }
 
 describe('auth routes (integration)', () => {
-  let pool: ConnectionPool;
+  let testDb: TestDb;
   let tokenProvider: TokenProvider;
   let server: Server;
 
-  const config = defineConfig({
-    database: TEST_URL,
-    schema: TEST_SCHEMA,
-    systemSchema: TEST_SCHEMA,
-  });
-
   beforeAll(async () => {
-    pool = createPool(TEST_URL);
+    testDb = await createTestDb();
 
-    // Clean slate
-    await pool.query(`DROP SCHEMA IF EXISTS ${TEST_SCHEMA} CASCADE`);
-    await bootstrap(pool, config);
+    const config = defineConfig({
+      database: testDb.url,
+      schema: TEST_SCHEMA,
+      systemSchema: TEST_SCHEMA,
+    });
+
+    await bootstrap(testDb.pool, config);
 
     tokenProvider = jwtTokenProvider(config.auth);
 
     // Create test user with known credentials
     const hash = await hashPassword('password123');
-    await pool.query(
+    await testDb.pool.query(
       `INSERT INTO ${TEST_SCHEMA}.users (email, password_hash, super_admin)
        VALUES ('alice@example.com', $1, false)
        ON CONFLICT (email) DO NOTHING`,
@@ -80,10 +71,10 @@ describe('auth routes (integration)', () => {
     );
 
     // Get alice's user id and default tenant id
-    const aliceResult = await pool.query<{ id: string }>(
+    const aliceResult = await testDb.pool.query<{ id: string }>(
       `SELECT id FROM ${TEST_SCHEMA}.users WHERE email = 'alice@example.com'`,
     );
-    const tenantResult = await pool.query<{ id: string }>(
+    const tenantResult = await testDb.pool.query<{ id: string }>(
       `SELECT id FROM ${TEST_SCHEMA}.tenants WHERE slug = 'default'`,
     );
 
@@ -91,7 +82,7 @@ describe('auth routes (integration)', () => {
     const tenantId = tenantResult.rows[0].id;
 
     // Create memberships for alice (app_editor + app_viewer)
-    await pool.query(
+    await testDb.pool.query(
       `INSERT INTO ${TEST_SCHEMA}.memberships (user_id, tenant_id, role)
        VALUES ($1, $2, 'app_editor'), ($1, $2, 'app_viewer')
        ON CONFLICT DO NOTHING`,
@@ -99,8 +90,8 @@ describe('auth routes (integration)', () => {
     );
 
     // Set up the HTTP server with routing
-    const loginHandler = createLoginHandler(tokenProvider, pool, TEST_SCHEMA);
-    const logoutHandler = createLogoutHandler(tokenProvider, pool, TEST_SCHEMA);
+    const loginHandler = createLoginHandler(tokenProvider, testDb.pool, TEST_SCHEMA);
+    const logoutHandler = createLogoutHandler(tokenProvider, testDb.pool, TEST_SCHEMA);
     const refreshHandler = createRefreshHandler(tokenProvider);
 
     server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
@@ -122,8 +113,7 @@ describe('auth routes (integration)', () => {
 
   afterAll(async () => {
     server.close();
-    await pool.query(`DROP SCHEMA IF EXISTS ${TEST_SCHEMA} CASCADE`);
-    await pool.end();
+    await destroyTestDb(testDb);
   });
 
   // ── Login ─────────────────────────────────────────────────
@@ -179,7 +169,6 @@ describe('auth routes (integration)', () => {
     expect(payload.userId).toBeDefined();
     expect(payload.tenantId).toBeDefined();
     expect(payload.roles).toEqual(expect.arrayContaining(['app_editor', 'app_viewer']));
-    // Highest-privilege role should be default active role
     expect(payload.activeRole).toBe('app_editor');
     expect(payload.authStrategy).toBe('password');
   });
@@ -201,7 +190,6 @@ describe('auth routes (integration)', () => {
     const body = refreshRes.body as { accessToken: string; refreshToken: string };
     expect(body.accessToken).toBeDefined();
     expect(body.refreshToken).toBeDefined();
-    // Verify the new access token is valid and contains correct payload
     const payload = await tokenProvider.verify(body.accessToken);
     expect(payload.userId).toBeDefined();
   });
@@ -209,7 +197,6 @@ describe('auth routes (integration)', () => {
   // ── Logout ────────────────────────────────────────────────
 
   it('logout invalidates refresh token', async () => {
-    // Login first to get tokens
     const loginRes = await request(server, 'POST', '/auth/login', {
       strategy: 'password',
       email: 'alice@example.com',
@@ -217,13 +204,11 @@ describe('auth routes (integration)', () => {
     });
     const { refreshToken } = loginRes.body as { refreshToken: string };
 
-    // Logout with the refresh token
     const logoutRes = await request(server, 'POST', '/auth/logout', {
       refreshToken,
     });
     expect(logoutRes.status).toBe(200);
 
-    // Attempt to refresh with invalidated token should fail
     const refreshRes = await request(server, 'POST', '/auth/refresh', {
       refreshToken,
     });
@@ -231,7 +216,6 @@ describe('auth routes (integration)', () => {
   });
 
   it('refresh with invalidated token returns 401', async () => {
-    // Login
     const loginRes = await request(server, 'POST', '/auth/login', {
       strategy: 'password',
       email: 'alice@example.com',
@@ -239,10 +223,8 @@ describe('auth routes (integration)', () => {
     });
     const { refreshToken } = loginRes.body as { refreshToken: string };
 
-    // Logout (invalidate)
     await request(server, 'POST', '/auth/logout', { refreshToken });
 
-    // Try to refresh
     const refreshRes = await request(server, 'POST', '/auth/refresh', {
       refreshToken,
     });

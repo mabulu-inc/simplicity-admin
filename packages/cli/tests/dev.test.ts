@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import fs from 'node:fs';
@@ -6,6 +6,7 @@ import os from 'node:os';
 import http from 'node:http';
 
 const CLI_PATH = path.resolve(__dirname, '../src/cli.ts');
+const DB_URL = process.env['DATABASE_URL'] ?? 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
 
 function runCLI(
   args: string[],
@@ -47,7 +48,6 @@ describe('CLI dev command', () => {
     it('fails gracefully if DB is not reachable', () => {
       const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sa-dev-'));
       try {
-        // Create a config file pointing to an unreachable database
         const configContent = `
           export default {
             database: 'postgresql://localhost:59999/nonexistent_db',
@@ -73,17 +73,11 @@ describe('CLI dev command', () => {
 
   describe('startup banner', () => {
     it('prints startup banner with URLs when started successfully', async () => {
-      // This test uses a real database. Skip if no test DB is available.
-      const dbUrl =
-        process.env.TEST_DATABASE_URL ??
-        'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
-
       const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sa-dev-'));
       try {
-        // Create a config with port 0 so OS picks a free port
         const configContent = `
           export default {
-            database: '${dbUrl}',
+            database: '${DB_URL}',
             port: 0,
             auth: {
               secret: 'test-secret-for-dev-command-test',
@@ -95,7 +89,6 @@ describe('CLI dev command', () => {
           configContent,
         );
 
-        // Start the dev server as a child process
         const { spawn } = await import('node:child_process');
         const child = spawn('npx', ['tsx', CLI_PATH, 'dev'], {
           cwd: tmpDir,
@@ -113,7 +106,6 @@ describe('CLI dev command', () => {
           stderr += data.toString();
         });
 
-        // Wait for the startup banner or timeout
         const bannerPromise = new Promise<string>((resolve, reject) => {
           const timeout = setTimeout(() => {
             reject(new Error(`Timed out waiting for banner. stdout: ${stdout}, stderr: ${stderr}`));
@@ -141,19 +133,16 @@ describe('CLI dev command', () => {
 
         const banner = await bannerPromise;
 
-        // Verify banner contents
         expect(banner).toContain('SIMPLICITY-ADMIN dev server running');
         expect(banner).toContain('Admin UI:');
         expect(banner).toContain('GraphQL:');
         expect(banner).toContain('/admin');
         expect(banner).toContain('/api/graphql');
 
-        // Extract port from banner and verify health check
         const portMatch = banner.match(/localhost:(\d+)/);
         expect(portMatch).not.toBeNull();
         const port = Number(portMatch![1]);
 
-        // Health check
         const healthRes = await new Promise<{ statusCode: number; body: string }>((resolve, reject) => {
           const req = http.get(`http://localhost:${port}/api/graphql`, (res) => {
             let body = '';
@@ -167,10 +156,8 @@ describe('CLI dev command', () => {
           });
         });
 
-        // PostGraphile should respond (200 for GraphiQL, 302 redirect, or 405 for non-POST)
         expect([200, 302, 405]).toContain(healthRes.statusCode);
 
-        // Cleanup
         child.kill('SIGTERM');
         await new Promise<void>((resolve) => {
           child.on('exit', () => resolve());
@@ -187,15 +174,11 @@ describe('CLI dev command', () => {
 
   describe('bootstraps DB on first run', () => {
     it('bootstraps the database during startup', async () => {
-      const dbUrl =
-        process.env.TEST_DATABASE_URL ??
-        'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
-
       const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sa-dev-'));
       try {
         const configContent = `
           export default {
-            database: '${dbUrl}',
+            database: '${DB_URL}',
             port: 0,
             auth: {
               secret: 'test-secret-for-bootstrap-test',
@@ -224,7 +207,6 @@ describe('CLI dev command', () => {
           stderr += data.toString();
         });
 
-        // Wait for startup banner
         await new Promise<void>((resolve, reject) => {
           const timeout = setTimeout(() => {
             reject(new Error(`Timed out. stdout: ${stdout}, stderr: ${stderr}`));
@@ -250,7 +232,6 @@ describe('CLI dev command', () => {
           });
         });
 
-        // Verify bootstrap ran (output should mention bootstrapping)
         expect(stdout).toContain('Bootstrapping database');
 
         child.kill('SIGTERM');

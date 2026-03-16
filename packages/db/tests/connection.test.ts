@@ -1,38 +1,28 @@
-import { describe, it, expect, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createPool, DatabaseError, maskConnectionUrl } from '@simplicity-admin/db';
 import type { ConnectionPool } from '@simplicity-admin/core';
-
-const TEST_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
 
 describe('createPool', () => {
-  const pools: ConnectionPool[] = [];
+  let testDb: TestDb;
+
+  beforeAll(async () => {
+    testDb = await createTestDb();
+  });
 
   afterAll(async () => {
-    for (const pool of pools) {
-      try {
-        await pool.end();
-      } catch {
-        // ignore
-      }
-    }
+    await destroyTestDb(testDb);
   });
 
   it('connects and executes SELECT 1', async () => {
-    const pool = createPool(TEST_URL);
-    pools.push(pool);
-
-    const result = await pool.query<{ result: number }>('SELECT 1 AS result');
+    const result = await testDb.pool.query<{ result: number }>('SELECT 1 AS result');
     expect(result.rows).toHaveLength(1);
     expect(result.rows[0].result).toBe(1);
     expect(result.rowCount).toBe(1);
   });
 
   it('withClient provides a client that can query', async () => {
-    const pool = createPool(TEST_URL);
-    pools.push(pool);
-
-    const value = await pool.withClient(async (client) => {
-      // PoolClient is opaque but the underlying pg client supports query
+    const value = await testDb.pool.withClient(async (client) => {
       const pgClient = client as unknown as { query: (sql: string) => Promise<{ rows: Array<{ n: number }> }> };
       const res = await pgClient.query('SELECT 42 AS n');
       return res.rows[0].n;
@@ -42,22 +32,33 @@ describe('createPool', () => {
   });
 
   it('pool.end() cleans up connections', async () => {
-    const pool = createPool(TEST_URL);
+    const extraDb = await createTestDb();
 
     // Verify pool works before ending
-    await pool.query('SELECT 1');
+    await extraDb.pool.query('SELECT 1');
 
     // End the pool
-    await pool.end();
+    await extraDb.pool.end();
 
     // Further queries should fail
-    await expect(pool.query('SELECT 1')).rejects.toThrow();
+    await expect(extraDb.pool.query('SELECT 1')).rejects.toThrow();
+
+    // Clean up the database using a fresh admin connection
+    const adminPool = createPool(testDb.url);
+    try {
+      await adminPool.query(
+        `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = $1 AND pid <> pg_backend_pid()`,
+        [extraDb.name],
+      );
+      await adminPool.query(`DROP DATABASE IF EXISTS "${extraDb.name}"`);
+    } finally {
+      await adminPool.end();
+    }
   });
 
   it('bad URL throws DatabaseError on query with masked password', async () => {
     const badUrl = 'postgres://user:supersecret@localhost:59999/nonexistent';
     const pool = createPool(badUrl);
-    pools.push(pool);
 
     try {
       await pool.query('SELECT 1');
@@ -66,8 +67,9 @@ describe('createPool', () => {
       expect(err).toBeInstanceOf(DatabaseError);
       const dbErr = err as DatabaseError;
       expect(dbErr.code).toBe('DB_002');
-      // Password should not appear in error message
       expect(dbErr.message).not.toContain('supersecret');
+    } finally {
+      try { await pool.end(); } catch { /* ignore */ }
     }
   });
 });

@@ -1,13 +1,14 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { EffectivePermissions } from '@simplicity-admin/auth';
 
-// Import the engine functions we need to implement
 import {
   canAccess,
   canAccessColumn,
   getAccessibleColumns,
   getEffectivePermissions,
 } from '../../src/rbac/engine.js';
+import { defineConfig } from '@simplicity-admin/core';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../../test-support/test-db.js';
 
 /**
  * Fixture: permissions for app_viewer with SELECT on contacts (id, name, email)
@@ -101,10 +102,8 @@ describe('RBAC permission engine — unit tests', () => {
 
     it('checks column-specific operations correctly', () => {
       const perms = makeEditorPermissions();
-      // salary only has SELECT, not UPDATE
       expect(canAccessColumn(perms, 'contacts', 'salary', 'SELECT')).toBe(true);
       expect(canAccessColumn(perms, 'contacts', 'salary', 'UPDATE')).toBe(false);
-      // name has SELECT + UPDATE
       expect(canAccessColumn(perms, 'contacts', 'name', 'UPDATE')).toBe(true);
     });
   });
@@ -137,69 +136,58 @@ describe('RBAC permission engine — unit tests', () => {
 });
 
 describe('RBAC permission engine — integration tests', () => {
-  // getEffectivePermissions requires a real Postgres connection.
-  // These tests run against the Docker Compose database with bootstrapped roles/grants.
+  let testDb: TestDb;
 
-  const DATABASE_URL = process.env['DATABASE_URL'] ?? 'postgresql://postgres:postgres@localhost:5432/simplicity_test';
+  beforeAll(async () => {
+    testDb = await createTestDb();
 
-  // Skip integration tests if no DB is available
-  const describeDb = process.env['CI'] || process.env['DATABASE_URL']
-    ? describe
-    : describe.skip;
-
-  describeDb('getEffectivePermissions()', () => {
-    let pool: import('@simplicity-admin/core').ConnectionPool;
-
-    // We dynamically import to avoid errors when pg is not available
-    beforeAll(async () => {
-      const { createPool } = await import('@simplicity-admin/db');
-      pool = createPool(DATABASE_URL);
-
-      // Bootstrap: ensure roles and grants exist
-      const { bootstrap } = await import('@simplicity-admin/db');
-      await bootstrap(pool);
+    const config = defineConfig({
+      database: testDb.url,
+      schema: 'public',
+      systemSchema: 'public',
     });
 
-    afterAll(async () => {
-      if (pool) await pool.end();
-    });
+    const { bootstrap } = await import('@simplicity-admin/db');
+    await bootstrap(testDb.pool, config);
+  });
 
-    it('reads grants for a role from the database', async () => {
-      const perms = await getEffectivePermissions(pool, 'app_viewer');
-      expect(perms.role).toBe('app_viewer');
-      expect(perms.tables.length).toBeGreaterThan(0);
-    });
+  afterAll(async () => {
+    await destroyTestDb(testDb);
+  });
 
-    it('includes column-level detail', async () => {
-      const perms = await getEffectivePermissions(pool, 'app_viewer');
-      const usersTable = perms.tables.find(t => t.table === 'users');
-      expect(usersTable).toBeDefined();
-      expect(usersTable!.columnPermissions.length).toBeGreaterThan(0);
-    });
+  it('reads grants for a role from the database', async () => {
+    const perms = await getEffectivePermissions(testDb.pool, 'app_viewer');
+    expect(perms.role).toBe('app_viewer');
+    expect(perms.tables.length).toBeGreaterThan(0);
+  });
 
-    it('returns SELECT operations for app_viewer', async () => {
-      const perms = await getEffectivePermissions(pool, 'app_viewer');
-      // app_viewer should only have SELECT
-      for (const table of perms.tables) {
-        for (const op of table.operations) {
-          expect(op).toBe('SELECT');
-        }
+  it('includes column-level detail', async () => {
+    const perms = await getEffectivePermissions(testDb.pool, 'app_viewer');
+    const usersTable = perms.tables.find(t => t.table === 'users');
+    expect(usersTable).toBeDefined();
+    expect(usersTable!.columnPermissions.length).toBeGreaterThan(0);
+  });
+
+  it('returns SELECT operations for app_viewer', async () => {
+    const perms = await getEffectivePermissions(testDb.pool, 'app_viewer');
+    for (const table of perms.tables) {
+      for (const op of table.operations) {
+        expect(op).toBe('SELECT');
       }
-    });
+    }
+  });
 
-    it('returns broader permissions for app_admin', async () => {
-      const perms = await getEffectivePermissions(pool, 'app_admin');
-      expect(perms.role).toBe('app_admin');
-      // app_admin should have at least SELECT and DELETE on some tables
-      const allOps = new Set(perms.tables.flatMap(t => t.operations));
-      expect(allOps.has('SELECT')).toBe(true);
-    });
+  it('returns broader permissions for app_admin', async () => {
+    const perms = await getEffectivePermissions(testDb.pool, 'app_admin');
+    expect(perms.role).toBe('app_admin');
+    const allOps = new Set(perms.tables.flatMap(t => t.operations));
+    expect(allOps.has('SELECT')).toBe(true);
+  });
 
-    it('filters by schema when provided', async () => {
-      const perms = await getEffectivePermissions(pool, 'app_viewer', 'public');
-      for (const table of perms.tables) {
-        expect(table.schema).toBe('public');
-      }
-    });
+  it('filters by schema when provided', async () => {
+    const perms = await getEffectivePermissions(testDb.pool, 'app_viewer', 'public');
+    for (const table of perms.tables) {
+      expect(table.schema).toBe('public');
+    }
   });
 });

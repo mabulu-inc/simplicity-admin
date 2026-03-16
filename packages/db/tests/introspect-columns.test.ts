@@ -1,25 +1,18 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createPool } from '@simplicity-admin/db';
 import { introspectColumns } from '../src/introspect/columns.js';
-import type { ConnectionPool } from '@simplicity-admin/core';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
 
-const TEST_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
 const TEST_SCHEMA = 'test_introspect_columns';
 
 describe('introspectColumns', () => {
-  let pool: ConnectionPool;
+  let testDb: TestDb;
 
   beforeAll(async () => {
-    pool = createPool(TEST_URL);
+    testDb = await createTestDb();
 
-    await pool.query(`DROP SCHEMA IF EXISTS ${TEST_SCHEMA} CASCADE`);
-    await pool.query(`CREATE SCHEMA ${TEST_SCHEMA}`);
-
-    // Create an enum type
-    await pool.query(`CREATE TYPE ${TEST_SCHEMA}.article_status AS ENUM ('draft', 'review', 'published')`);
-
-    // Create a contacts table with various column types
-    await pool.query(`
+    await testDb.pool.query(`CREATE SCHEMA ${TEST_SCHEMA}`);
+    await testDb.pool.query(`CREATE TYPE ${TEST_SCHEMA}.article_status AS ENUM ('draft', 'review', 'published')`);
+    await testDb.pool.query(`
       CREATE TABLE ${TEST_SCHEMA}.contacts (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         name text NOT NULL,
@@ -28,12 +21,8 @@ describe('introspectColumns', () => {
         created_at timestamptz DEFAULT now()
       )
     `);
-
-    // Add a comment on a column
-    await pool.query(`COMMENT ON COLUMN ${TEST_SCHEMA}.contacts.name IS 'Full name of the contact'`);
-
-    // Create a table with enum, numeric precision, and generated columns
-    await pool.query(`
+    await testDb.pool.query(`COMMENT ON COLUMN ${TEST_SCHEMA}.contacts.name IS 'Full name of the contact'`);
+    await testDb.pool.query(`
       CREATE TABLE ${TEST_SCHEMA}.articles (
         id serial PRIMARY KEY,
         title text NOT NULL,
@@ -48,18 +37,17 @@ describe('introspectColumns', () => {
   });
 
   afterAll(async () => {
-    await pool.query(`DROP SCHEMA IF EXISTS ${TEST_SCHEMA} CASCADE`);
-    await pool.end();
+    await destroyTestDb(testDb);
   });
 
   it('returns correct column names for contacts table', async () => {
-    const columns = await introspectColumns(pool, 'contacts', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'contacts', TEST_SCHEMA);
     const names = columns.map((c) => c.name);
     expect(names).toEqual(['id', 'name', 'email', 'active', 'created_at']);
   });
 
   it('maps column types correctly', async () => {
-    const columns = await introspectColumns(pool, 'contacts', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'contacts', TEST_SCHEMA);
     const typeMap = Object.fromEntries(columns.map((c) => [c.name, c.type]));
     expect(typeMap).toEqual({
       id: 'uuid',
@@ -71,31 +59,31 @@ describe('introspectColumns', () => {
   });
 
   it('detects nullable and non-nullable columns', async () => {
-    const columns = await introspectColumns(pool, 'contacts', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'contacts', TEST_SCHEMA);
     const nullMap = Object.fromEntries(columns.map((c) => [c.name, c.nullable]));
     expect(nullMap).toEqual({
-      id: false,    // PK is NOT NULL
-      name: false,  // explicitly NOT NULL
-      email: true,  // nullable by default
-      active: true, // nullable by default
+      id: false,
+      name: false,
+      email: true,
+      active: true,
       created_at: true,
     });
   });
 
   it('detects columns with defaults', async () => {
-    const columns = await introspectColumns(pool, 'contacts', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'contacts', TEST_SCHEMA);
     const defaultMap = Object.fromEntries(columns.map((c) => [c.name, c.hasDefault]));
     expect(defaultMap).toEqual({
-      id: true,         // gen_random_uuid()
+      id: true,
       name: false,
       email: false,
-      active: true,     // true
-      created_at: true, // now()
+      active: true,
+      created_at: true,
     });
   });
 
   it('detects primary key columns', async () => {
-    const columns = await introspectColumns(pool, 'contacts', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'contacts', TEST_SCHEMA);
     const pkMap = Object.fromEntries(columns.map((c) => [c.name, c.isPrimaryKey]));
     expect(pkMap).toEqual({
       id: true,
@@ -107,14 +95,14 @@ describe('introspectColumns', () => {
   });
 
   it('handles varchar(N) maxLength', async () => {
-    const columns = await introspectColumns(pool, 'contacts', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'contacts', TEST_SCHEMA);
     const email = columns.find((c) => c.name === 'email');
     expect(email).toBeDefined();
     expect(email!.maxLength).toBe(255);
   });
 
   it('detects enum columns with values', async () => {
-    const columns = await introspectColumns(pool, 'articles', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'articles', TEST_SCHEMA);
     const status = columns.find((c) => c.name === 'status');
     expect(status).toBeDefined();
     expect(status!.type).toBe('enum');
@@ -122,18 +110,17 @@ describe('introspectColumns', () => {
   });
 
   it('detects generated columns', async () => {
-    const columns = await introspectColumns(pool, 'articles', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'articles', TEST_SCHEMA);
     const fullName = columns.find((c) => c.name === 'full_name');
     expect(fullName).toBeDefined();
     expect(fullName!.isGenerated).toBe(true);
 
-    // Non-generated columns should have isGenerated = false
     const title = columns.find((c) => c.name === 'title');
     expect(title!.isGenerated).toBe(false);
   });
 
   it('handles numeric(P,S) precision and scale', async () => {
-    const columns = await introspectColumns(pool, 'articles', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'articles', TEST_SCHEMA);
     const price = columns.find((c) => c.name === 'price');
     expect(price).toBeDefined();
     expect(price!.type).toBe('numeric');
@@ -142,14 +129,14 @@ describe('introspectColumns', () => {
   });
 
   it('detects array columns', async () => {
-    const columns = await introspectColumns(pool, 'articles', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'articles', TEST_SCHEMA);
     const tags = columns.find((c) => c.name === 'tags');
     expect(tags).toBeDefined();
     expect(tags!.type).toBe('array');
   });
 
   it('includes column comments', async () => {
-    const columns = await introspectColumns(pool, 'contacts', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'contacts', TEST_SCHEMA);
     const name = columns.find((c) => c.name === 'name');
     expect(name!.comment).toBe('Full name of the contact');
 
@@ -158,22 +145,18 @@ describe('introspectColumns', () => {
   });
 
   it('preserves raw pgType', async () => {
-    const columns = await introspectColumns(pool, 'contacts', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'contacts', TEST_SCHEMA);
     const id = columns.find((c) => c.name === 'id');
     expect(id!.pgType).toBe('uuid');
   });
 
   it('defaults to public schema', async () => {
-    // Should not throw — just returns columns for the table in public schema
-    // (may be empty if no tables exist in public)
-    // We just verify it doesn't throw with a non-existent table
-    const columns = await introspectColumns(pool, 'contacts');
-    // contacts is in our test schema, not public — should return empty
+    const columns = await introspectColumns(testDb.pool, 'contacts');
     expect(columns).toEqual([]);
   });
 
   it('detects serial columns as having defaults', async () => {
-    const columns = await introspectColumns(pool, 'articles', TEST_SCHEMA);
+    const columns = await introspectColumns(testDb.pool, 'articles', TEST_SCHEMA);
     const id = columns.find((c) => c.name === 'id');
     expect(id).toBeDefined();
     expect(id!.hasDefault).toBe(true);

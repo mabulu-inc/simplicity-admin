@@ -1,20 +1,18 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createPool } from '@simplicity-admin/db';
 import type { ConnectionPool } from '@simplicity-admin/core';
 import { executeWidgetQuery } from '../../src/lib/dashboards/manager.js';
 import type { Widget } from '../../src/lib/dashboards/types.js';
-
-const DB_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../../test-support/test-db.js';
 
 describe('Widget Execution Engine (integration)', () => {
-	let pool: ConnectionPool;
+	let testDb: TestDb;
 
 	beforeAll(async () => {
-		pool = createPool(DB_URL);
+		testDb = await createTestDb();
 
 		// Create test tables
-		await pool.query(`
+		await testDb.pool.query(`
 			CREATE TABLE IF NOT EXISTS simplicity_widgets (
 				id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 				type text NOT NULL,
@@ -26,7 +24,7 @@ describe('Widget Execution Engine (integration)', () => {
 		`);
 
 		// Create a test data table for widget queries
-		await pool.query(`
+		await testDb.pool.query(`
 			CREATE TABLE IF NOT EXISTS widget_test_contacts (
 				id serial PRIMARY KEY,
 				name text NOT NULL,
@@ -35,8 +33,7 @@ describe('Widget Execution Engine (integration)', () => {
 			)
 		`);
 
-		await pool.query('DELETE FROM widget_test_contacts');
-		await pool.query(`
+		await testDb.pool.query(`
 			INSERT INTO widget_test_contacts (name, email, tenant_id) VALUES
 			('Alice', 'alice@example.com', 'tenant-a'),
 			('Bob', 'bob@example.com', 'tenant-a'),
@@ -45,8 +42,7 @@ describe('Widget Execution Engine (integration)', () => {
 	});
 
 	afterAll(async () => {
-		await pool.query('DROP TABLE IF EXISTS widget_test_contacts');
-		await pool.end();
+		await destroyTestDb(testDb);
 	});
 
 	describe('Stat widget query', () => {
@@ -61,7 +57,7 @@ describe('Widget Execution Engine (integration)', () => {
 				},
 			};
 
-			const result = await executeWidgetQuery(pool, widget);
+			const result = await executeWidgetQuery(testDb.pool, widget);
 			expect(result).toEqual({ value: 3 });
 		});
 	});
@@ -81,7 +77,7 @@ describe('Widget Execution Engine (integration)', () => {
 				},
 			};
 
-			const result = await executeWidgetQuery(pool, widget);
+			const result = await executeWidgetQuery(testDb.pool, widget);
 			expect(result).toEqual([
 				{ name: 'Alice', email: 'alice@example.com' },
 				{ name: 'Bob', email: 'bob@example.com' },
@@ -102,7 +98,7 @@ describe('Widget Execution Engine (integration)', () => {
 				},
 			};
 
-			const result = await executeWidgetQuery(pool, widget);
+			const result = await executeWidgetQuery(testDb.pool, widget);
 			expect(result).toEqual([
 				{ label: 'tenant-a', value: 2 },
 				{ label: 'tenant-b', value: 1 },
@@ -112,9 +108,6 @@ describe('Widget Execution Engine (integration)', () => {
 
 	describe('RLS enforcement (tenant isolation)', () => {
 		it('sets tenant context via set_config when tenantId is provided', async () => {
-			// Instead of relying on RLS policies (which require non-superuser roles),
-			// verify that executeWidgetQuery sets the app.tenant_id session variable
-			// by using a query that reads it back.
 			const widget: Widget = {
 				id: 'stat-rls',
 				type: 'stat',
@@ -125,24 +118,22 @@ describe('Widget Execution Engine (integration)', () => {
 				},
 			};
 
-			const result = await executeWidgetQuery(pool, widget, 'tenant-a');
+			const result = await executeWidgetQuery(testDb.pool, widget, 'tenant-a');
 			expect(result).toEqual({ value: 'tenant-a' });
 		});
 
 		it('filters data when RLS policy is active', async () => {
-			// Create a non-superuser role for RLS testing
-			await pool.query(`
+			await testDb.pool.query(`
 				DO $$ BEGIN
 					IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'rls_test_role') THEN
 						CREATE ROLE rls_test_role;
 					END IF;
 				END $$
 			`);
-			await pool.query(`GRANT SELECT ON widget_test_contacts TO rls_test_role`);
+			await testDb.pool.query(`GRANT SELECT ON widget_test_contacts TO rls_test_role`);
 
-			// Enable RLS
-			await pool.query(`ALTER TABLE widget_test_contacts ENABLE ROW LEVEL SECURITY`);
-			await pool.query(`
+			await testDb.pool.query(`ALTER TABLE widget_test_contacts ENABLE ROW LEVEL SECURITY`);
+			await testDb.pool.query(`
 				DO $$ BEGIN
 					IF NOT EXISTS (
 						SELECT 1 FROM pg_policies WHERE tablename = 'widget_test_contacts' AND policyname = 'tenant_isolation'
@@ -153,8 +144,7 @@ describe('Widget Execution Engine (integration)', () => {
 				END $$
 			`);
 
-			// Execute as non-superuser role with tenant context inside a transaction
-			const result = await pool.withClient(async (client) => {
+			const result = await testDb.pool.withClient(async (client) => {
 				const pgClient = client as { query: (sql: string, params?: unknown[]) => Promise<{ rows: Record<string, unknown>[] }> };
 				await pgClient.query('BEGIN');
 				await pgClient.query("SELECT set_config('app.tenant_id', $1, true)", ['tenant-a']);
@@ -166,10 +156,9 @@ describe('Widget Execution Engine (integration)', () => {
 
 			expect(result).toEqual({ value: 2 });
 
-			// Clean up
-			await pool.query(`DROP POLICY IF EXISTS tenant_isolation ON widget_test_contacts`);
-			await pool.query(`ALTER TABLE widget_test_contacts DISABLE ROW LEVEL SECURITY`);
-			await pool.query(`REVOKE SELECT ON widget_test_contacts FROM rls_test_role`);
+			await testDb.pool.query(`DROP POLICY IF EXISTS tenant_isolation ON widget_test_contacts`);
+			await testDb.pool.query(`ALTER TABLE widget_test_contacts DISABLE ROW LEVEL SECURITY`);
+			await testDb.pool.query(`REVOKE SELECT ON widget_test_contacts FROM rls_test_role`);
 		});
 	});
 
@@ -185,7 +174,7 @@ describe('Widget Execution Engine (integration)', () => {
 				},
 			};
 
-			await expect(executeWidgetQuery(pool, widget)).rejects.toThrow(/only SELECT/i);
+			await expect(executeWidgetQuery(testDb.pool, widget)).rejects.toThrow(/only SELECT/i);
 		});
 
 		it('rejects UPDATE queries', async () => {
@@ -199,7 +188,7 @@ describe('Widget Execution Engine (integration)', () => {
 				},
 			};
 
-			await expect(executeWidgetQuery(pool, widget)).rejects.toThrow(/only SELECT/i);
+			await expect(executeWidgetQuery(testDb.pool, widget)).rejects.toThrow(/only SELECT/i);
 		});
 
 		it('rejects DELETE queries', async () => {
@@ -213,7 +202,7 @@ describe('Widget Execution Engine (integration)', () => {
 				},
 			};
 
-			await expect(executeWidgetQuery(pool, widget)).rejects.toThrow(/only SELECT/i);
+			await expect(executeWidgetQuery(testDb.pool, widget)).rejects.toThrow(/only SELECT/i);
 		});
 
 		it('rejects DROP queries', async () => {
@@ -227,7 +216,7 @@ describe('Widget Execution Engine (integration)', () => {
 				},
 			};
 
-			await expect(executeWidgetQuery(pool, widget)).rejects.toThrow(/only SELECT/i);
+			await expect(executeWidgetQuery(testDb.pool, widget)).rejects.toThrow(/only SELECT/i);
 		});
 	});
 });

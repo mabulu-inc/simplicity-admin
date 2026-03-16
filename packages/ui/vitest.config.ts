@@ -15,5 +15,6 @@ export default defineConfig({
 	test: {
 		include: ['tests/**/*.test.ts'],
 		environment: 'jsdom',
+		globalSetup: [path.resolve(__dirname, '../../test-support/global-setup.ts')],
 	},
 });

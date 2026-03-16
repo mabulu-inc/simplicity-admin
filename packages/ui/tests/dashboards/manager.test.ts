@@ -1,6 +1,5 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createPool } from '@simplicity-admin/db';
 import type { ConnectionPool } from '@simplicity-admin/core';
 import {
 	createDashboard,
@@ -13,17 +12,16 @@ import {
 	updateWidget,
 	deleteWidget,
 } from '../../src/lib/dashboards/manager.js';
-
-const DB_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../../test-support/test-db.js';
 
 describe('Dashboard Manager (integration)', () => {
-	let pool: ConnectionPool;
+	let testDb: TestDb;
 
 	beforeAll(async () => {
-		pool = createPool(DB_URL);
+		testDb = await createTestDb();
 
 		// Create tables for testing
-		await pool.query(`
+		await testDb.pool.query(`
 			CREATE TABLE IF NOT EXISTS simplicity_dashboards (
 				id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 				name text NOT NULL,
@@ -37,7 +35,7 @@ describe('Dashboard Manager (integration)', () => {
 			)
 		`);
 
-		await pool.query(`
+		await testDb.pool.query(`
 			CREATE TABLE IF NOT EXISTS simplicity_widgets (
 				id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 				type text NOT NULL,
@@ -50,17 +48,14 @@ describe('Dashboard Manager (integration)', () => {
 	});
 
 	afterAll(async () => {
-		// Cleanup test data
-		await pool.query('DELETE FROM simplicity_dashboards');
-		await pool.query('DELETE FROM simplicity_widgets');
-		await pool.end();
+		await destroyTestDb(testDb);
 	});
 
 	describe('Dashboard CRUD', () => {
 		let dashboardId: string;
 
 		it('creates a dashboard', async () => {
-			const dashboard = await createDashboard(pool, {
+			const dashboard = await createDashboard(testDb.pool, {
 				name: 'Admin Dashboard',
 				slug: 'admin-dashboard',
 				roles: ['app_admin'],
@@ -83,18 +78,18 @@ describe('Dashboard Manager (integration)', () => {
 		});
 
 		it('gets a dashboard by id', async () => {
-			const dashboard = await getDashboard(pool, dashboardId);
+			const dashboard = await getDashboard(testDb.pool, dashboardId);
 			expect(dashboard).not.toBeNull();
 			expect(dashboard!.name).toBe('Admin Dashboard');
 		});
 
 		it('returns null for non-existent dashboard', async () => {
-			const dashboard = await getDashboard(pool, '00000000-0000-0000-0000-000000000000');
+			const dashboard = await getDashboard(testDb.pool, '00000000-0000-0000-0000-000000000000');
 			expect(dashboard).toBeNull();
 		});
 
 		it('updates a dashboard', async () => {
-			const updated = await updateDashboard(pool, dashboardId, {
+			const updated = await updateDashboard(testDb.pool, dashboardId, {
 				name: 'Updated Dashboard',
 			});
 			expect(updated.name).toBe('Updated Dashboard');
@@ -102,8 +97,7 @@ describe('Dashboard Manager (integration)', () => {
 		});
 
 		it('deletes a dashboard', async () => {
-			// Create one to delete
-			const d = await createDashboard(pool, {
+			const d = await createDashboard(testDb.pool, {
 				name: 'To Delete',
 				slug: 'to-delete',
 				roles: [],
@@ -112,18 +106,17 @@ describe('Dashboard Manager (integration)', () => {
 				createdBy: 'test-user',
 			});
 
-			await deleteDashboard(pool, d.id);
-			const result = await getDashboard(pool, d.id);
+			await deleteDashboard(testDb.pool, d.id);
+			const result = await getDashboard(testDb.pool, d.id);
 			expect(result).toBeNull();
 		});
 	});
 
 	describe('listDashboards filters by role', () => {
 		beforeAll(async () => {
-			// Clean up and seed
-			await pool.query("DELETE FROM simplicity_dashboards WHERE slug LIKE 'list-test-%'");
+			await testDb.pool.query("DELETE FROM simplicity_dashboards WHERE slug LIKE 'list-test-%'");
 
-			await createDashboard(pool, {
+			await createDashboard(testDb.pool, {
 				name: 'Admin Only',
 				slug: 'list-test-admin',
 				roles: ['app_admin'],
@@ -132,7 +125,7 @@ describe('Dashboard Manager (integration)', () => {
 				createdBy: 'test-user',
 			});
 
-			await createDashboard(pool, {
+			await createDashboard(testDb.pool, {
 				name: 'Viewer Only',
 				slug: 'list-test-viewer',
 				roles: ['app_viewer'],
@@ -141,7 +134,7 @@ describe('Dashboard Manager (integration)', () => {
 				createdBy: 'test-user',
 			});
 
-			await createDashboard(pool, {
+			await createDashboard(testDb.pool, {
 				name: 'All Roles',
 				slug: 'list-test-all',
 				roles: [],
@@ -152,12 +145,12 @@ describe('Dashboard Manager (integration)', () => {
 		});
 
 		it('returns all dashboards when no role filter', async () => {
-			const all = await listDashboards(pool);
+			const all = await listDashboards(testDb.pool);
 			expect(all.length).toBeGreaterThanOrEqual(3);
 		});
 
 		it('filters dashboards by role', async () => {
-			const adminDashboards = await listDashboards(pool, 'app_admin');
+			const adminDashboards = await listDashboards(testDb.pool, 'app_admin');
 			const slugs = adminDashboards.map((d) => d.slug);
 			expect(slugs).toContain('list-test-admin');
 			expect(slugs).toContain('list-test-all');
@@ -165,7 +158,7 @@ describe('Dashboard Manager (integration)', () => {
 		});
 
 		it('includes dashboards with empty roles array (visible to all)', async () => {
-			const viewerDashboards = await listDashboards(pool, 'app_viewer');
+			const viewerDashboards = await listDashboards(testDb.pool, 'app_viewer');
 			const slugs = viewerDashboards.map((d) => d.slug);
 			expect(slugs).toContain('list-test-viewer');
 			expect(slugs).toContain('list-test-all');
@@ -174,11 +167,10 @@ describe('Dashboard Manager (integration)', () => {
 
 	describe('getDefaultDashboard', () => {
 		beforeAll(async () => {
-			// Clear all existing defaults to isolate this test
-			await pool.query("UPDATE simplicity_dashboards SET is_default = false WHERE slug NOT LIKE 'default-test-%'");
-			await pool.query("DELETE FROM simplicity_dashboards WHERE slug LIKE 'default-test-%'");
+			await testDb.pool.query("UPDATE simplicity_dashboards SET is_default = false WHERE slug NOT LIKE 'default-test-%'");
+			await testDb.pool.query("DELETE FROM simplicity_dashboards WHERE slug LIKE 'default-test-%'");
 
-			await createDashboard(pool, {
+			await createDashboard(testDb.pool, {
 				name: 'Default Admin',
 				slug: 'default-test-admin',
 				roles: ['app_admin'],
@@ -187,7 +179,7 @@ describe('Dashboard Manager (integration)', () => {
 				createdBy: 'test-user',
 			});
 
-			await createDashboard(pool, {
+			await createDashboard(testDb.pool, {
 				name: 'Default Viewer',
 				slug: 'default-test-viewer',
 				roles: ['app_viewer'],
@@ -198,13 +190,13 @@ describe('Dashboard Manager (integration)', () => {
 		});
 
 		it('returns the default dashboard for a role', async () => {
-			const dashboard = await getDefaultDashboard(pool, 'app_admin');
+			const dashboard = await getDefaultDashboard(testDb.pool, 'app_admin');
 			expect(dashboard).not.toBeNull();
 			expect(dashboard!.slug).toBe('default-test-admin');
 		});
 
 		it('returns null when no default for role', async () => {
-			const dashboard = await getDefaultDashboard(pool, 'app_editor');
+			const dashboard = await getDefaultDashboard(testDb.pool, 'app_editor');
 			expect(dashboard).toBeNull();
 		});
 	});
@@ -213,7 +205,7 @@ describe('Dashboard Manager (integration)', () => {
 		let widgetId: string;
 
 		it('creates a widget', async () => {
-			const widget = await createWidget(pool, {
+			const widget = await createWidget(testDb.pool, {
 				type: 'stat',
 				title: 'Total Users',
 				config: {
@@ -234,7 +226,7 @@ describe('Dashboard Manager (integration)', () => {
 		});
 
 		it('updates a widget', async () => {
-			const updated = await updateWidget(pool, widgetId, {
+			const updated = await updateWidget(testDb.pool, widgetId, {
 				title: 'Active Users',
 			});
 			expect(updated.title).toBe('Active Users');
@@ -242,7 +234,7 @@ describe('Dashboard Manager (integration)', () => {
 		});
 
 		it('deletes a widget', async () => {
-			const w = await createWidget(pool, {
+			const w = await createWidget(testDb.pool, {
 				type: 'table',
 				title: 'To Delete',
 				config: {
@@ -251,10 +243,9 @@ describe('Dashboard Manager (integration)', () => {
 				},
 			});
 
-			await deleteWidget(pool, w.id);
+			await deleteWidget(testDb.pool, w.id);
 
-			// Verify deleted — query directly
-			const result = await pool.query<{ count: string }>(
+			const result = await testDb.pool.query<{ count: string }>(
 				'SELECT COUNT(*) AS count FROM simplicity_widgets WHERE id = $1',
 				[w.id],
 			);

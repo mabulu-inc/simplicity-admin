@@ -1,15 +1,18 @@
-import { describe, it, expect, afterAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { postgresProvider } from '@simplicity-admin/db';
 import type { DatabaseProvider, ConnectionPool, SchemaMeta } from '@simplicity-admin/core';
-
-const TEST_URL = process.env['DATABASE_URL'] ?? 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
 
 describe('postgresProvider', () => {
+  let testDb: TestDb;
   let provider: DatabaseProvider;
-  let pool: ConnectionPool;
+
+  beforeAll(async () => {
+    testDb = await createTestDb();
+  });
 
   afterAll(async () => {
-    if (pool) await pool.end();
+    await destroyTestDb(testDb);
   });
 
   it('returns a DatabaseProvider', () => {
@@ -28,17 +31,17 @@ describe('postgresProvider', () => {
 
   it('connect() returns a working ConnectionPool', async () => {
     provider = postgresProvider();
-    pool = await provider.connect(TEST_URL);
+    const pool = await provider.connect(testDb.url);
 
     const result = await pool.query<{ val: number }>('SELECT 1 AS val');
     expect(result.rows[0]?.val).toBe(1);
+    await pool.end();
   });
 
   it('introspect() returns SchemaMeta', async () => {
     provider = postgresProvider();
-    pool = await provider.connect(TEST_URL);
+    const pool = await provider.connect(testDb.url);
 
-    // Create a temp table to introspect
     await pool.query(`
       CREATE TABLE IF NOT EXISTS provider_test_introspect (
         id serial PRIMARY KEY,
@@ -54,15 +57,13 @@ describe('postgresProvider', () => {
     expect(testTable).toBeDefined();
     expect(testTable!.columns.length).toBeGreaterThan(0);
 
-    // Cleanup
-    await pool.query('DROP TABLE IF EXISTS provider_test_introspect');
+    await pool.end();
   });
 
   it('migrate() runs bootstrap (schema-flow)', async () => {
     provider = postgresProvider();
-    pool = await provider.connect(TEST_URL);
+    const pool = await provider.connect(testDb.url);
 
-    // Create a unique schema to test migration in isolation
     const testSchema = 'provider_migrate_test';
     await pool.query(`DROP SCHEMA IF EXISTS ${testSchema} CASCADE`);
     await pool.query(`CREATE SCHEMA ${testSchema}`);
@@ -75,15 +76,14 @@ describe('postgresProvider', () => {
     expect(result.applied).toBeGreaterThanOrEqual(0);
     expect(Array.isArray(result.operations)).toBe(true);
 
-    // Cleanup
-    await pool.query(`DROP SCHEMA IF EXISTS ${testSchema} CASCADE`);
+    await pool.end();
   });
 
   it('generate() does not throw', async () => {
     provider = postgresProvider();
-    pool = await provider.connect(TEST_URL);
+    const pool = await provider.connect(testDb.url);
 
-    // generate() is a placeholder until schema-flow generate is implemented
     await expect(provider.generate(pool, '/tmp/test-generate', 'public')).resolves.not.toThrow();
+    await pool.end();
   });
 });

@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 
 const CLI_PATH = path.resolve(__dirname, '../src/cli.ts');
+const DB_URL = process.env['DATABASE_URL'] ?? 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
 
 function runCLI(
   args: string[],
@@ -26,10 +27,6 @@ function runCLI(
     };
   }
 }
-
-const DB_URL =
-  process.env.TEST_DATABASE_URL ??
-  'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
 
 describe('CLI generate command', () => {
   it('fails gracefully if no config file exists', () => {
@@ -68,7 +65,6 @@ describe('CLI generate command', () => {
         path.join(tmpDir, 'simplicity-admin.config.ts'),
         `export default { database: '${DB_URL}' };`,
       );
-      // Create the output directory
       fs.mkdirSync(path.join(tmpDir, 'schema'), { recursive: true });
 
       const { stdout, exitCode } = runCLI(['generate'], {
@@ -141,7 +137,6 @@ describe('CLI migrate command', () => {
         path.join(tmpDir, 'simplicity-admin.config.ts'),
         `export default { database: '${DB_URL}' };`,
       );
-      // Create schema directory (migrations read from here)
       fs.mkdirSync(path.join(tmpDir, 'schema'), { recursive: true });
 
       const { stdout, exitCode } = runCLI(['migrate'], {

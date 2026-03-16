@@ -1,27 +1,22 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import type { ConnectionPool } from '@simplicity-admin/core';
 import { defineConfig } from '@simplicity-admin/core';
-import { createPool } from '@simplicity-admin/db';
 import { createAPIServer } from '../src/server.js';
-
-const TEST_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
 
 describe('API server', () => {
-  let pool: ConnectionPool;
+  let testDb: TestDb;
   let server: Server;
   let port: number;
   let closeServer: () => Promise<void>;
   const testSchema = 'api_server_test';
 
   beforeAll(async () => {
-    pool = createPool(TEST_URL);
+    testDb = await createTestDb();
 
-    // Create test schema and table
-    await pool.query(`DROP SCHEMA IF EXISTS ${testSchema} CASCADE`);
-    await pool.query(`CREATE SCHEMA ${testSchema}`);
-    await pool.query(`
+    await testDb.pool.query(`CREATE SCHEMA ${testSchema}`);
+    await testDb.pool.query(`
       CREATE TABLE ${testSchema}.contacts (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         name text NOT NULL,
@@ -31,12 +26,12 @@ describe('API server', () => {
     `);
 
     const config = defineConfig({
-      database: TEST_URL,
+      database: testDb.url,
       schema: testSchema,
       api: { graphiql: true },
     });
 
-    const result = await createAPIServer(pool, { tables: [], relations: [], enums: [] }, config);
+    const result = await createAPIServer(testDb.pool, { tables: [], relations: [], enums: [] }, config);
     closeServer = result.close;
 
     server = createServer(result.handler);
@@ -51,8 +46,7 @@ describe('API server', () => {
   afterAll(async () => {
     await new Promise<void>((resolve) => server.close(() => resolve()));
     await closeServer();
-    await pool.query(`DROP SCHEMA IF EXISTS ${testSchema} CASCADE`);
-    await pool.end();
+    await destroyTestDb(testDb);
   });
 
   async function graphql(query: string, variables?: Record<string, unknown>) {
@@ -100,7 +94,6 @@ describe('API server', () => {
   });
 
   it('updates a record via mutation', async () => {
-    // First get Alice's id
     const { body: listBody } = await graphql(`{ allContacts { nodes { rowId name } } }`);
     const alice = listBody.data.allContacts.nodes.find(
       (n: Record<string, unknown>) => n.name === 'Alice',
@@ -118,7 +111,6 @@ describe('API server', () => {
   });
 
   it('deletes a record via mutation', async () => {
-    // First get Alice's id
     const { body: listBody } = await graphql(`{ allContacts { nodes { rowId name } } }`);
     const alice = listBody.data.allContacts.nodes.find(
       (n: Record<string, unknown>) => n.name === 'Alice Updated',
@@ -134,7 +126,6 @@ describe('API server', () => {
 
     expect(body.data.deleteContactByRowId.contact.name).toBe('Alice Updated');
 
-    // Verify deleted
     const { body: afterBody } = await graphql(`{ allContacts { nodes { rowId } } }`);
     const deleted = afterBody.data.allContacts.nodes.find(
       (n: Record<string, unknown>) => n.rowId === alice.rowId,
@@ -149,7 +140,6 @@ describe('API server', () => {
     });
     expect(res.status).toBe(200);
     const text = await res.text();
-    // GraphiQL returns an HTML page
     expect(text).toContain('html');
   });
 });

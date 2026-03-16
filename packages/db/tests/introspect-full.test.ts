@@ -1,35 +1,27 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import type { ConnectionPool } from '@simplicity-admin/core';
-import { createPool } from '@simplicity-admin/db';
 import { introspectSchema } from '../src/introspect/index.js';
-
-const TEST_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
+import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
 
 describe('introspectSchema', () => {
-  let pool: ConnectionPool;
+  let testDb: TestDb;
   const testSchema = 'introspect_full_test';
 
   beforeAll(async () => {
-    pool = createPool(TEST_URL);
+    testDb = await createTestDb();
 
-    // Create test schema with multiple tables, relations, and enums
-    await pool.query(`DROP SCHEMA IF EXISTS ${testSchema} CASCADE`);
-    await pool.query(`CREATE SCHEMA ${testSchema}`);
+    await testDb.pool.query(`CREATE SCHEMA ${testSchema}`);
+    await testDb.pool.query(`CREATE TYPE ${testSchema}.article_status AS ENUM ('draft', 'review', 'published')`);
 
-    // Create enum
-    await pool.query(`CREATE TYPE ${testSchema}.article_status AS ENUM ('draft', 'review', 'published')`);
-
-    // Create tables
-    await pool.query(`
+    await testDb.pool.query(`
       CREATE TABLE ${testSchema}.authors (
         id serial PRIMARY KEY,
         name text NOT NULL,
         email varchar(255) UNIQUE
       )
     `);
-    await pool.query(`COMMENT ON TABLE ${testSchema}.authors IS 'Article authors'`);
+    await testDb.pool.query(`COMMENT ON TABLE ${testSchema}.authors IS 'Article authors'`);
 
-    await pool.query(`
+    await testDb.pool.query(`
       CREATE TABLE ${testSchema}.articles (
         id serial PRIMARY KEY,
         title text NOT NULL,
@@ -39,14 +31,14 @@ describe('introspectSchema', () => {
       )
     `);
 
-    await pool.query(`
+    await testDb.pool.query(`
       CREATE TABLE ${testSchema}.tags (
         id serial PRIMARY KEY,
         label text NOT NULL UNIQUE
       )
     `);
 
-    await pool.query(`
+    await testDb.pool.query(`
       CREATE TABLE ${testSchema}.article_tags (
         article_id integer NOT NULL REFERENCES ${testSchema}.articles(id),
         tag_id integer NOT NULL REFERENCES ${testSchema}.tags(id),
@@ -56,12 +48,11 @@ describe('introspectSchema', () => {
   });
 
   afterAll(async () => {
-    await pool.query(`DROP SCHEMA IF EXISTS ${testSchema} CASCADE`);
-    await pool.end();
+    await destroyTestDb(testDb);
   });
 
   it('returns a complete SchemaMeta', async () => {
-    const schema = await introspectSchema(pool, testSchema);
+    const schema = await introspectSchema(testDb.pool, testSchema);
 
     expect(schema).toBeDefined();
     expect(schema.tables).toBeInstanceOf(Array);
@@ -70,13 +61,13 @@ describe('introspectSchema', () => {
   });
 
   it('includes all tables', async () => {
-    const schema = await introspectSchema(pool, testSchema);
+    const schema = await introspectSchema(testDb.pool, testSchema);
     const tableNames = schema.tables.map((t) => t.name).sort();
     expect(tableNames).toEqual(['article_tags', 'articles', 'authors', 'tags']);
   });
 
   it('populates columns on each table', async () => {
-    const schema = await introspectSchema(pool, testSchema);
+    const schema = await introspectSchema(testDb.pool, testSchema);
 
     const authors = schema.tables.find((t) => t.name === 'authors');
     expect(authors).toBeDefined();
@@ -87,7 +78,7 @@ describe('introspectSchema', () => {
   });
 
   it('populates primary keys including composite', async () => {
-    const schema = await introspectSchema(pool, testSchema);
+    const schema = await introspectSchema(testDb.pool, testSchema);
 
     const articleTags = schema.tables.find((t) => t.name === 'article_tags');
     expect(articleTags).toBeDefined();
@@ -95,16 +86,14 @@ describe('introspectSchema', () => {
   });
 
   it('includes relations in both directions', async () => {
-    const schema = await introspectSchema(pool, testSchema);
+    const schema = await introspectSchema(testDb.pool, testSchema);
 
-    // articles.author_id -> authors.id should produce both directions
     const manyToOne = schema.relations.filter((r) => r.type === 'many-to-one');
     const oneToMany = schema.relations.filter((r) => r.type === 'one-to-many');
 
     expect(manyToOne.length).toBeGreaterThanOrEqual(1);
     expect(oneToMany.length).toBeGreaterThanOrEqual(1);
 
-    // Verify articles -> authors many-to-one exists
     const articlesToAuthors = manyToOne.find(
       (r) => r.fromTable === 'articles' && r.toTable === 'authors',
     );
@@ -112,7 +101,6 @@ describe('introspectSchema', () => {
     expect(articlesToAuthors!.fromColumns).toEqual(['author_id']);
     expect(articlesToAuthors!.toColumns).toEqual(['id']);
 
-    // Verify authors -> articles one-to-many exists
     const authorsToArticles = oneToMany.find(
       (r) => r.fromTable === 'authors' && r.toTable === 'articles',
     );
@@ -120,7 +108,7 @@ describe('introspectSchema', () => {
   });
 
   it('includes enums', async () => {
-    const schema = await introspectSchema(pool, testSchema);
+    const schema = await introspectSchema(testDb.pool, testSchema);
 
     expect(schema.enums.length).toBeGreaterThanOrEqual(1);
     const articleStatus = schema.enums.find((e) => e.name === 'article_status');
@@ -130,7 +118,7 @@ describe('introspectSchema', () => {
   });
 
   it('defaults to public schema', async () => {
-    const schema = await introspectSchema(pool);
+    const schema = await introspectSchema(testDb.pool);
     expect(schema).toBeDefined();
     expect(schema.tables).toBeInstanceOf(Array);
     expect(schema.relations).toBeInstanceOf(Array);
@@ -139,16 +127,16 @@ describe('introspectSchema', () => {
 
   it('handles schema with no tables', async () => {
     const emptySchema = 'introspect_full_empty';
-    await pool.query(`DROP SCHEMA IF EXISTS ${emptySchema} CASCADE`);
-    await pool.query(`CREATE SCHEMA ${emptySchema}`);
+    await testDb.pool.query(`DROP SCHEMA IF EXISTS ${emptySchema} CASCADE`);
+    await testDb.pool.query(`CREATE SCHEMA ${emptySchema}`);
 
     try {
-      const schema = await introspectSchema(pool, emptySchema);
+      const schema = await introspectSchema(testDb.pool, emptySchema);
       expect(schema.tables).toEqual([]);
       expect(schema.relations).toEqual([]);
       expect(schema.enums).toEqual([]);
     } finally {
-      await pool.query(`DROP SCHEMA IF EXISTS ${emptySchema} CASCADE`);
+      await testDb.pool.query(`DROP SCHEMA IF EXISTS ${emptySchema} CASCADE`);
     }
   });
 });
