@@ -71,7 +71,11 @@
     );
   }
 
-  let formData: Record<string, unknown> = $state(initFormData(columns, values));
+  let formData: Record<string, unknown> = $state({});
+
+  $effect.pre(() => {
+    formData = initFormData(columns, values);
+  });
 
   // Validation errors
   let errors: Record<string, string> = $state({});

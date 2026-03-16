@@ -21,12 +21,21 @@
 		availableRoles = ['app_admin', 'app_editor', 'app_viewer'],
 	}: Props = $props();
 
-	let dashboardName = $state(name);
-	let dashboardSlug = $state(slug);
-	let dashboardRoles = $state<string[]>([...roles]);
-	let dashboardIsDefault = $state(isDefault);
-	let dashboardWidgets = $state<Widget[]>([...widgets]);
-	let dashboardLayout = $state<WidgetLayout[]>([...layout]);
+	let dashboardName = $state('');
+	let dashboardSlug = $state('');
+	let dashboardRoles = $state<string[]>([]);
+	let dashboardIsDefault = $state(false);
+	let dashboardWidgets = $state<Widget[]>([]);
+	let dashboardLayout = $state<WidgetLayout[]>([]);
+
+	$effect.pre(() => {
+		dashboardName = name;
+		dashboardSlug = slug;
+		dashboardRoles = [...roles];
+		dashboardIsDefault = isDefault;
+		dashboardWidgets = [...widgets];
+		dashboardLayout = [...layout];
+	});
 
 	// New widget form state
 	let newWidgetTitle = $state('');

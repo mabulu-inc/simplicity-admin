@@ -173,6 +173,39 @@ describe('AutoForm', () => {
     });
     expect(screen.queryByRole('button', { name: /delete/i })).toBeNull();
   });
+
+  it('updates form data when values prop changes', async () => {
+    const { rerender } = render(AutoForm, {
+      props: {
+        columns: [textColumn, booleanColumn],
+        values: { name: 'Alice', active: true },
+      },
+    });
+    expect((screen.getByLabelText('Name') as HTMLInputElement).value).toBe('Alice');
+
+    await rerender({
+      columns: [textColumn, booleanColumn],
+      values: { name: 'Bob', active: false },
+    });
+    expect((screen.getByLabelText('Name') as HTMLInputElement).value).toBe('Bob');
+    expect((screen.getByLabelText('Active') as HTMLInputElement).checked).toBe(false);
+  });
+
+  it('updates form data when columns prop changes', async () => {
+    const { rerender } = render(AutoForm, {
+      props: {
+        columns: [textColumn],
+      },
+    });
+    expect(screen.getByLabelText('Name')).toBeTruthy();
+    expect(screen.queryByLabelText('Active')).toBeNull();
+
+    await rerender({
+      columns: [textColumn, booleanColumn],
+    });
+    expect(screen.getByLabelText('Name')).toBeTruthy();
+    expect(screen.getByLabelText('Active')).toBeTruthy();
+  });
 });
 
 describe('ConfirmDialog', () => {

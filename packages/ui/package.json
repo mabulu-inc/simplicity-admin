@@ -18,7 +18,7 @@
     "build:app": "vite build",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json --fail-on-warnings",
     "lint": "eslint src/",
     "clean": "rm -rf dist .turbo *.tsbuildinfo .svelte-kit"
   },
