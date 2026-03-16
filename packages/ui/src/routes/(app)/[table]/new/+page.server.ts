@@ -3,7 +3,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
 import { getTableRbacInfo } from '$lib/server/rbac.js';
 import { requireAuth, requireInsert, getWritableColumnNames } from '$lib/server/rbac-guards.js';
-import { escapeIdentifier } from '@simplicity-admin/db';
+import { escapeIdentifier, sanitizeDbError } from '@simplicity-admin/db';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const tableName = params.table;
@@ -69,8 +69,7 @@ export const actions: Actions = {
 				values,
 			);
 		} catch (err: unknown) {
-			const message = err instanceof Error ? err.message : 'Unknown error';
-			return { error: message };
+			return { error: sanitizeDbError(err instanceof Error ? err : new Error(String(err))) };
 		}
 
 		throw redirect(303, `/${tableName}`);

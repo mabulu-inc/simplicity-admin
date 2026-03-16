@@ -11,3 +11,4 @@ export { introspectSchema } from './introspect/index.js';
 export { bootstrap } from './bootstrap.js';
 export { escapeIdentifier } from './escape.js';
 export { postgresProvider } from './provider.js';
+export { sanitizeDbError } from './sanitize-error.js';
