@@ -4,7 +4,7 @@
 
 ## Overview
 
-The database module (`@simplicity-admin/db`) handles PostgreSQL connectivity, schema introspection, system schema bootstrapping via schema-flow, and provides the default `DatabaseProvider` implementation. It converts live PostgreSQL schemas into the `SchemaMeta` model that drives all downstream modules.
+The database module (`@simplicity-admin/db`) handles PostgreSQL connectivity, schema introspection, system schema bootstrapping via simplicity-schema, and provides the default `DatabaseProvider` implementation. It converts live PostgreSQL schemas into the `SchemaMeta` model that drives all downstream modules.
 
 ## Package Location
 
@@ -16,7 +16,7 @@ The database module (`@simplicity-admin/db`) handles PostgreSQL connectivity, sc
 ## Dependencies
 
 - `@simplicity-admin/core` — metadata types, provider interface, config types
-- `@mabulu-inc/schema-flow` — declarative DDL, migration, DB introspection
+- `@mabulu-inc/simplicity-schema` — declarative DDL, migration, DB introspection
 - `pg` — PostgreSQL client (connection pooling)
 
 ## Public API
@@ -134,12 +134,12 @@ export function postgresProvider(): DatabaseProvider;
 ### B-DB-013: Bootstrap — Fresh Database
 **Given** a PostgreSQL database with no system schema
 **When** `bootstrap(pool, config)` is called
-**Then** creates the system schema with `users`, `tenants`, `memberships` tables, database roles, functions, and RLS policies using schema-flow
+**Then** creates the system schema with `users`, `tenants`, `memberships` tables, database roles, functions, and RLS policies using simplicity-schema
 
 ### B-DB-014: Bootstrap — Idempotent
 **Given** a database where bootstrap has already run
 **When** `bootstrap(pool, config)` is called again
-**Then** completes without error (schema-flow handles idempotency)
+**Then** completes without error (simplicity-schema handles idempotency)
 
 ### B-DB-015: Bootstrap — Creates Default Tenant
 **Given** a fresh bootstrap
@@ -154,7 +154,7 @@ export function postgresProvider(): DatabaseProvider;
 ### B-DB-017: Generate YAML from DB
 **Given** an existing database with tables
 **When** `provider.generate(pool, outputDir, schema)` is called
-**Then** creates schema-flow YAML files in outputDir representing the current database schema (delegates to schema-flow's generateFromDb)
+**Then** creates simplicity-schema YAML files in outputDir representing the current database schema (delegates to simplicity-schema's generateFromDb)
 
 ## Error Handling
 
@@ -164,7 +164,7 @@ export function postgresProvider(): DatabaseProvider;
 | Query failed | DatabaseError | DB_002 | Throw with query summary and original error |
 | Introspection failed | DatabaseError | DB_003 | Throw with table/schema name and original error |
 | Bootstrap failed | DatabaseError | DB_004 | Throw with migration details and original error |
-| Schema-flow error | DatabaseError | DB_005 | Wrap schema-flow error with context |
+| Schema-flow error | DatabaseError | DB_005 | Wrap simplicity-schema error with context |
 
 ## Security Considerations
 
@@ -215,7 +215,7 @@ packages/db/
       columns.ts                # introspectColumns()
       relations.ts              # introspectRelations()
       enums.ts                  # introspectEnums()
-  schema/                       # schema-flow YAML (system schema)
+  schema/                       # simplicity-schema YAML (system schema)
     tables/
       users.yaml
       tenants.yaml
@@ -245,5 +245,5 @@ packages/db/
 
 ## Decision References
 
-- ADR-001: PostgreSQL-first database strategy, schema-flow for DDL
+- ADR-001: PostgreSQL-first database strategy, simplicity-schema for DDL
 - ADR-006: Provider pattern — postgresProvider() is the default DatabaseProvider

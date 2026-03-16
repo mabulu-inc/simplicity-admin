@@ -4,7 +4,7 @@
 
 ## Overview
 
-The RBAC (Role-Based Access Control) module provides column-level permission management. Permissions are defined code-first in schema-flow YAML files (grants, policies, roles) and enforced at the PostgreSQL level. The admin UI allows further restriction of permissions but can NEVER exceed the code-defined ceiling. This module reads effective permissions and exposes them to the UI for rendering decisions.
+The RBAC (Role-Based Access Control) module provides column-level permission management. Permissions are defined code-first in simplicity-schema YAML files (grants, policies, roles) and enforced at the PostgreSQL level. The admin UI allows further restriction of permissions but can NEVER exceed the code-defined ceiling. This module reads effective permissions and exposes them to the UI for rendering decisions.
 
 ## Package Location
 
@@ -108,7 +108,7 @@ export function listOverrides(pool: ConnectionPool, role: string): Promise<Permi
 ## Behavior Specification
 
 ### B-RBAC-001: Read Code-Defined Permissions
-**Given** schema-flow YAML grants `app_viewer` SELECT on `contacts` columns `[id, name, email]`
+**Given** simplicity-schema YAML grants `app_viewer` SELECT on `contacts` columns `[id, name, email]`
 **When** `getEffectivePermissions(pool, 'app_viewer')` is called
 **Then** returns permissions showing SELECT on contacts for columns id, name, email only
 
@@ -143,7 +143,7 @@ export function listOverrides(pool: ConnectionPool, role: string): Promise<Permi
 **Then** `canAccessColumn(perms, 'contacts', 'email', 'SELECT')` returns `true` (restored to code ceiling)
 
 ### B-RBAC-008: Admin Role Has Full Access
-**Given** `app_admin` has all privileges on all tables (via schema-flow YAML)
+**Given** `app_admin` has all privileges on all tables (via simplicity-schema YAML)
 **When** `canAccess(perms, 'any_table', 'DELETE')` is called
 **Then** returns `true`
 
@@ -177,7 +177,7 @@ export function listOverrides(pool: ConnectionPool, role: string): Promise<Permi
 - [ ] `canAccessColumn()` returns false for non-granted column
 - [ ] `getAccessibleColumns()` returns correct column list for operation
 
-### Integration Tests (require real Postgres with schema-flow grants applied)
+### Integration Tests (require real Postgres with simplicity-schema grants applied)
 - [ ] `getEffectivePermissions()` reads correct grants from database
 - [ ] `getEffectivePermissions()` includes column-level grant detail
 - [ ] `getEffectivePermissions()` merges UI overrides with code grants
@@ -185,7 +185,7 @@ export function listOverrides(pool: ConnectionPool, role: string): Promise<Permi
 - [ ] `saveOverride()` rejects override that exceeds code ceiling
 - [ ] `removeOverride()` restores code-defined permission
 - [ ] `listOverrides()` returns all overrides for a role
-- [ ] Full flow: define grants in YAML → run schema-flow → read permissions → override via UI → verify merge
+- [ ] Full flow: define grants in YAML → run simplicity-schema → read permissions → override via UI → verify merge
 
 ## File Manifest
 

@@ -45,7 +45,7 @@ The framework needs authentication (who are you?) and authorization (what can yo
 4. PostgreSQL enforces grants and RLS — no application-layer permission checks needed
 
 **RBAC definition:**
-- Roles defined in schema-flow YAML (`schema/roles/*.yaml`)
+- Roles defined in simplicity-schema YAML (`schema/roles/*.yaml`)
 - Table + column grants defined in table YAML (`grants:` section)
 - RLS policies defined in table YAML (`policies:` section)
 - This is the "code ceiling" — the maximum permission level
@@ -57,7 +57,7 @@ The framework needs authentication (who are you?) and authorization (what can yo
 - Column-level RBAC is a first-class PostgreSQL feature (GRANT on columns)
 - RLS provides transparent row-level filtering without query modification
 - Functional roles are shared across users (not N roles for N users)
-- Permissions are version-controlled via schema-flow YAML
+- Permissions are version-controlled via simplicity-schema YAML
 
 **Negative:**
 - Requires PostgreSQL (RLS + column grants are PG-specific)

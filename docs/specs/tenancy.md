@@ -166,7 +166,7 @@ export function setTenantPgSettings(tenantId: string | undefined, superAdmin: bo
 
 ### B-TEN-011: Tenant-Scoped Mixin
 **Given** a table YAML using `use: [tenant_scoped]`
-**When** schema-flow runs
+**When** simplicity-schema runs
 **Then** the table gets a `tenant_id` column (uuid, NOT NULL, FK to tenants.id), an RLS policy (`tenant_id = current_setting('app.tenant_id')::uuid OR current_setting('app.is_super_admin', true)::boolean = true`), and `force_rls: true`
 
 ### B-TEN-012: Create Tenant

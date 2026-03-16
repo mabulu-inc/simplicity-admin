@@ -31,7 +31,7 @@ export function postgresProvider(): DatabaseProvider {
 
     async migrate(pool: ConnectionPool, config: MigrationConfig): Promise<MigrationResult> {
       // Currently delegates to bootstrap for system schema setup.
-      // Full schema-flow diff/apply migration will be added in a later task.
+      // Full simplicity-schema diff/apply migration will be added in a later task.
       await bootstrap(pool, {
         database: '', // Not used by bootstrap (it uses the pool directly)
         schema: config.schema ?? 'public',
@@ -47,7 +47,7 @@ export function postgresProvider(): DatabaseProvider {
       _outputDir: string,
       _schema?: string,
     ): Promise<void> {
-      // Placeholder — full schema-flow YAML generation will be implemented
+      // Placeholder — full simplicity-schema YAML generation will be implemented
       // when the generate-from-db feature is built (B-DB-017).
     },
   };

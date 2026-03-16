@@ -51,7 +51,7 @@ cd my-admin
 # Edit simplicity-admin.config.ts with your DATABASE_URL
 npm run dev
 ```
-Generates a complete starter project with config file, Docker Compose for Postgres, and a dev script. Running `npm run dev` bootstraps the database (creates system tables via schema-flow) and launches the admin UI.
+Generates a complete starter project with config file, Docker Compose for Postgres, and a dev script. Running `npm run dev` bootstraps the database (creates system tables via simplicity-schema) and launches the admin UI.
 
 ### 4b. npm install + config (Existing project)
 ```bash
@@ -102,10 +102,10 @@ Mounts the full admin suite (API + UI) at the specified path. Works with Express
 **As a** developer, **I want to** provide a database URL and have SIMPLICITY-ADMIN introspect the schema **so that** I don't have to manually define my data model.
 
 - AC-002a: Connecting to an existing Postgres DB introspects all user tables, columns, types, relations, and enums
-- AC-002b: System tables (users, tenants, memberships) are created automatically via schema-flow if they don't exist
+- AC-002b: System tables (users, tenants, memberships) are created automatically via simplicity-schema if they don't exist
 - AC-002c: Introspection produces an internal metadata model that drives CRUD, forms, and API generation
 - AC-002d: Re-running introspection detects schema changes
-- AC-002e: Developer can generate schema-flow YAML files from their existing DB at any time via `npx simplicity-admin generate`
+- AC-002e: Developer can generate simplicity-schema YAML files from their existing DB at any time via `npx simplicity-admin generate`
 
 #### US-003: Authentication
 **As a** user, **I want to** log in with email and password **so that** I can access the admin panel securely.
@@ -154,22 +154,22 @@ Mounts the full admin suite (API + UI) at the specified path. Works with Express
 **As a** developer, **I want to** run `npx simplicity-admin dev` **so that** I get a hot-reloading development environment.
 
 - AC-007a: Starts the API server (PostGraphile) and admin UI (SvelteKit)
-- AC-007b: Bootstraps the database if needed (runs schema-flow migrations)
+- AC-007b: Bootstraps the database if needed (runs simplicity-schema migrations)
 - AC-007c: Hot-reloads on config file changes
 - AC-007d: Displays clear startup banner with URLs for UI, API, and GraphiQL
 
 ### M2: Access Control (v0.2.0)
 
-**Goal:** Developers can define column-level RBAC via code (schema-flow YAML), admins can further customize permissions via the UI, and navigation adapts to user roles.
+**Goal:** Developers can define column-level RBAC via code (simplicity-schema YAML), admins can further customize permissions via the UI, and navigation adapts to user roles.
 
 #### US-008: Role-Based Access Control (RBAC)
-**As a** developer, **I want to** define roles and permissions in schema-flow YAML **so that** access control is version-controlled and enforced at the database level.
+**As a** developer, **I want to** define roles and permissions in simplicity-schema YAML **so that** access control is version-controlled and enforced at the database level.
 
-- AC-008a: Roles are defined in schema-flow YAML (`schema/roles/*.yaml`)
+- AC-008a: Roles are defined in simplicity-schema YAML (`schema/roles/*.yaml`)
 - AC-008b: Table-level permissions (SELECT, INSERT, UPDATE, DELETE) are defined via `grants` in table YAML
 - AC-008c: Column-level permissions are defined via `grants.columns` in table YAML
 - AC-008d: RLS policies are defined via `policies` in table YAML
-- AC-008e: Running schema-flow applies all grants, policies, and RLS settings to the database
+- AC-008e: Running simplicity-schema applies all grants, policies, and RLS settings to the database
 - AC-008f: The admin UI respects all permissions — hidden columns are not visible, denied actions are disabled
 
 #### US-009: UI Permission Management
@@ -289,11 +289,11 @@ SIMPLICITY-ADMIN is licensed under the **Business Source License (BSL 1.1)**.
 | **Functional role** | A database role representing a permission level (e.g., `app_admin`, `app_editor`, `app_viewer`). Not tied to individual users — users are assigned to roles via memberships. |
 | **Tenant** | An isolated workspace within the application. All data is scoped to a tenant via `tenant_id` foreign keys and RLS policies. Invisible if multi-tenancy is not configured. |
 | **Membership** | The association of a user to a tenant with a specific role. A user can be a member of multiple tenants with different roles. |
-| **Mixin** | A reusable schema pattern in schema-flow (e.g., `timestamps`, `tenant_scoped`, `auditable`). Applied to tables via `use: [mixin_name]` in YAML. |
-| **schema-flow** | `@mabulu-inc/schema-flow` — declarative PostgreSQL migration tool that defines schema as YAML files. Supports tables, columns, enums, mixins, RLS policies, grants, triggers, functions, and views. |
-| **System schema** | Database objects owned by SIMPLICITY-ADMIN (users, tenants, memberships, roles). Managed via schema-flow YAML shipped with the framework. |
+| **Mixin** | A reusable schema pattern in simplicity-schema (e.g., `timestamps`, `tenant_scoped`, `auditable`). Applied to tables via `use: [mixin_name]` in YAML. |
+| **simplicity-schema** | `@mabulu-inc/simplicity-schema` — declarative PostgreSQL migration tool that defines schema as YAML files. Supports tables, columns, enums, mixins, RLS policies, grants, triggers, functions, and views. |
+| **System schema** | Database objects owned by SIMPLICITY-ADMIN (users, tenants, memberships, roles). Managed via simplicity-schema YAML shipped with the framework. |
 | **Application schema** | Database objects owned by the developer's application. Introspected by SIMPLICITY-ADMIN to generate CRUD, API, and UI. |
 | **Ralph Loop** | AI development methodology: stateless while loop where each iteration reads specs, picks a task, does TDD, commits, and resets context. |
-| **Code ceiling** | RBAC principle: permissions defined in code (schema-flow YAML) set the maximum access level. UI-based customization can further restrict but never exceed this ceiling. |
+| **Code ceiling** | RBAC principle: permissions defined in code (simplicity-schema YAML) set the maximum access level. UI-based customization can further restrict but never exceed this ceiling. |
 | **Metadata model** | Internal representation of the database schema (tables, columns, relations, enums) that drives CRUD generation, form rendering, and API schema. |
 | **Design tokens** | CSS custom properties that define the visual language (colors, spacing, typography). Swappable via themes. |

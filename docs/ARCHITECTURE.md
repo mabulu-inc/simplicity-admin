@@ -46,12 +46,12 @@ All three consumption modes (CLI scaffold, npm package, middleware) converge on 
 ```mermaid
 graph TD
     CORE["@simplicity-admin/core<br/>Config, Types, Plugin Registry"]
-    DB["@simplicity-admin/db<br/>Introspection, schema-flow, Bootstrap"]
+    DB["@simplicity-admin/db<br/>Introspection, simplicity-schema, Bootstrap"]
     API["@simplicity-admin/api<br/>PostGraphile V5, REST adapter"]
     AUTH["@simplicity-admin/auth<br/>JWT, Middleware, RBAC"]
     UI["@simplicity-admin/ui<br/>SvelteKit, Components, Theming"]
     CLI["@simplicity-admin/cli<br/>init, dev, build, generate"]
-    SF["@mabulu-inc/schema-flow<br/>Declarative DDL, Migrations"]
+    SF["@mabulu-inc/simplicity-schema<br/>Declarative DDL, Migrations"]
 
     DB --> CORE
     DB --> SF
@@ -69,7 +69,7 @@ graph TD
 
 **Dependency rules:**
 - `core` has ZERO dependencies on other `@simplicity-admin` packages
-- `db` depends on `core` + `schema-flow`
+- `db` depends on `core` + `simplicity-schema`
 - `api` depends on `core` + `db` (needs metadata to configure PostGraphile)
 - `auth` depends on `core` + `db` (needs user/membership tables)
 - `ui` depends on `core` only (communicates with API via HTTP, not direct import)
@@ -193,7 +193,7 @@ simplicity-admin/
 │   ├── db/
 │   │   ├── package.json      # @simplicity-admin/db
 │   │   ├── tsconfig.json
-│   │   ├── schema/                   # schema-flow YAML (system schema)
+│   │   ├── schema/                   # simplicity-schema YAML (system schema)
 │   │   │   ├── tables/
 │   │   │   │   ├── users.yaml
 │   │   │   │   ├── tenants.yaml
@@ -295,7 +295,7 @@ simplicity-admin/
 │           │   ├── init.ts           # Scaffold new project
 │           │   ├── dev.ts            # Start dev environment
 │           │   ├── build.ts          # Production build
-│           │   └── generate.ts       # Generate schema-flow YAML from DB
+│           │   └── generate.ts       # Generate simplicity-schema YAML from DB
 │           ├── templates/            # Scaffold templates (shared)
 │           └── starters/             # Starter-specific scaffolds
 │               ├── blank/            # Minimal: config + empty schema
@@ -320,7 +320,7 @@ my-admin/
 ├── simplicity-admin.config.ts    # Config: database, auth, hooks, actions
 ├── compose.yaml                  # PostgreSQL container
 ├── .env                          # DATABASE_URL, secrets
-├── schema/                       # schema-flow YAML (data structure)
+├── schema/                       # simplicity-schema YAML (data structure)
 │   └── tables/
 │       ├── contacts.yaml
 │       └── deals.yaml
@@ -437,7 +437,7 @@ The developer decides where and how to implement their business rules. The frame
 
 | Layer | Mechanism | Best for | Example |
 |-------|-----------|----------|---------|
-| **Database** | Constraints, triggers, functions, RLS (via schema-flow YAML) | Hard invariants that must be enforced regardless of how data enters | `CHECK (price > 0)`, `UNIQUE (email)`, trigger that updates `updated_at` |
+| **Database** | Constraints, triggers, functions, RLS (via simplicity-schema YAML) | Hard invariants that must be enforced regardless of how data enters | `CHECK (price > 0)`, `UNIQUE (email)`, trigger that updates `updated_at` |
 | **Code** | Data hooks in `config.hooks` (`validate`, `beforeInsert`, `afterUpdate`, etc.) | Business rules that need application context, external API calls, or complex logic | Validate against a CRM API before insert, send a Slack notification after a deal closes |
 | **API** | PostGraphile plugins, REST middleware, GraphQL resolvers | Request-level concerns, computed fields, custom endpoints | Add a computed `fullName` field, rate-limit a specific mutation |
 
@@ -530,12 +530,12 @@ The framework never forces business logic into any one layer. DB constraints are
 
 ### 6a. Schema-flow Integration
 
-SIMPLICITY-ADMIN uses `@mabulu-inc/schema-flow` programmatically (not via CLI) for:
+SIMPLICITY-ADMIN uses `@mabulu-inc/simplicity-schema` programmatically (not via CLI) for:
 - **Bootstrap**: Creating system tables (users, tenants, memberships) on first run
 - **Migration**: Applying system schema changes on framework upgrades
-- **Generation**: `npx simplicity-admin generate` delegates to `schema-flow generate` to introspect an existing DB and create YAML files
+- **Generation**: `npx simplicity-admin generate` delegates to `simplicity-schema generate` to introspect an existing DB and create YAML files
 
-Key schema-flow APIs used:
+Key simplicity-schema APIs used:
 - `runAll(config)` — execute full migration (pre → migrate → post)
 - `buildPlan(config)` — preview changes without applying
 - `generateFromDb(config)` — introspect DB → generate YAML files
@@ -557,7 +557,7 @@ This metadata model drives everything downstream: PostGraphile schema, UI compon
 
 ### 6c. System vs Application Schema
 
-- **System schema** (`_simplicity_admin`): Owned by the framework. Contains `users`, `tenants`, `memberships`. Managed by schema-flow YAML shipped with `@simplicity-admin/db`. Never modified by the developer directly. The underscore prefix signals "framework-owned".
+- **System schema** (`_simplicity_admin`): Owned by the framework. Contains `users`, `tenants`, `memberships`. Managed by simplicity-schema YAML shipped with `@simplicity-admin/db`. Never modified by the developer directly. The underscore prefix signals "framework-owned".
 - **Application schema**: Owned by the developer. By default, this is `public` — all business tables live in one schema. Developers who prefer modular, namespaced schemas can configure `schema` to a custom name (e.g., `'crm'`, `'inventory'`) or use multiple schemas by pointing different simplicity-admin instances at different schemas within the same database.
 
 These are separate PostgreSQL schemas. The framework's system tables never collide with the developer's tables regardless of how the developer organizes their application schemas.
@@ -637,7 +637,7 @@ The admin UI is a SvelteKit application that:
 The view layer controls how data is presented. Four tiers, each building on the last:
 
 1. **Auto-generated defaults** — framework introspects schema + relations to produce smart list and detail views with zero config. Detail views include field sections and related data (e.g., viewing a team shows its roster, upcoming games, and past games). List views auto-select appropriate columns (text, number, date — not JSON blobs).
-2. **Developer view definitions** (`views/*.view.yaml`) — YAML files that customize layouts, sections, related data display, filter presets, and field presentation. Separate from schema-flow YAML (schema = structure, views = presentation). Version-controlled and deployed.
+2. **Developer view definitions** (`views/*.view.yaml`) — YAML files that customize layouts, sections, related data display, filter presets, and field presentation. Separate from simplicity-schema YAML (schema = structure, views = presentation). Version-controlled and deployed.
 3. **Admin view overrides** (runtime UI) — admins drag/drop sections, hide/show columns, reorder fields. Stored in `_simplicity_admin.view_overrides`. Portable between environments via `npx simplicity-admin env export/import`.
 4. **User saved views** (personal) — users save their own column picks, filters, sort orders, and layout preferences. Nameable, shareable within tenant. Not subject to managed porting.
 
@@ -716,10 +716,10 @@ Themes are swappable via config or at runtime. Light and dark themes ship by def
 ### 10a. Three Layers
 
 1. **Database roles** (PostgreSQL): `anon`, `app_viewer`, `app_editor`, `app_admin`, `authenticator`
-2. **Grants** (table + column level): Defined in schema-flow YAML, applied to database
+2. **Grants** (table + column level): Defined in simplicity-schema YAML, applied to database
 3. **RLS policies**: Row-level filtering based on `current_setting('app.user_id')` and `current_setting('app.tenant_id')`
 
-### 10b. Code-First Permissions (schema-flow YAML)
+### 10b. Code-First Permissions (simplicity-schema YAML)
 
 ```yaml
 # schema/tables/contacts.yaml

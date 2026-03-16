@@ -20,7 +20,7 @@ function parseArgs(args: string[]): { outputDir?: string; schema?: string } {
 }
 
 /**
- * Generate schema-flow YAML from existing database.
+ * Generate simplicity-schema YAML from existing database.
  * Delegates to the DatabaseProvider.generate() method.
  */
 export async function runGenerate(args: string[]): Promise<void> {

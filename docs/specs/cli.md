@@ -15,7 +15,7 @@ The CLI module (`@simplicity-admin/cli`) provides the command-line interface for
 ## Dependencies
 
 - `@simplicity-admin/core` — config loader
-- `@simplicity-admin/db` — bootstrap, schema-flow integration
+- `@simplicity-admin/db` — bootstrap, simplicity-schema integration
 - `@simplicity-admin/api` — API server
 - `@simplicity-admin/auth` — auth setup
 - `@simplicity-admin/ui` — UI server
@@ -29,8 +29,8 @@ npx simplicity-admin init [dir] [--starter <name>]  # Scaffold new project (star
 npx simplicity-admin dev                 # Start development server
 npx simplicity-admin build               # Build for production
 npx simplicity-admin start               # Start production server
-npx simplicity-admin generate            # Generate schema-flow YAML from existing DB
-npx simplicity-admin migrate             # Run schema-flow migrations
+npx simplicity-admin generate            # Generate simplicity-schema YAML from existing DB
+npx simplicity-admin migrate             # Run simplicity-schema migrations
 npx simplicity-admin env export [--output <file>]  # Export admin overrides + runtime config
 npx simplicity-admin env import [--input <file>]   # Import admin overrides into target env
 npx simplicity-admin --help              # Show help
@@ -83,7 +83,7 @@ Each prompt shows its default in brackets. Pressing Enter accepts the default.
 **Given** a starter other than `blank` is selected
 **When** scaffolding completes
 **Then** creates the standard files (package.json, config, compose.yaml, .env.example, .gitignore, empty `schema/` and `views/` directories) PLUS:
-- `schema/tables/` pre-populated with starter-specific schema-flow YAML files (e.g., contacts, deals, activities for CRM)
+- `schema/tables/` pre-populated with starter-specific simplicity-schema YAML files (e.g., contacts, deals, activities for CRM)
 - `simplicity-admin.config.ts` with starter-appropriate nav config and comments
 
 ### B-CLI-001f: Init — Unknown Starter
@@ -117,7 +117,7 @@ Config: simplicity-admin.config.ts (edit anytime)
 ### B-CLI-004: Dev — Full Stack Start
 **Given** a valid config file and PostgreSQL is accessible
 **When** `npx simplicity-admin dev` is run
-**Then** bootstraps the database (schema-flow), starts the API server (PostGraphile), and starts the UI server (SvelteKit), displaying URLs in a startup banner
+**Then** bootstraps the database (simplicity-schema), starts the API server (PostGraphile), and starts the UI server (SvelteKit), displaying URLs in a startup banner
 
 ### B-CLI-005: Dev — Startup Banner
 **Given** dev server starts on port 3000
@@ -156,12 +156,12 @@ Config: simplicity-admin.config.ts (edit anytime)
 ### B-CLI-010: Generate — Schema from DB
 **Given** a database with existing tables
 **When** `npx simplicity-admin generate` is run
-**Then** generates schema-flow YAML files in `schema/` representing the current database (delegates to schema-flow)
+**Then** generates simplicity-schema YAML files in `schema/` representing the current database (delegates to simplicity-schema)
 
 ### B-CLI-011: Migrate — Run Migrations
-**Given** schema-flow YAML files exist with changes
+**Given** simplicity-schema YAML files exist with changes
 **When** `npx simplicity-admin migrate` is run
-**Then** runs schema-flow migrations (plan + apply)
+**Then** runs simplicity-schema migrations (plan + apply)
 
 ### B-CLI-014: Env Export
 **Given** admin view overrides and admin strategy configs exist in `_simplicity_admin`
@@ -271,6 +271,6 @@ packages/cli/
 
 ## Decision References
 
-- ADR-001: PostgreSQL — bootstrap and migrate use schema-flow
+- ADR-001: PostgreSQL — bootstrap and migrate use simplicity-schema
 - ADR-002: PostGraphile — dev server starts PostGraphile
 - ADR-004: SvelteKit — build/start manage SvelteKit production build

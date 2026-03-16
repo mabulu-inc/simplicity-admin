@@ -3,7 +3,7 @@
 ## Current State
 <!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
 Last completed task: T-068
-Next eligible task: T-069 (Bootstrap via schema-flow programmatic API)
+Next eligible task: T-069 (Bootstrap via simplicity-schema programmatic API)
 Blockers: none
 Note: M5 tasks renumbered — bootstrap refactor added as T-069 (depends only on T-017, immediately eligible). Old T-069–T-081 shifted to T-070–T-082. Old T-082 (parameterize SQL) superseded and removed. Eligible tasks: T-069 (depends T-017), T-070–T-076, T-079–T-080 (depend T-068).
 Test suite status: 648 unit passed (5 skipped — DB integration), 17 E2E passed, 2 pre-existing DB test failures (contacts table in public schema from E2E setup conflicts with introspection tests)
@@ -228,7 +228,7 @@ Format for each entry:
 **Review**: introspectSchema() orchestrates listTables, introspectRelations, and introspectEnums in parallel, then populates columns on each table in parallel via introspectColumns (B-DB-012). Returns complete SchemaMeta with all tables (columns + primaryKey populated), all relations (both directions), and all enums. Defaults to 'public' schema. Handles empty schemas gracefully. Errors wrapped in DatabaseError with DB_003 code. All 8 integration tests use real Postgres with multi-table schema including composite PKs, FKs, and enums. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
-### 2026-03-08 — T-016: System schema YAML (schema-flow)
+### 2026-03-08 — T-016: System schema YAML (simplicity-schema)
 **Status**: DONE
 **Commit**: 6e8dd9c
 **Duration**: ~8 min
@@ -251,7 +251,7 @@ Format for each entry:
 - packages/db/tests/schema-validation.test.ts (48 tests)
 - packages/db/package.json (added yaml devDependency)
 **Test results**: 253 passed, 0 failed
-**Review**: All 14 schema-flow YAML files follow the documented YAML format reference. Tables: users has uuid PK, unique email, timestamps mixin; tenants has unique slug with regex check; memberships has composite unique index on (user_id, tenant_id, role) with FK constraints and role validity check. Roles: authenticator is login role with membership in all functional roles (anon, app_viewer, app_editor, app_admin) per ADR-005; functional roles are non-login with inherit. Functions: current_user_id/current_tenant_id return uuid from pgSettings; begin_session uses SECURITY DEFINER to SET LOCAL role and configure session variables; update_timestamp is the trigger function for timestamps mixin. Mixins: timestamps adds created_at/updated_at with auto-update trigger; tenant_scoped adds tenant_id with RLS policy matching B-TEN-011/018 (tenant isolation + super-admin bypass); auditable adds created_by/updated_by with FK to users. Grants on system tables restrict app_viewer/app_editor to SELECT on safe columns, app_admin gets full access. All 48 validation tests pass. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: All 14 simplicity-schema YAML files follow the documented YAML format reference. Tables: users has uuid PK, unique email, timestamps mixin; tenants has unique slug with regex check; memberships has composite unique index on (user_id, tenant_id, role) with FK constraints and role validity check. Roles: authenticator is login role with membership in all functional roles (anon, app_viewer, app_editor, app_admin) per ADR-005; functional roles are non-login with inherit. Functions: current_user_id/current_tenant_id return uuid from pgSettings; begin_session uses SECURITY DEFINER to SET LOCAL role and configure session variables; update_timestamp is the trigger function for timestamps mixin. Mixins: timestamps adds created_at/updated_at with auto-update trigger; tenant_scoped adds tenant_id with RLS policy matching B-TEN-011/018 (tenant isolation + super-admin bypass); auditable adds created_by/updated_by with FK to users. Grants on system tables restrict app_viewer/app_editor to SELECT on safe columns, app_admin gets full access. All 48 validation tests pass. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: Also created update_timestamp.yaml function (referenced by timestamps mixin trigger) which is not in the Produces list but is required for the mixin to work.
 
 ### 2026-03-08 — T-017: DB bootstrap orchestrator
@@ -276,8 +276,8 @@ Format for each entry:
 - packages/db/src/index.ts (added postgresProvider re-export)
 - packages/db/tests/provider.test.ts (6 integration tests)
 **Test results**: 268 passed, 0 failed
-**Review**: postgresProvider() returns a DatabaseProvider with name='postgres', version='0.0.1'. connect() wraps createPool() and verifies connectivity with a SELECT 1 query. introspect() delegates to introspectSchema(). migrate() delegates to bootstrap() for system schema setup (full schema-flow diff/apply to be added later). generate() is a no-op placeholder for B-DB-017 (schema-flow YAML generation from DB). All 4 DatabaseProvider methods implemented. Provider is stateless — each call to postgresProvider() creates a fresh instance. All 6 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
-**Notes**: migrate() currently wraps bootstrap() only. Full schema-flow migration (diff + apply) will be implemented when schema-flow engine is built.
+**Review**: postgresProvider() returns a DatabaseProvider with name='postgres', version='0.0.1'. connect() wraps createPool() and verifies connectivity with a SELECT 1 query. introspect() delegates to introspectSchema(). migrate() delegates to bootstrap() for system schema setup (full simplicity-schema diff/apply to be added later). generate() is a no-op placeholder for B-DB-017 (simplicity-schema YAML generation from DB). All 4 DatabaseProvider methods implemented. Provider is stateless — each call to postgresProvider() creates a fresh instance. All 6 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
+**Notes**: migrate() currently wraps bootstrap() only. Full simplicity-schema migration (diff + apply) will be implemented when simplicity-schema engine is built.
 
 ### 2026-03-08 — T-019: Initialize @simplicity-admin/auth package
 **Status**: DONE
@@ -643,7 +643,7 @@ Format for each entry:
 - packages/cli/src/cli.ts (wired generate and migrate commands into switch)
 - packages/cli/tests/generate.test.ts (9 integration tests)
 **Test results**: 143 passed (vitest), 0 failed
-**Review**: Generate command implements B-CLI-010 (schema generation from DB, delegates to DatabaseProvider.generate()). Migrate command implements B-CLI-011 (migration plan+apply, delegates to DatabaseProvider.migrate()). Both commands follow the same pattern as dev.ts: load config → connect DB → delegate → clean up pool. Error handling for missing config (CLI_002) and DB connection failure (CLI_003) matches spec. Supports --output-dir/--schema-dir/--schema/--allow-destructive flags. Provider methods are currently stubs (generate is a no-op, migrate delegates to bootstrap) — full schema-flow integration deferred to when @mabulu-inc/schema-flow is available. No circular deps. Typecheck clean. All tests pass with zero regressions.
+**Review**: Generate command implements B-CLI-010 (schema generation from DB, delegates to DatabaseProvider.generate()). Migrate command implements B-CLI-011 (migration plan+apply, delegates to DatabaseProvider.migrate()). Both commands follow the same pattern as dev.ts: load config → connect DB → delegate → clean up pool. Error handling for missing config (CLI_002) and DB connection failure (CLI_003) matches spec. Supports --output-dir/--schema-dir/--schema/--allow-destructive flags. Provider methods are currently stubs (generate is a no-op, migrate delegates to bootstrap) — full simplicity-schema integration deferred to when @mabulu-inc/simplicity-schema is available. No circular deps. Typecheck clean. All tests pass with zero regressions.
 
 ### 2026-03-08 — T-044: M1 end-to-end smoke test
 **Status**: DONE
@@ -833,7 +833,7 @@ Format for each entry:
 - packages/db/schema/tables/simplicity_notification_rules.yaml (system table for rules)
 - packages/db/schema/tables/simplicity_notifications.yaml (system table for notifications)
 **Test results**: 558 passed, 5 skipped (DB integration), 0 failed
-**Review**: Notification module follows core package conventions — types in types.ts, logic separated into rules.ts and engine.ts. All types match spec exactly. evaluateCondition supports =, !=, >, <, >=, <= operators. Template interpolation handles missing fields with empty string per spec. NotificationEngine.processEvent fetches enabled rules, matches by trigger type/table/condition, resolves recipients (users/roles/field), and creates notifications. field.changed trigger correctly compares old/new values. System table YAML follows existing schema-flow format with proper foreign keys, indexes, checks, and grants. No circular dependencies. All 23 notification tests pass. Lint, typecheck, build all clean.
+**Review**: Notification module follows core package conventions — types in types.ts, logic separated into rules.ts and engine.ts. All types match spec exactly. evaluateCondition supports =, !=, >, <, >=, <= operators. Template interpolation handles missing fields with empty string per spec. NotificationEngine.processEvent fetches enabled rules, matches by trigger type/table/condition, resolves recipients (users/roles/field), and creates notifications. field.changed trigger correctly compares old/new values. System table YAML follows existing simplicity-schema format with proper foreign keys, indexes, checks, and grants. No circular dependencies. All 23 notification tests pass. Lint, typecheck, build all clean.
 **Notes**: —
 
 ### 2026-03-08 — T-058: Notification delivery (in-app + email)

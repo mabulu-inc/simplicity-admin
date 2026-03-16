@@ -60,7 +60,7 @@ describe('postgresProvider', () => {
     await pool.end();
   });
 
-  it('migrate() runs bootstrap (schema-flow)', async () => {
+  it('migrate() runs bootstrap (simplicity-schema)', async () => {
     provider = postgresProvider();
     const pool = await provider.connect(testDb.url);
 

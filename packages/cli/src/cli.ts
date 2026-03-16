@@ -21,8 +21,8 @@ Commands:
   dev              Start development server
   build            Build for production
   start            Start production server
-  generate         Generate schema-flow YAML from existing DB
-  migrate          Run schema-flow migrations
+  generate         Generate simplicity-schema YAML from existing DB
+  migrate          Run simplicity-schema migrations
   env              Export/import admin configuration
 
 Options:

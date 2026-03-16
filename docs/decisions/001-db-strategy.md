@@ -14,20 +14,20 @@ PostgreSQL offers unique features critical to the framework's security model: Ro
 ## Decision
 **PostgreSQL-first with clean seams.** The framework is built to deeply leverage PostgreSQL features (RLS, grants, roles, functions). The `DatabaseProvider` interface in `@simplicity-admin/core` provides the seam for future database adapters, but the initial implementation assumes PostgreSQL.
 
-Schema management uses `@mabulu-inc/schema-flow` for declarative DDL via YAML files. schema-flow handles table creation, enum management, role definitions, RLS policies, column-level grants, triggers, functions, and zero-downtime migrations.
+Schema management uses `@mabulu-inc/simplicity-schema` for declarative DDL via YAML files. simplicity-schema handles table creation, enum management, role definitions, RLS policies, column-level grants, triggers, functions, and zero-downtime migrations.
 
 Key integration points:
-- **Bootstrap**: schema-flow YAML defines the system schema (users, tenants, memberships, roles)
+- **Bootstrap**: simplicity-schema YAML defines the system schema (users, tenants, memberships, roles)
 - **Introspection**: Direct `information_schema` + `pg_catalog` queries for runtime metadata
-- **Permissions**: schema-flow YAML defines grants and RLS policies (code-first RBAC)
-- **Generation**: `schema-flow generate` introspects existing databases to create YAML files
+- **Permissions**: simplicity-schema YAML defines grants and RLS policies (code-first RBAC)
+- **Generation**: `simplicity-schema generate` introspects existing databases to create YAML files
 
 ## Consequences
 **Positive:**
 - Security enforcement at the database level (RLS + grants) — cannot be bypassed by application bugs
 - Rich introspection capabilities (PostgreSQL has excellent metadata tables)
-- schema-flow provides declarative, version-controlled schema management
-- Zero-downtime migrations via schema-flow's expand/contract pattern
+- simplicity-schema provides declarative, version-controlled schema management
+- Zero-downtime migrations via simplicity-schema's expand/contract pattern
 
 **Negative:**
 - Framework cannot be used with MySQL/SQLite without significant adapter work
@@ -35,5 +35,5 @@ Key integration points:
 - PostgreSQL-specific SQL in some queries (e.g., `current_setting()`, `SET LOCAL`)
 
 **Risks:**
-- schema-flow is an internal dependency — changes to its API require coordinated updates
+- simplicity-schema is an internal dependency — changes to its API require coordinated updates
 - PostgreSQL version requirements (RLS requires 9.5+, but we target 14+ for best support)

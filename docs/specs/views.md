@@ -11,7 +11,7 @@ The views module controls how data is presented in the admin UI. It operates in 
 3. **Admin view overrides** — runtime UI customizations (hide/show/reorder fields, rearrange sections) stored in `_simplicity_admin` tables. Portable between environments via managed export/import.
 4. **User saved views** — personal views (filters, column picks, sort order, layouts) that users can name, save, and share within their tenant. Not subject to managed porting.
 
-View definitions are separate from schema-flow YAML files — schema defines structure, views define presentation.
+View definitions are separate from simplicity-schema YAML files — schema defines structure, views define presentation.
 
 ## Package Location
 
@@ -382,7 +382,7 @@ list:
 **Then** the admin overrides are applied to the sandbox's `_simplicity_admin.view_overrides` table (upsert by table name)
 
 ### B-VIEW-022: Export Includes Schema + Views
-**Given** a project with schema-flow YAML in `schema/` and view definitions in `views/`
+**Given** a project with simplicity-schema YAML in `schema/` and view definitions in `views/`
 **When** deploying to another environment
 **Then** both directories are version-controlled and deployed together — schema defines structure, views define presentation. Admin overrides are exported/imported separately.
 
