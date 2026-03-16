@@ -84,7 +84,7 @@
 - [x] T-067: Workflow management UI
 - [x] T-068: M4 end-to-end smoke test
 
-## M5 — Security Hardening ($3.66)
+## M5 — Security Hardening ($4.01)
 
 - [ ] T-069: Bootstrap via simplicity-schema programmatic API
 - [x] T-070: Server-side RBAC enforcement on mutations — $1.10
@@ -93,7 +93,7 @@
 - [x] T-073: Rate limiting on auth endpoints — $0.49
 - [x] T-074: Request body size limiting — $0.24
 - [x] T-075: Error message sanitization — $0.35
-- [ ] T-076: Timing-safe login
+- [x] T-076: Timing-safe login — $0.35
 - [ ] T-077: Token revocation persistence
 - [ ] T-078: Refresh token rotation
 - [ ] T-079: Security headers
@@ -112,4 +112,4 @@
 - [x] T-089: Fix Svelte 5 state_referenced_locally warnings — $0.93
 - [x] T-090: Convert test-support to a workspace package — $1.46
 
-**Grand Total: $11.47**
+**Grand Total: $11.82**
