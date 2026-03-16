@@ -1,5 +1,7 @@
 # Multi-Tenancy Module Specification
 
+**PRD Reference:** §2, §3, §6 (NFR-007)
+
 ## Overview
 
 The tenancy module provides first-class multi-tenancy support that is architecturally present from day one but completely invisible when not configured. When enabled, it provides row-level data isolation via PostgreSQL RLS, tenant resolution from incoming requests, and a tenant-switching UI.

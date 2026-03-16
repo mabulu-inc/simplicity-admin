@@ -1,5 +1,7 @@
 # CRUD Module Specification
 
+**PRD Reference:** §5 (US-004, US-005)
+
 ## Overview
 
 The CRUD module provides auto-generated list views, detail views, and forms driven by the database metadata model. It is not a separate package — CRUD functionality is implemented as SvelteKit routes in `@simplicity-admin/ui` that consume `SchemaMeta` from the API. This spec defines the data flow and component behavior.

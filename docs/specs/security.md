@@ -1,5 +1,7 @@
 # Security Hardening Specification
 
+**PRD Reference:** §6 (NFR-005, NFR-006, NFR-007, NFR-008, NFR-009)
+
 ## Overview
 
 This spec addresses findings from the adversarial security audit performed on 2026-03-09. It covers authentication hardening, authorization enforcement, input validation, API protection, and production readiness.

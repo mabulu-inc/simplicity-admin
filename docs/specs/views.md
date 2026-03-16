@@ -1,5 +1,7 @@
 # Views Module Specification
 
+**PRD Reference:** §5 (US-004, US-005, US-009)
+
 ## Overview
 
 The views module controls how data is presented in the admin UI. It operates in four tiers, each building on the last:

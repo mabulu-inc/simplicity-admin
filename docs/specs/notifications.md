@@ -1,5 +1,7 @@
 # Notifications Module Specification
 
+**PRD Reference:** §5 (US-012)
+
 ## Overview
 
 The notifications module provides event-driven notifications through multiple channels. Admins can configure notification rules via the admin UI — defining triggers (data events), conditions, templates, and delivery channels. The system supports in-app notifications (notification bell) and email (with swappable SMTP provider).

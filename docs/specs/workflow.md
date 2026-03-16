@@ -1,5 +1,7 @@
 # Workflow Module Specification
 
+**PRD Reference:** §5 (US-013, US-014)
+
 ## Overview
 
 The workflow module provides two complementary automation capabilities:

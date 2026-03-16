@@ -1,5 +1,7 @@
 # Navigation Module Specification
 
+**PRD Reference:** §5 (US-010)
+
 ## Overview
 
 The navigation module provides role-based, customizable navigation menus for the admin UI. By default, navigation is auto-generated from the database schema — one menu item per table, alphabetically sorted. Developers can customize navigation via config (grouping, ordering, icons, labels). The navigation automatically filters based on the current user's RBAC permissions.

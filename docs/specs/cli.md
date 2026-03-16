@@ -1,5 +1,7 @@
 # CLI Module Specification
 
+**PRD Reference:** §4, §5 (US-001, US-007)
+
 ## Overview
 
 The CLI module (`@simplicity-admin/cli`) provides the command-line interface for scaffolding projects, running the development server, building for production, and generating schema files. It is the primary entry point for developers using the framework.

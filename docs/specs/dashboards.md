@@ -1,5 +1,7 @@
 # Dashboards Module Specification
 
+**PRD Reference:** §5 (US-011)
+
 ## Overview
 
 The dashboards module provides customizable dashboard pages with data widgets. Dashboards are composed of widgets arranged in a grid layout. Widgets are powered by database queries and display data as stat cards, tables, or charts. Dashboards can be role-specific (different roles see different dashboards) and can serve as landing pages.

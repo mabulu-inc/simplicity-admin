@@ -1,5 +1,7 @@
 # Database Module Specification
 
+**PRD Reference:** §5 (US-002)
+
 ## Overview
 
 The database module (`@simplicity-admin/db`) handles PostgreSQL connectivity, schema introspection, system schema bootstrapping via schema-flow, and provides the default `DatabaseProvider` implementation. It converts live PostgreSQL schemas into the `SchemaMeta` model that drives all downstream modules.

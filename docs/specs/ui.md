@@ -1,5 +1,7 @@
 # UI Module Specification
 
+**PRD Reference:** §5 (US-004, US-005, US-010), §6 (NFR-013, NFR-014, NFR-015)
+
 ## Overview
 
 The UI module (`@simplicity-admin/ui`) provides the SvelteKit-based admin interface. It includes reusable components (DataTable, AutoForm, Shell, Sidebar, TopBar), a design token system for theming, and the SvelteKit route structure for the admin panel. Components are metadata-driven — they receive `ColumnMeta[]` and render appropriate UI elements.

@@ -1,5 +1,7 @@
 # RBAC Module Specification
 
+**PRD Reference:** §5 (US-008, US-009), §6 (NFR-007)
+
 ## Overview
 
 The RBAC (Role-Based Access Control) module provides column-level permission management. Permissions are defined code-first in schema-flow YAML files (grants, policies, roles) and enforced at the PostgreSQL level. The admin UI allows further restriction of permissions but can NEVER exceed the code-defined ceiling. This module reads effective permissions and exposes them to the UI for rendering decisions.

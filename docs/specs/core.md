@@ -1,5 +1,7 @@
 # Core Module Specification
 
+**PRD Reference:** §2, §5
+
 ## Overview
 
 The core module (`@simplicity-admin/core`) is the foundation of the framework. It defines the config system, metadata types, provider interfaces, and plugin lifecycle. It has ZERO dependencies on other `@simplicity-admin` packages — all other packages depend on it.

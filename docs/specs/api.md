@@ -1,5 +1,7 @@
 # API Module Specification
 
+**PRD Reference:** §5 (US-006)
+
 ## Overview
 
 The API module (`@simplicity-admin/api`) provides the auto-generated API layer. The default implementation uses PostGraphile V5 to generate a complete GraphQL API from PostgreSQL. An optional REST adapter provides RESTful endpoints from the same metadata. The API layer is swappable via the provider pattern.

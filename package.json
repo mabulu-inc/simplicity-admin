@@ -10,7 +10,8 @@
     "typecheck": "turbo run typecheck",
     "check": "turbo run lint typecheck test build",
     "clean": "turbo run clean",
-    "dev": "turbo run dev"
+    "dev": "turbo run dev",
+    "ralph": "npx @mabulu-inc/ralph loop"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.0.0",

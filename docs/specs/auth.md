@@ -1,5 +1,7 @@
 # Authentication Module Specification
 
+**PRD Reference:** §5 (US-003), §6 (NFR-005)
+
 ## Overview
 
 The auth module (`@simplicity-admin/auth`) provides multi-strategy authentication and JWT token management. Multiple authentication strategies can be active simultaneously — for example, email/password + Twilio Verify OTP + Office 365 OAuth. Strategies are configurable at the app level and optionally per-tenant (e.g., tenant A uses Google Workspace OAuth, tenant B uses Office 365). The token layer (JWT sign/verify/refresh) is constant; only the identity verification method varies.
