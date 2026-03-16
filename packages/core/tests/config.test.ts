@@ -88,9 +88,9 @@ describe('defineConfig', () => {
       expect(config.api?.rest).toBe(false);
     });
 
-    it('sets api.graphiql to true', () => {
+    it('sets api.graphiql to false', () => {
       const config = defineConfig({ database: validDb });
-      expect(config.api?.graphiql).toBe(true);
+      expect(config.api?.graphiql).toBe(false);
     });
 
     it('sets tenancy.enabled to false', () => {

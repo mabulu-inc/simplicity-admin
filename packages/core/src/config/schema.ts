@@ -23,7 +23,7 @@ const apiSchema = z.object({
 });
 
 const authSchema = z.object({
-  secret: z.string().optional(),
+  secret: z.string().min(32).optional(),
   accessTokenTTL: z.number().optional(),
   refreshTokenTTL: z.number().optional(),
   strategies: z.array(authStrategySchema).optional(),

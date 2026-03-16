@@ -3,7 +3,7 @@ import type { APIConfig, AuthConfig, TenancyConfig } from './types.js';
 export const DEFAULT_API: Required<Pick<APIConfig, 'graphql' | 'rest' | 'graphiql'>> = {
   graphql: '/api/graphql',
   rest: false,
-  graphiql: true,
+  graphiql: false,
 };
 
 export const DEFAULT_AUTH: Required<Pick<AuthConfig, 'accessTokenTTL' | 'refreshTokenTTL' | 'strategies'>> = {

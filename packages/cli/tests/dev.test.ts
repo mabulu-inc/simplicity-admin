@@ -80,7 +80,7 @@ describe('CLI dev command', () => {
             database: '${DB_URL}',
             port: 0,
             auth: {
-              secret: 'test-secret-for-dev-command-test',
+              secret: 'test-secret-for-dev-command-test-long-enough-32chars',
             },
           };
         `;
@@ -181,7 +181,7 @@ describe('CLI dev command', () => {
             database: '${DB_URL}',
             port: 0,
             auth: {
-              secret: 'test-secret-for-bootstrap-test',
+              secret: 'test-secret-for-bootstrap-test-long-enough-32ch',
             },
           };
         `;

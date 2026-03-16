@@ -57,9 +57,9 @@ describe('resolveConfig', () => {
   it('env overrides auth secret', () => {
     const config = resolveConfig(
       { database: 'postgres://localhost/mydb' },
-      { SIMPLICITY_ADMIN_AUTH_SECRET: 'my-secret' },
+      { SIMPLICITY_ADMIN_AUTH_SECRET: 'my-secret-that-is-at-least-32-chars!' },
     );
-    expect(config.auth?.secret).toBe('my-secret');
+    expect(config.auth?.secret).toBe('my-secret-that-is-at-least-32-chars!');
   });
 
   it('resolution order is defaults < file < env', () => {

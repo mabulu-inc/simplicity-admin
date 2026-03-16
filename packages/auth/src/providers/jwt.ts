@@ -1,17 +1,44 @@
 import jwt from 'jsonwebtoken';
 import type { TokenProvider, TokenPayload, TokenPair } from '@simplicity-admin/core';
 import type { AuthConfig } from '@simplicity-admin/core';
+import { ConfigError } from '@simplicity-admin/core';
 import { AuthError } from '../errors.js';
 
+const DEFAULT_SECRET = 'development-secret';
+const MIN_SECRET_LENGTH = 32;
 const DEFAULT_ACCESS_TTL = 900; // 15 minutes
 const DEFAULT_REFRESH_TTL = 604800; // 7 days
+
+function validateSecret(secret: string): void {
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (isProduction) {
+    if (secret === DEFAULT_SECRET) {
+      throw new ConfigError(
+        'The default development-secret must not be used in production. Set a strong AUTH_SECRET (>= 32 characters).',
+        'AUTH_010',
+      );
+    }
+    if (secret.length < MIN_SECRET_LENGTH) {
+      throw new ConfigError(
+        `JWT secret must be at least 32 characters in production (got ${secret.length})`,
+        'AUTH_010',
+      );
+    }
+  } else if (secret === DEFAULT_SECRET) {
+    console.warn(
+      'Using the default development-secret for JWT signing. Do not use this in production.',
+    );
+  }
+}
 
 interface InternalPayload extends TokenPayload {
   tokenType?: 'access' | 'refresh';
 }
 
 export function jwtTokenProvider(config?: AuthConfig): TokenProvider {
-  const secret = config?.secret ?? 'development-secret';
+  const secret = config?.secret ?? DEFAULT_SECRET;
+  validateSecret(secret);
   const accessTTL = config?.accessTokenTTL ?? DEFAULT_ACCESS_TTL;
   const refreshTTL = config?.refreshTokenTTL ?? DEFAULT_REFRESH_TTL;
 
