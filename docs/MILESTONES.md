@@ -84,10 +84,10 @@
 - [x] T-067: Workflow management UI
 - [x] T-068: M4 end-to-end smoke test
 
-## M5 — Security Hardening
+## M5 — Security Hardening ($1.10)
 
 - [ ] T-069: Bootstrap via schema-flow programmatic API
-- [ ] T-070: Server-side RBAC enforcement on mutations
+- [x] T-070: Server-side RBAC enforcement on mutations — $1.10
 - [ ] T-071: JWT secret validation and production guard
 - [ ] T-072: SQL identifier escaping utility
 - [ ] T-073: Rate limiting on auth endpoints
@@ -110,4 +110,4 @@
 - [ ] T-087: Replace unsafe double type casts with runtime validation
 - [x] T-088: Test infrastructure — Docker lifecycle and per-test database isolation — $5.42
 
-**Grand Total: $5.42**
+**Grand Total: $6.52**
