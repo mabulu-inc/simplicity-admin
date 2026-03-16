@@ -21,7 +21,7 @@
 - [x] T-013: DB introspection — relations
 - [x] T-014: DB introspection — enums
 - [x] T-015: DB introspection — full schema assembly
-- [x] T-016: System schema YAML (schema-flow)
+- [x] T-016: System schema YAML (simplicity-schema)
 - [x] T-017: DB bootstrap orchestrator
 - [x] T-018: DB provider (default DatabaseProvider)
 - [x] T-019: Initialize @simplicity-admin/auth package
@@ -86,7 +86,7 @@
 
 ## M5 — Security Hardening ($1.10)
 
-- [ ] T-069: Bootstrap via schema-flow programmatic API
+- [ ] T-069: Bootstrap via simplicity-schema programmatic API
 - [x] T-070: Server-side RBAC enforcement on mutations — $1.10
 - [ ] T-071: JWT secret validation and production guard
 - [ ] T-072: SQL identifier escaping utility
@@ -101,7 +101,7 @@
 - [ ] T-081: begin_session role validation
 - [ ] T-082: M5 security integration test
 
-## M6 — Code Quality & Hardening ($5.42)
+## M6 — Code Quality & Hardening ($6.88)
 
 - [ ] T-083: Replace z.any() with typed schemas in core config
 - [ ] T-084: Add justifying comments to all as any casts
@@ -109,5 +109,7 @@
 - [ ] T-086: Extract shared admin auth check helper
 - [ ] T-087: Replace unsafe double type casts with runtime validation
 - [x] T-088: Test infrastructure — Docker lifecycle and per-test database isolation — $5.42
+- [ ] T-089: Fix Svelte 5 state_referenced_locally warnings
+- [x] T-090: Convert test-support to a workspace package — $1.46
 
-**Grand Total: $6.52**
+**Grand Total: $7.98**
