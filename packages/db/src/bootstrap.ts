@@ -1,5 +1,6 @@
 import type { ConnectionPool, ProjectConfig } from '@simplicity-admin/core';
 import { DatabaseError } from './errors.js';
+import { escapeIdentifier } from './escape.js';
 import bcrypt from 'bcrypt';
 
 const BCRYPT_COST = 12;
@@ -14,7 +15,7 @@ export async function bootstrap(pool: ConnectionPool, config: ProjectConfig): Pr
 
   try {
     // 1. Create schema
-    await pool.query(`CREATE SCHEMA IF NOT EXISTS ${ident(schema)}`);
+    await pool.query(`CREATE SCHEMA IF NOT EXISTS ${escapeIdentifier(schema)}`);
 
     // 2. Create roles (idempotent via DO block)
     await createRoles(pool);
@@ -46,10 +47,6 @@ export async function bootstrap(pool: ConnectionPool, config: ProjectConfig): Pr
   }
 }
 
-/** SQL identifier quoting (simple — no user input) */
-function ident(name: string): string {
-  return `"${name.replace(/"/g, '""')}"`;
-}
 
 async function createRoles(pool: ConnectionPool): Promise<void> {
   // Create roles if they don't exist (no IF NOT EXISTS for CREATE ROLE in PG < 16)
@@ -67,7 +64,7 @@ async function createRoles(pool: ConnectionPool): Promise<void> {
     await pool.query(`
       DO $$ BEGIN
         IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${role.name}') THEN
-          CREATE ROLE ${ident(role.name)} ${loginClause} ${inheritClause};
+          CREATE ROLE ${escapeIdentifier(role.name)} ${loginClause} ${inheritClause};
         END IF;
       END $$;
     `);
@@ -75,12 +72,12 @@ async function createRoles(pool: ConnectionPool): Promise<void> {
 
   // Grant membership: authenticator is member of all functional roles
   for (const role of ['anon', 'app_viewer', 'app_editor', 'app_admin']) {
-    await pool.query(`GRANT ${ident(role)} TO ${ident('authenticator')}`);
+    await pool.query(`GRANT ${escapeIdentifier(role)} TO ${escapeIdentifier('authenticator')}`);
   }
 }
 
 async function createFunctions(pool: ConnectionPool, schema: string): Promise<void> {
-  const s = ident(schema);
+  const s = escapeIdentifier(schema);
 
   await pool.query(`
     CREATE OR REPLACE FUNCTION ${s}.current_user_id() RETURNS uuid
@@ -127,7 +124,7 @@ async function createFunctions(pool: ConnectionPool, schema: string): Promise<vo
 }
 
 async function createTables(pool: ConnectionPool, schema: string): Promise<void> {
-  const s = ident(schema);
+  const s = escapeIdentifier(schema);
 
   // Users table
   await pool.query(`
@@ -170,7 +167,7 @@ async function createTables(pool: ConnectionPool, schema: string): Promise<void>
 }
 
 async function createIndexes(pool: ConnectionPool, schema: string): Promise<void> {
-  const s = ident(schema);
+  const s = escapeIdentifier(schema);
 
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_users_email ON ${s}.users (email)`);
   await pool.query(`CREATE INDEX IF NOT EXISTS idx_tenants_slug ON ${s}.tenants (slug)`);
@@ -180,15 +177,15 @@ async function createIndexes(pool: ConnectionPool, schema: string): Promise<void
 }
 
 async function createTriggers(pool: ConnectionPool, schema: string): Promise<void> {
-  const s = ident(schema);
+  const s = escapeIdentifier(schema);
 
   for (const table of ['users', 'tenants', 'memberships']) {
     const triggerName = `set_${table}_updated_at`;
     // DROP + CREATE since CREATE OR REPLACE TRIGGER requires PG 14+
     await pool.query(`
-      DROP TRIGGER IF EXISTS ${ident(triggerName)} ON ${s}.${ident(table)};
-      CREATE TRIGGER ${ident(triggerName)}
-        BEFORE UPDATE ON ${s}.${ident(table)}
+      DROP TRIGGER IF EXISTS ${escapeIdentifier(triggerName)} ON ${s}.${escapeIdentifier(table)};
+      CREATE TRIGGER ${escapeIdentifier(triggerName)}
+        BEFORE UPDATE ON ${s}.${escapeIdentifier(table)}
         FOR EACH ROW
         WHEN (OLD.* IS DISTINCT FROM NEW.*)
         EXECUTE FUNCTION ${s}.update_timestamp();
@@ -197,7 +194,7 @@ async function createTriggers(pool: ConnectionPool, schema: string): Promise<voi
 }
 
 async function createGrants(pool: ConnectionPool, schema: string): Promise<void> {
-  const s = ident(schema);
+  const s = escapeIdentifier(schema);
 
   // Schema usage
   await pool.query(`GRANT USAGE ON SCHEMA ${s} TO anon, app_viewer, app_editor, app_admin, authenticator`);
@@ -221,7 +218,7 @@ async function createGrants(pool: ConnectionPool, schema: string): Promise<void>
 }
 
 async function seedDefaults(pool: ConnectionPool, schema: string): Promise<void> {
-  const s = ident(schema);
+  const s = escapeIdentifier(schema);
 
   // Insert default tenant (idempotent via ON CONFLICT)
   await pool.query(`

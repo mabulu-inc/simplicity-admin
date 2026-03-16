@@ -3,6 +3,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
 import { getTableRbacInfo } from '$lib/server/rbac.js';
 import { requireAuth, requireInsert, getWritableColumnNames } from '$lib/server/rbac-guards.js';
+import { escapeIdentifier } from '@simplicity-admin/db';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const tableName = params.table;
@@ -51,7 +52,7 @@ export const actions: Actions = {
 			// Skip empty values for columns with defaults
 			if ((value === '' || value === null || value === undefined) && col.hasDefault) continue;
 
-			columnNames.push(`"${key}"`);
+			columnNames.push(escapeIdentifier(key));
 			values.push(value === '' ? null : value);
 		}
 
@@ -60,7 +61,7 @@ export const actions: Actions = {
 		}
 
 		const placeholders = columnNames.map((_, i) => `$${i + 1}`).join(', ');
-		const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
+		const qualifiedTable = `${escapeIdentifier(SCHEMA)}.${escapeIdentifier(tableName)}`;
 
 		try {
 			await pool.query(

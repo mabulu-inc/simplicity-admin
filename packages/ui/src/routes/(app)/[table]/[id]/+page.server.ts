@@ -4,6 +4,7 @@ import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js'
 import { getTableRbacInfo } from '$lib/server/rbac.js';
 import { requireAuth, requireUpdate, requireDelete, getWritableColumnNames } from '$lib/server/rbac-guards.js';
 import { getStateMachine } from '@simplicity-admin/core';
+import { escapeIdentifier } from '@simplicity-admin/db';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const tableName = params.table;
@@ -30,11 +31,11 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	// Use RBAC-filtered columns if available, otherwise fall back to all columns
 	const columns = rbac ? rbac.visibleColumns : table.columns;
-	const columnNames = columns.map((c) => `"${c.name}"`).join(', ');
-	const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
+	const columnNames = columns.map((c) => escapeIdentifier(c.name)).join(', ');
+	const qualifiedTable = `${escapeIdentifier(SCHEMA)}.${escapeIdentifier(tableName)}`;
 
 	const result = await pool.query(
-		`SELECT ${columnNames} FROM ${qualifiedTable} WHERE "${pk}" = $1`,
+		`SELECT ${columnNames} FROM ${qualifiedTable} WHERE ${escapeIdentifier(pk)} = $1`,
 		[recordId],
 	);
 
@@ -132,7 +133,7 @@ export const actions: Actions = {
 			const col = table.columns.find((c) => c.name === key);
 			if (!col || col.isPrimaryKey || col.isGenerated) continue;
 
-			setClauses.push(`"${key}" = $${paramIndex}`);
+			setClauses.push(`${escapeIdentifier(key)} = $${paramIndex}`);
 			values.push(value === '' ? null : value);
 			paramIndex++;
 		}
@@ -141,12 +142,12 @@ export const actions: Actions = {
 			return { error: 'No changes to save' };
 		}
 
-		const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
+		const qualifiedTable = `${escapeIdentifier(SCHEMA)}.${escapeIdentifier(tableName)}`;
 
 		try {
 			values.push(recordId);
 			await pool.query(
-				`UPDATE ${qualifiedTable} SET ${setClauses.join(', ')} WHERE "${pk}" = $${paramIndex}`,
+				`UPDATE ${qualifiedTable} SET ${setClauses.join(', ')} WHERE ${escapeIdentifier(pk)} = $${paramIndex}`,
 				values,
 			);
 		} catch (err: unknown) {
@@ -188,9 +189,9 @@ export const actions: Actions = {
 			}
 
 			// Fetch current record state
-			const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
+			const qualifiedTable = `${escapeIdentifier(SCHEMA)}.${escapeIdentifier(tableName)}`;
 			const result = await pool.query(
-				`SELECT "${machine.column}" FROM ${qualifiedTable} WHERE "${pk}" = $1`,
+				`SELECT ${escapeIdentifier(machine.column)} FROM ${qualifiedTable} WHERE ${escapeIdentifier(pk)} = $1`,
 				[recordId],
 			);
 
@@ -216,7 +217,7 @@ export const actions: Actions = {
 
 			// Execute the state change
 			await pool.query(
-				`UPDATE ${qualifiedTable} SET "${machine.column}" = $1 WHERE "${pk}" = $2`,
+				`UPDATE ${qualifiedTable} SET ${escapeIdentifier(machine.column)} = $1 WHERE ${escapeIdentifier(pk)} = $2`,
 				[toState, recordId],
 			);
 
@@ -255,10 +256,10 @@ export const actions: Actions = {
 		const rbac = await getTableRbacInfo(pool, user.activeRole, table, SCHEMA);
 		requireDelete(rbac);
 
-		const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
+		const qualifiedTable = `${escapeIdentifier(SCHEMA)}.${escapeIdentifier(tableName)}`;
 
 		try {
-			await pool.query(`DELETE FROM ${qualifiedTable} WHERE "${pk}" = $1`, [recordId]);
+			await pool.query(`DELETE FROM ${qualifiedTable} WHERE ${escapeIdentifier(pk)} = $1`, [recordId]);
 		} catch (err: unknown) {
 			const message = err instanceof Error ? err.message : 'Unknown error';
 			if (message.includes('violates foreign key constraint')) {

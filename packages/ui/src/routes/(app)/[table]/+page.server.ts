@@ -2,6 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
 import { getTableRbacInfo } from '$lib/server/rbac.js';
+import { escapeIdentifier } from '@simplicity-admin/db';
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {
 	const tableName = params.table;
@@ -35,17 +36,17 @@ export const load: PageServerLoad = async ({ params, url, locals }) => {
 	const offset = (page - 1) * pageSize;
 
 	// Build column list for SELECT (only accessible columns)
-	const columnNames = columns.map((c) => `"${c.name}"`).join(', ');
+	const columnNames = columns.map((c) => escapeIdentifier(c.name)).join(', ');
 
 	// Build ORDER BY clause
 	let orderBy = '';
 	if (sort) {
-		orderBy = `ORDER BY "${sort.column}" ${sort.direction.toUpperCase()}`;
+		orderBy = `ORDER BY ${escapeIdentifier(sort.column)} ${sort.direction.toUpperCase()}`;
 	} else if (table.primaryKey.length > 0) {
-		orderBy = `ORDER BY "${table.primaryKey[0]}" DESC`;
+		orderBy = `ORDER BY ${escapeIdentifier(table.primaryKey[0])} DESC`;
 	}
 
-	const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
+	const qualifiedTable = `${escapeIdentifier(SCHEMA)}.${escapeIdentifier(tableName)}`;
 
 	// Run count and data queries in parallel
 	const [countResult, dataResult] = await Promise.all([

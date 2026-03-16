@@ -9,4 +9,5 @@ export { introspectRelations } from './introspect/relations.js';
 export { introspectEnums } from './introspect/enums.js';
 export { introspectSchema } from './introspect/index.js';
 export { bootstrap } from './bootstrap.js';
+export { escapeIdentifier } from './escape.js';
 export { postgresProvider } from './provider.js';
