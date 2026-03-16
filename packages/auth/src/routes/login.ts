@@ -1,8 +1,15 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { TokenProvider, ConnectionPool, HttpHandler } from '@simplicity-admin/core';
+import bcrypt from 'bcrypt';
 import { verifyPassword } from '../strategies/password.js';
 import { parseBody, json } from './helpers.js';
 import type { RateLimiter } from '../rate-limit.js';
+
+/**
+ * Pre-computed bcrypt hash used for dummy comparisons when the user is not found.
+ * This ensures constant-time responses regardless of user existence (B-SEC-009).
+ */
+const DUMMY_HASH = '$2b$12$LJ3m4ys3Lg2VBe6iXHklLeh1HEVGvSHFPvl7JJHvOzHBsR1tK7X5e';
 
 /** Role priority — higher number = higher privilege */
 const ROLE_PRIORITY: Record<string, number> = {
@@ -73,6 +80,8 @@ export function createLoginHandler(
     );
 
     if (userResult.rows.length === 0) {
+      // B-SEC-009: Run dummy bcrypt to prevent timing-based user enumeration
+      await bcrypt.compare(password, DUMMY_HASH);
       json(res, 401, { error: 'Invalid credentials' });
       return;
     }

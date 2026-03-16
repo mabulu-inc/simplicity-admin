@@ -1,7 +1,14 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import bcrypt from 'bcrypt';
 import { jwtTokenProvider, verifyPassword } from '@simplicity-admin/auth';
 import { createPool } from '@simplicity-admin/db';
+
+/**
+ * Pre-computed bcrypt hash used for dummy comparisons when the user is not found.
+ * This ensures constant-time responses regardless of user existence (B-SEC-009).
+ */
+const DUMMY_HASH = '$2b$12$LJ3m4ys3Lg2VBe6iXHklLeh1HEVGvSHFPvl7JJHvOzHBsR1tK7X5e';
 
 const ROLE_PRIORITY: Record<string, number> = {
 	app_admin: 3,
@@ -36,6 +43,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		);
 
 		if (userResult.rows.length === 0) {
+			// B-SEC-009: Run dummy bcrypt to prevent timing-based user enumeration
+			await bcrypt.compare(password, DUMMY_HASH);
 			return json({ error: 'Invalid credentials' }, { status: 401 });
 		}
 
