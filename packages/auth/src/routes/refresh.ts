@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { TokenProvider, HttpHandler } from '@simplicity-admin/core';
 import { parseBody, json, isTokenRevoked } from './helpers.js';
+import type { RateLimiter } from '../rate-limit.js';
 
 /**
  * Creates a refresh route handler.
@@ -10,8 +11,22 @@ import { parseBody, json, isTokenRevoked } from './helpers.js';
  */
 export function createRefreshHandler(
   tokenProvider: TokenProvider,
+  rateLimiter?: RateLimiter,
 ): HttpHandler {
   return async (req: IncomingMessage, res: ServerResponse) => {
+    if (rateLimiter) {
+      const ip = req.socket.remoteAddress ?? 'unknown';
+      const result = rateLimiter.check(ip);
+      if (!result.allowed) {
+        res.writeHead(429, {
+          'Content-Type': 'application/json',
+          'Retry-After': String(result.retryAfter),
+        });
+        res.end(JSON.stringify({ error: 'Too many requests' }));
+        return;
+      }
+    }
+
     let body: Record<string, unknown>;
     try {
       body = await parseBody(req);

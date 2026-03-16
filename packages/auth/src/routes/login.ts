@@ -2,6 +2,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { TokenProvider, ConnectionPool, HttpHandler } from '@simplicity-admin/core';
 import { verifyPassword } from '../strategies/password.js';
 import { parseBody, json } from './helpers.js';
+import type { RateLimiter } from '../rate-limit.js';
 
 /** Role priority — higher number = higher privilege */
 const ROLE_PRIORITY: Record<string, number> = {
@@ -20,8 +21,22 @@ export function createLoginHandler(
   tokenProvider: TokenProvider,
   pool: ConnectionPool,
   schema: string,
+  rateLimiter?: RateLimiter,
 ): HttpHandler {
   return async (req: IncomingMessage, res: ServerResponse) => {
+    if (rateLimiter) {
+      const ip = req.socket.remoteAddress ?? 'unknown';
+      const result = rateLimiter.check(ip);
+      if (!result.allowed) {
+        res.writeHead(429, {
+          'Content-Type': 'application/json',
+          'Retry-After': String(result.retryAfter),
+        });
+        res.end(JSON.stringify({ error: 'Too many requests' }));
+        return;
+      }
+    }
+
     let body: Record<string, unknown>;
     try {
       body = await parseBody(req);
