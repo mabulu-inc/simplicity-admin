@@ -2,6 +2,7 @@ import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
 import { getTableRbacInfo } from '$lib/server/rbac.js';
+import { requireAuth, requireUpdate, requireDelete, getWritableColumnNames } from '$lib/server/rbac-guards.js';
 import { getStateMachine } from '@simplicity-admin/core';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
@@ -93,7 +94,8 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 };
 
 export const actions: Actions = {
-	update: async ({ params, request }) => {
+	update: async ({ params, request, locals }) => {
+		const user = requireAuth(locals.user);
 		const tableName = params.table;
 		const recordId = params.id;
 		const meta = await getSchemaMeta();
@@ -108,6 +110,10 @@ export const actions: Actions = {
 			throw error(400, `Table "${tableName}" has no primary key`);
 		}
 
+		const pool = getPool();
+		const rbac = await getTableRbacInfo(pool, user.activeRole, table, SCHEMA);
+		requireUpdate(rbac);
+
 		const formData = await request.formData();
 		const dataJson = formData.get('_data');
 		if (!dataJson || typeof dataJson !== 'string') {
@@ -115,14 +121,14 @@ export const actions: Actions = {
 		}
 
 		const data = JSON.parse(dataJson) as Record<string, unknown>;
-		const validColumns = new Set(table.columns.map((c) => c.name));
+		const writableColumns = getWritableColumnNames(rbac);
 
 		const setClauses: string[] = [];
 		const values: unknown[] = [];
 		let paramIndex = 1;
 
 		for (const [key, value] of Object.entries(data)) {
-			if (!validColumns.has(key)) continue;
+			if (!writableColumns.has(key)) continue;
 			const col = table.columns.find((c) => c.name === key);
 			if (!col || col.isPrimaryKey || col.isGenerated) continue;
 
@@ -136,7 +142,6 @@ export const actions: Actions = {
 		}
 
 		const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
-		const pool = getPool();
 
 		try {
 			values.push(recordId);
@@ -153,6 +158,7 @@ export const actions: Actions = {
 	},
 
 	transition: async ({ params, request, locals }) => {
+		const user = requireAuth(locals.user);
 		const tableName = params.table;
 		const recordId = params.id;
 		const meta = await getSchemaMeta();
@@ -196,12 +202,12 @@ export const actions: Actions = {
 			const currentState = record[machine.column] as string;
 
 			// Validate transition exists and role is authorized
-			const role = locals.user?.activeRole;
+			const role = user.activeRole;
 			const transition = machine.transitions.find(
 				(t) =>
 					t.from === currentState &&
 					t.to === toState &&
-					(!role || t.roles.length === 0 || t.roles.includes(role)),
+					(t.roles.length === 0 || t.roles.includes(role)),
 			);
 
 			if (!transition) {
@@ -215,7 +221,7 @@ export const actions: Actions = {
 			);
 
 			// Write to audit log
-			const userId = locals.user?.id ?? null;
+			const userId = user.userId ?? null;
 			await pool.query(
 				`INSERT INTO public.simplicity_transition_log (table_name, record_id, from_state, to_state, user_id)
 				 VALUES ($1, $2, $3, $4, $5)`,
@@ -229,7 +235,8 @@ export const actions: Actions = {
 		throw redirect(303, `/${tableName}/${recordId}`);
 	},
 
-	delete: async ({ params }) => {
+	delete: async ({ params, locals }) => {
+		const user = requireAuth(locals.user);
 		const tableName = params.table;
 		const recordId = params.id;
 		const meta = await getSchemaMeta();
@@ -244,8 +251,11 @@ export const actions: Actions = {
 			throw error(400, `Table "${tableName}" has no primary key`);
 		}
 
-		const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
 		const pool = getPool();
+		const rbac = await getTableRbacInfo(pool, user.activeRole, table, SCHEMA);
+		requireDelete(rbac);
+
+		const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
 
 		try {
 			await pool.query(`DELETE FROM ${qualifiedTable} WHERE "${pk}" = $1`, [recordId]);

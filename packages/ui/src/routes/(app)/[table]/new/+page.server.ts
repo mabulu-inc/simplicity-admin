@@ -1,6 +1,8 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
+import { getTableRbacInfo } from '$lib/server/rbac.js';
+import { requireAuth, requireInsert, getWritableColumnNames } from '$lib/server/rbac-guards.js';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const tableName = params.table;
@@ -15,7 +17,8 @@ export const load: PageServerLoad = async ({ params }) => {
 };
 
 export const actions: Actions = {
-	default: async ({ params, request }) => {
+	default: async ({ params, request, locals }) => {
+		const user = requireAuth(locals.user);
 		const tableName = params.table;
 		const meta = await getSchemaMeta();
 		const table = getTableMeta(meta, tableName);
@@ -24,6 +27,10 @@ export const actions: Actions = {
 			throw error(404, `Table "${tableName}" not found`);
 		}
 
+		const pool = getPool();
+		const rbac = await getTableRbacInfo(pool, user.activeRole, table, SCHEMA);
+		requireInsert(rbac);
+
 		const formData = await request.formData();
 		const dataJson = formData.get('_data');
 		if (!dataJson || typeof dataJson !== 'string') {
@@ -31,14 +38,13 @@ export const actions: Actions = {
 		}
 
 		const data = JSON.parse(dataJson) as Record<string, unknown>;
+		const writableColumns = getWritableColumnNames(rbac);
 
-		// Build INSERT from submitted data, filtering to valid columns
-		const validColumns = new Set(table.columns.map((c) => c.name));
 		const columnNames: string[] = [];
 		const values: unknown[] = [];
 
 		for (const [key, value] of Object.entries(data)) {
-			if (!validColumns.has(key)) continue;
+			if (!writableColumns.has(key)) continue;
 			const col = table.columns.find((c) => c.name === key);
 			if (!col || col.isPrimaryKey || col.isGenerated) continue;
 
@@ -55,7 +61,6 @@ export const actions: Actions = {
 
 		const placeholders = columnNames.map((_, i) => `$${i + 1}`).join(', ');
 		const qualifiedTable = `"${SCHEMA}"."${tableName}"`;
-		const pool = getPool();
 
 		try {
 			await pool.query(
