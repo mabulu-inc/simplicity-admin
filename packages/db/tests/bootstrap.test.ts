@@ -3,7 +3,7 @@ import type { ConnectionPool } from '@simplicity-admin/core';
 import { defineConfig } from '@simplicity-admin/core';
 import { bootstrap } from '../src/bootstrap.js';
 import bcrypt from 'bcrypt';
-import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
+import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
 describe('bootstrap', () => {
   let testDb: TestDb;

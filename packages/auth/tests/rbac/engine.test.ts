@@ -8,7 +8,7 @@ import {
   getEffectivePermissions,
 } from '../../src/rbac/engine.js';
 import { defineConfig } from '@simplicity-admin/core';
-import { createTestDb, destroyTestDb, type TestDb } from '../../../../test-support/test-db.js';
+import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
 /**
  * Fixture: permissions for app_viewer with SELECT on contacts (id, name, email)

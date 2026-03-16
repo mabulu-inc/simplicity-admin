@@ -6,12 +6,13 @@ export default defineConfig({
     alias: {
       '@simplicity-admin/db': path.resolve(__dirname, 'src/index.ts'),
       '@simplicity-admin/core': path.resolve(__dirname, '../core/src/index.ts'),
+      '@simplicity-admin/test-support': path.resolve(__dirname, '../../test-support/src/index.ts'),
     },
   },
   test: {
     globals: true,
     environment: 'node',
     include: ['tests/**/*.test.ts'],
-    globalSetup: [path.resolve(__dirname, '../../test-support/global-setup.ts')],
+    globalSetup: [path.resolve(__dirname, '../../test-support/src/global-setup.ts')],
   },
 });

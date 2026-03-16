@@ -209,6 +209,9 @@ importers:
       '@playwright/test':
         specifier: ^1.58.2
         version: 1.58.2
+      '@simplicity-admin/test-support':
+        specifier: workspace:*
+        version: link:../../test-support
       '@sveltejs/adapter-node':
         specifier: ^5.5.4
         version: 5.5.4(@sveltejs/kit@2.53.4(@sveltejs/vite-plugin-svelte@5.1.1(svelte@5.53.7)(vite@6.4.1(@types/node@25.3.5)(tsx@4.21.0)(yaml@2.8.2)))(svelte@5.53.7)(typescript@5.9.3)(vite@6.4.1(@types/node@25.3.5)(tsx@4.21.0)(yaml@2.8.2)))
@@ -254,6 +257,25 @@ importers:
       vite:
         specifier: ^6.0.0
         version: 6.4.1(@types/node@25.3.5)(tsx@4.21.0)(yaml@2.8.2)
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@25.3.5)(jsdom@28.1.0)
+
+  test-support:
+    dependencies:
+      '@simplicity-admin/core':
+        specifier: workspace:*
+        version: link:../packages/core
+      '@simplicity-admin/db':
+        specifier: workspace:*
+        version: link:../packages/db
+    devDependencies:
+      '@types/node':
+        specifier: ^25.3.5
+        version: 25.3.5
+      typescript:
+        specifier: ^5.5.0
+        version: 5.9.3
       vitest:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@25.3.5)(jsdom@28.1.0)

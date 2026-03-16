@@ -12,7 +12,7 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     root: __dirname,
-    include: ['*.test.ts'],
-    globalSetup: [path.resolve(__dirname, 'global-setup.ts')],
+    include: ['src/__tests__/*.test.ts'],
+    globalSetup: [path.resolve(__dirname, 'src/global-setup.ts')],
   },
 });

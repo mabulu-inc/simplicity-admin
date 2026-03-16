@@ -12,7 +12,7 @@ import {
 	updateWidget,
 	deleteWidget,
 } from '../../src/lib/dashboards/manager.js';
-import { createTestDb, destroyTestDb, type TestDb } from '../../../../test-support/test-db.js';
+import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
 describe('Dashboard Manager (integration)', () => {
 	let testDb: TestDb;

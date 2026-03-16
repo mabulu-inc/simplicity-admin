@@ -9,7 +9,7 @@ import { hashPassword } from '../src/strategies/password.js';
 import { createLoginHandler } from '../src/routes/login.js';
 import { createLogoutHandler } from '../src/routes/logout.js';
 import { createRefreshHandler } from '../src/routes/refresh.js';
-import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
+import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
 const TEST_SCHEMA = 'public';
 

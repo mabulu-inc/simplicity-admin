@@ -1,0 +1,26 @@
+{
+  "name": "@simplicity-admin/test-support",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./global-setup": "./src/global-setup.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "echo 'no lint'",
+    "build": "echo 'no build'",
+    "clean": "rm -rf .turbo"
+  },
+  "dependencies": {
+    "@simplicity-admin/core": "workspace:*",
+    "@simplicity-admin/db": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterAll } from 'vitest';
-import { createTestDb, destroyTestDb, type TestDb } from './test-db.js';
+import { createTestDb, destroyTestDb, type TestDb } from '../test-db.js';
 
 describe('createTestDb / destroyTestDb', () => {
   const testDbs: TestDb[] = [];

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { listTables } from '../src/introspect/tables.js';
-import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
+import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
 const TEST_SCHEMA = 'test_introspect_tables';
 

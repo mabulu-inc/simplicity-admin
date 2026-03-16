@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { startPostgres, stopPostgres } from './global-setup.js';
+import { startPostgres, stopPostgres } from '../global-setup.js';
 
 describe('global-setup Docker lifecycle', () => {
   it('exports startPostgres function', () => {

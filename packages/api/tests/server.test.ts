@@ -3,7 +3,7 @@ import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { defineConfig } from '@simplicity-admin/core';
 import { createAPIServer } from '../src/server.js';
-import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
+import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
 describe('API server', () => {
   let testDb: TestDb;

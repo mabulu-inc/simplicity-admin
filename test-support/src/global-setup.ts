@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
 import { resolve } from 'node:path';
 
-const PROJECT_ROOT = resolve(import.meta.dirname, '..');
+const PROJECT_ROOT = resolve(import.meta.dirname, '..', '..');
 const COMPOSE_FILE = resolve(PROJECT_ROOT, 'compose.yaml');
 
 /**

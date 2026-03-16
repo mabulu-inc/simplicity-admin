@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { introspectSchema } from '../src/introspect/index.js';
-import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
+import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
 describe('introspectSchema', () => {
   let testDb: TestDb;

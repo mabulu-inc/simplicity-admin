@@ -9,6 +9,7 @@ export default defineConfig({
 			'@simplicity-admin/ui': path.resolve(__dirname, 'src/lib/index.ts'),
 			'@simplicity-admin/core': path.resolve(__dirname, '../core/src/index.ts'),
 			'@simplicity-admin/db': path.resolve(__dirname, '../db/src/index.ts'),
+			'@simplicity-admin/test-support': path.resolve(__dirname, '../../test-support/src/index.ts'),
 			'$lib': path.resolve(__dirname, 'src/lib'),
 		},
 		conditions: ['browser'],
@@ -16,6 +17,6 @@ export default defineConfig({
 	test: {
 		include: ['tests/**/*.test.ts'],
 		environment: 'jsdom',
-		globalSetup: [path.resolve(__dirname, '../../test-support/global-setup.ts')],
+		globalSetup: [path.resolve(__dirname, '../../test-support/src/global-setup.ts')],
 	},
 });

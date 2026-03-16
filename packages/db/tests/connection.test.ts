@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createPool, DatabaseError, maskConnectionUrl } from '@simplicity-admin/db';
 import type { ConnectionPool } from '@simplicity-admin/core';
-import { createTestDb, destroyTestDb, type TestDb } from '../../../test-support/test-db.js';
+import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
 describe('createPool', () => {
   let testDb: TestDb;
