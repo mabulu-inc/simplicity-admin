@@ -101,13 +101,13 @@
 - [ ] T-081: begin_session role validation
 - [ ] T-082: M5 security integration test
 
-## M6 — Code Quality & Hardening
+## M6 — Code Quality & Hardening ($5.42)
 
 - [ ] T-083: Replace z.any() with typed schemas in core config
 - [ ] T-084: Add justifying comments to all as any casts
 - [ ] T-085: Validate JSON-parsed user input with Zod
 - [ ] T-086: Extract shared admin auth check helper
 - [ ] T-087: Replace unsafe double type casts with runtime validation
-- [ ] T-088: Enforce test isolation across all integration tests
+- [x] T-088: Test infrastructure — Docker lifecycle and per-test database isolation — $5.42
 
-**Grand Total: $0.00**
+**Grand Total: $5.42**
