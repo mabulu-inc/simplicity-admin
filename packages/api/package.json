@@ -1,6 +1,6 @@
 {
   "name": "@simplicity-admin/api",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -39,5 +39,8 @@
     "@types/pg": "^8.18.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }

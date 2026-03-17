@@ -1,6 +1,6 @@
 {
   "name": "@simplicity-admin/ui",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "type": "module",
   "svelte": "./dist/index.js",
   "main": "./dist/index.js",
@@ -47,5 +47,8 @@
     "vite": "^8.0.0",
     "vitest": "^4.1.0",
     "zod": "^4.3.6"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
