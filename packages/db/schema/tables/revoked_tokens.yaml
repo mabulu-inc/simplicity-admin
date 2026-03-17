@@ -1,5 +1,5 @@
 table: revoked_tokens
-schema: _simplicity_admin
+schema: _simplicity
 comment: "Persisted token revocation — survives server restarts"
 
 columns:

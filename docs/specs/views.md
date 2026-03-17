@@ -8,7 +8,7 @@ The views module controls how data is presented in the admin UI. It operates in 
 
 1. **Auto-generated defaults** — the framework introspects the schema and relations to produce sensible list and detail views with zero configuration
 2. **Developer view definitions** — YAML files (`views/*.view.yaml`) that customize layouts, sections, related data, and field presentation. Version-controlled alongside schema.
-3. **Admin view overrides** — runtime UI customizations (hide/show/reorder fields, rearrange sections) stored in `_simplicity_admin` tables. Portable between environments via managed export/import.
+3. **Admin view overrides** — runtime UI customizations (hide/show/reorder fields, rearrange sections) stored in `_simplicity` tables. Portable between environments via managed export/import.
 4. **User saved views** — personal views (filters, column picks, sort order, layouts) that users can name, save, and share within their tenant. Not subject to managed porting.
 
 View definitions are separate from simplicity-schema YAML files — schema defines structure, views define presentation.
@@ -308,7 +308,7 @@ list:
 ### B-VIEW-008: Admin Hides a Column
 **Given** the developer view shows columns `[name, founded, league, home_stadium]` on the teams detail view
 **When** an admin hides `founded` via the customization UI
-**Then** a view override is saved in `_simplicity_admin.view_overrides`, and `founded` no longer appears for any user
+**Then** a view override is saved in `_simplicity.view_overrides`, and `founded` no longer appears for any user
 
 ### B-VIEW-009: Admin Reorders Sections
 **Given** the detail view has sections: Team Info, Roster, Upcoming Games, Past Games
@@ -379,7 +379,7 @@ list:
 ### B-VIEW-021: Import Admin Overrides
 **Given** an `overrides.json` file from production
 **When** `npx simplicity-admin env import --input overrides.json` is run in a sandbox environment
-**Then** the admin overrides are applied to the sandbox's `_simplicity_admin.view_overrides` table (upsert by table name)
+**Then** the admin overrides are applied to the sandbox's `_simplicity.view_overrides` table (upsert by table name)
 
 ### B-VIEW-022: Export Includes Schema + Views
 **Given** a project with simplicity-schema YAML in `schema/` and view definitions in `views/`

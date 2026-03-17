@@ -88,7 +88,7 @@ Raw PostgreSQL error messages are returned to the client in form action response
 Token revocation uses an in-memory `Set<string>` that is lost on restart and not shared across instances.
 
 **Requirements:**
-- Replace the in-memory set with a database-backed revocation table in the system schema: `_simplicity_admin.revoked_tokens (token_hash text PRIMARY KEY, revoked_at timestamptz DEFAULT now(), expires_at timestamptz)`
+- Replace the in-memory set with a database-backed revocation table in the system schema: `_simplicity.revoked_tokens (token_hash text PRIMARY KEY, revoked_at timestamptz DEFAULT now(), expires_at timestamptz)`
 - Store a SHA-256 hash of the token, not the token itself
 - On revocation check, query the table
 - Add a cleanup job or TTL index to purge expired entries (tokens older than refresh TTL)

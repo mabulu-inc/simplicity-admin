@@ -347,7 +347,7 @@ export interface ProjectConfig {
   /** Schema to introspect (default: 'public') */
   schema?: string;
 
-  /** System schema name (default: '_simplicity_admin') */
+  /** System schema name (default: '_simplicity') */
   systemSchema?: string;
 
   /** Server port (default: 3000) */
@@ -557,7 +557,7 @@ This metadata model drives everything downstream: PostGraphile schema, UI compon
 
 ### 6c. System vs Application Schema
 
-- **System schema** (`_simplicity_admin`): Owned by the framework. Contains `users`, `tenants`, `memberships`. Managed by simplicity-schema YAML shipped with `@mabulu-inc/simplicity-admin-db`. Never modified by the developer directly. The underscore prefix signals "framework-owned".
+- **System schema** (`_simplicity`): Owned by the framework. Contains `users`, `tenants`, `memberships`. Managed by simplicity-schema YAML shipped with `@mabulu-inc/simplicity-admin-db`. Never modified by the developer directly. The underscore prefix signals "framework-owned".
 - **Application schema**: Owned by the developer. By default, this is `public` — all business tables live in one schema. Developers who prefer modular, namespaced schemas can configure `schema` to a custom name (e.g., `'crm'`, `'inventory'`) or use multiple schemas by pointing different simplicity-admin instances at different schemas within the same database.
 
 These are separate PostgreSQL schemas. The framework's system tables never collide with the developer's tables regardless of how the developer organizes their application schemas.
@@ -638,7 +638,7 @@ The view layer controls how data is presented. Four tiers, each building on the 
 
 1. **Auto-generated defaults** — framework introspects schema + relations to produce smart list and detail views with zero config. Detail views include field sections and related data (e.g., viewing a team shows its roster, upcoming games, and past games). List views auto-select appropriate columns (text, number, date — not JSON blobs).
 2. **Developer view definitions** (`views/*.view.yaml`) — YAML files that customize layouts, sections, related data display, filter presets, and field presentation. Separate from simplicity-schema YAML (schema = structure, views = presentation). Version-controlled and deployed.
-3. **Admin view overrides** (runtime UI) — admins drag/drop sections, hide/show columns, reorder fields. Stored in `_simplicity_admin.view_overrides`. Portable between environments via `npx simplicity-admin env export/import`.
+3. **Admin view overrides** (runtime UI) — admins drag/drop sections, hide/show columns, reorder fields. Stored in `_simplicity.view_overrides`. Portable between environments via `npx simplicity-admin env export/import`.
 4. **User saved views** (personal) — users save their own column picks, filters, sort orders, and layout preferences. Nameable, shareable within tenant. Not subject to managed porting.
 
 Resolution order: auto-default ← developer YAML ← admin override ← user saved view. Admin overrides set a ceiling that user views cannot exceed (same principle as RBAC).

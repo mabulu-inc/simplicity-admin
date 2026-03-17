@@ -21,7 +21,7 @@ function getSchemaDir(): string {
  * Idempotent — safe to run multiple times.
  */
 export async function bootstrap(pool: ConnectionPool, config: ProjectConfig): Promise<void> {
-  const schema = config.systemSchema ?? config.schema ?? 'public';
+  const schema = config.systemSchema ?? '_simplicity';
 
   try {
     // 1. Create target schema if it doesn't exist

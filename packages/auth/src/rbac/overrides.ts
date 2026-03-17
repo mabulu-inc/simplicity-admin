@@ -17,7 +17,7 @@ export interface PermissionOverride {
 type NewOverride = Omit<PermissionOverride, 'id' | 'createdAt'>;
 
 /** Default system schema where permission overrides table lives */
-const DEFAULT_SYSTEM_SCHEMA = 'simplicity_admin';
+const DEFAULT_SYSTEM_SCHEMA = '_simplicity';
 
 function overridesTable(systemSchema = DEFAULT_SYSTEM_SCHEMA): string {
   return `"${systemSchema}"."simplicity_permission_overrides"`;

@@ -60,12 +60,12 @@ export interface RevocationPool {
   query(text: string, values: unknown[]): Promise<{ rows: unknown[]; rowCount: number }>;
 }
 
-/** Database-backed revocation store using _simplicity_admin.revoked_tokens table. */
+/** Database-backed revocation store using _simplicity.revoked_tokens table. */
 export function createDbRevocationStore(pool: RevocationPool): RevocationStore {
   return {
     async revoke(token: string, expiresAt: Date): Promise<void> {
       await pool.query(
-        `INSERT INTO _simplicity_admin.revoked_tokens (token_hash, expires_at)
+        `INSERT INTO _simplicity.revoked_tokens (token_hash, expires_at)
          VALUES ($1, $2)
          ON CONFLICT (token_hash) DO NOTHING`,
         [hashToken(token), expiresAt],
@@ -73,14 +73,14 @@ export function createDbRevocationStore(pool: RevocationPool): RevocationStore {
     },
     async isRevoked(token: string): Promise<boolean> {
       const result = await pool.query(
-        `SELECT 1 FROM _simplicity_admin.revoked_tokens WHERE token_hash = $1`,
+        `SELECT 1 FROM _simplicity.revoked_tokens WHERE token_hash = $1`,
         [hashToken(token)],
       );
       return result.rows.length > 0;
     },
     async revokeAllForUser(userId: string): Promise<void> {
       await pool.query(
-        `INSERT INTO _simplicity_admin.user_revocations (user_id, revoked_at)
+        `INSERT INTO _simplicity.user_revocations (user_id, revoked_at)
          VALUES ($1, NOW())
          ON CONFLICT (user_id) DO UPDATE SET revoked_at = NOW()`,
         [userId],
@@ -88,7 +88,7 @@ export function createDbRevocationStore(pool: RevocationPool): RevocationStore {
     },
     async isUserRevoked(userId: string): Promise<Date | null> {
       const result = await pool.query(
-        `SELECT revoked_at FROM _simplicity_admin.user_revocations WHERE user_id = $1`,
+        `SELECT revoked_at FROM _simplicity.user_revocations WHERE user_id = $1`,
         [userId],
       );
       if (result.rows.length === 0) return null;
@@ -96,7 +96,7 @@ export function createDbRevocationStore(pool: RevocationPool): RevocationStore {
     },
     async cleanup(): Promise<number> {
       const result = await pool.query(
-        `DELETE FROM _simplicity_admin.revoked_tokens WHERE expires_at <= NOW()`,
+        `DELETE FROM _simplicity.revoked_tokens WHERE expires_at <= NOW()`,
         [],
       );
       return result.rowCount;

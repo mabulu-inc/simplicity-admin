@@ -20,7 +20,7 @@ export const DEFAULT_TENANCY: Required<Pick<TenancyConfig, 'enabled' | 'resoluti
 
 export const DEFAULT_CONFIG = {
   schema: 'public',
-  systemSchema: '_simplicity_admin',
+  systemSchema: '_simplicity',
   port: 3000,
   basePath: '/admin',
   api: DEFAULT_API,

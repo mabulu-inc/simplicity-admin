@@ -164,14 +164,14 @@ Config: simplicity-admin.config.ts (edit anytime)
 **Then** runs simplicity-schema migrations (plan + apply)
 
 ### B-CLI-014: Env Export
-**Given** admin view overrides and admin strategy configs exist in `_simplicity_admin`
+**Given** admin view overrides and admin strategy configs exist in `_simplicity`
 **When** `npx simplicity-admin env export --output prod-config.json` is run
 **Then** exports all admin-managed runtime configuration (view overrides, permission overrides, tenant strategy configs) as a portable JSON file. User saved views are NOT included.
 
 ### B-CLI-015: Env Import
 **Given** a `prod-config.json` file exported from production
 **When** `npx simplicity-admin env import --input prod-config.json` is run in a sandbox
-**Then** applies the overrides to the sandbox's `_simplicity_admin` tables (upsert by table/key). Warns and skips entries that reference non-existent tables.
+**Then** applies the overrides to the sandbox's `_simplicity` tables (upsert by table/key). Warns and skips entries that reference non-existent tables.
 
 ### B-CLI-016: Env Export — Default Output
 **Given** no `--output` flag is specified

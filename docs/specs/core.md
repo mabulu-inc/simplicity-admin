@@ -27,7 +27,7 @@ The core module (`@mabulu-inc/simplicity-admin-core`) is the foundation of the f
 export interface ProjectConfig {
   database: string;
   schema?: string;                    // default: 'public'
-  systemSchema?: string;              // default: '_simplicity_admin'
+  systemSchema?: string;              // default: '_simplicity'
   port?: number;                      // default: 3000
   basePath?: string;                  // default: '/admin'
   api?: APIConfig;

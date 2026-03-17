@@ -72,7 +72,7 @@ export async function runDev(_args: string[]): Promise<void> {
   );
 
   // 6. Auth middleware + routes
-  const systemSchema = config.systemSchema ?? config.schema ?? 'public';
+  const systemSchema = config.systemSchema ?? '_simplicity';
   const tokenProvider = jwtTokenProvider(config.auth);
   const authMiddleware = createAuthMiddleware(tokenProvider, pool, config);
   const loginHandler = createLoginHandler(tokenProvider, pool, systemSchema);

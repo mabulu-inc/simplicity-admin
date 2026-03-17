@@ -63,9 +63,14 @@ describe('defineConfig', () => {
       expect(config.schema).toBe('public');
     });
 
-    it('sets systemSchema to _simplicity_admin', () => {
+    it('sets systemSchema to _simplicity', () => {
       const config = defineConfig({ database: validDb });
-      expect(config.systemSchema).toBe('_simplicity_admin');
+      expect(config.systemSchema).toBe('_simplicity');
+    });
+
+    it('preserves custom systemSchema', () => {
+      const config = defineConfig({ database: validDb, systemSchema: 'custom' });
+      expect(config.systemSchema).toBe('custom');
     });
 
     it('sets port to 3000', () => {
