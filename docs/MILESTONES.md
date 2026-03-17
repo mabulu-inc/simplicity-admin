@@ -101,7 +101,7 @@
 - [x] T-081: begin_session role validation — $0.29
 - [x] T-082: M5 security integration test — $0.78
 
-## M6 — Code Quality & Hardening ($14.46)
+## M6 — Code Quality & Hardening ($15.23)
 
 - [x] T-083: Replace z.any() with typed schemas in core config — $0.63
 - [x] T-084: Add justifying comments to all as any casts — $0.19
@@ -115,6 +115,6 @@
 - [x] T-092: README and GitHub Pages documentation site — $1.59
 - [x] T-093: Create @mabulu-inc/create-simplicity-admin scaffold package — $1.20
 - [x] T-094: Default systemSchema to _simplicity instead of public — $0.72
-- [ ] T-095: System schema documentation — prominent callout and reference page
+- [x] T-095: System schema documentation — prominent callout and reference page — $0.77
 
-**Grand Total: $23.68**
+**Grand Total: $24.45**
