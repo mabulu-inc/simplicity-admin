@@ -31,6 +31,7 @@ export interface APIConfig {
   graphql?: string | false;
   rest?: string | false;
   graphiql?: boolean;
+  maxQueryDepth?: number;
 }
 
 export interface AuthConfig {

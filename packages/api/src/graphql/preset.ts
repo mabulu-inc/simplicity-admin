@@ -2,6 +2,10 @@ import type { GraphileConfig } from 'graphile-config';
 import { PostGraphileAmberPreset } from 'postgraphile/presets/amber';
 import { makePgService } from '@dataplan/pg/adaptors/pg';
 import type { APIConfig, ConnectionPool } from '@simplicity-admin/core';
+import {
+  makeDepthLimitPlugin,
+  DEFAULT_MAX_DEPTH,
+} from './depth-limit.js';
 
 export function createPreset(
   config: APIConfig,
@@ -16,8 +20,11 @@ export function createPreset(
     schemas: ['public'],
   });
 
+  const maxDepth = config.maxQueryDepth ?? DEFAULT_MAX_DEPTH;
+
   return {
     extends: [PostGraphileAmberPreset],
+    plugins: [makeDepthLimitPlugin(maxDepth)],
     pgServices: [pgService],
     grafserv: {
       graphiql: config.graphiql ?? false,

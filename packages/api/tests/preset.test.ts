@@ -48,4 +48,22 @@ describe('createPreset', () => {
     const preset = createPreset({ ...defaultConfig, graphiql: false }, mockPool);
     expect(preset.grafserv!.graphiql).toBe(false);
   });
+
+  it('preset includes depth limit plugin by default', () => {
+    const preset = createPreset(defaultConfig, mockPool);
+    expect(preset.plugins).toBeDefined();
+    const depthPlugin = preset.plugins!.find(
+      (p) => p.name === 'DepthLimitPlugin',
+    );
+    expect(depthPlugin).toBeDefined();
+  });
+
+  it('preset includes depth limit plugin with custom maxQueryDepth', () => {
+    const preset = createPreset({ ...defaultConfig, maxQueryDepth: 5 }, mockPool);
+    expect(preset.plugins).toBeDefined();
+    const depthPlugin = preset.plugins!.find(
+      (p) => p.name === 'DepthLimitPlugin',
+    );
+    expect(depthPlugin).toBeDefined();
+  });
 });
