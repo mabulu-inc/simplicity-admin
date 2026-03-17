@@ -84,7 +84,7 @@
 - [x] T-067: Workflow management UI
 - [x] T-068: M4 end-to-end smoke test
 
-## M5 — Security Hardening ($8.44)
+## M5 — Security Hardening ($9.22)
 
 - [x] T-069: Bootstrap via simplicity-schema programmatic API — $1.73
 - [x] T-070: Server-side RBAC enforcement on mutations — $1.10
@@ -99,7 +99,7 @@
 - [x] T-079: Security headers — $0.23
 - [x] T-080: GraphQL depth limiting — $0.94
 - [x] T-081: begin_session role validation — $0.29
-- [ ] T-082: M5 security integration test
+- [x] T-082: M5 security integration test — $0.78
 
 ## M6 — Code Quality & Hardening ($8.44)
 
@@ -112,4 +112,4 @@
 - [x] T-089: Fix Svelte 5 state_referenced_locally warnings — $0.93
 - [x] T-090: Convert test-support to a workspace package — $1.46
 
-**Grand Total: $16.88**
+**Grand Total: $17.66**
