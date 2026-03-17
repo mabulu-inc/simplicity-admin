@@ -3,6 +3,18 @@ import { ConfigError } from '../errors.js';
 import { DEFAULT_CONFIG, DEFAULT_API, DEFAULT_AUTH, DEFAULT_TENANCY } from './defaults.js';
 import type { ProjectConfig } from './types.js';
 
+// ── Reusable provider base schema ──────────────────────────────
+const providerBaseSchema = z.object({
+  name: z.string(),
+  version: z.string(),
+}).passthrough();
+
+// ── Auth Strategy implementation schema ────────────────────────
+const authStrategyImplSchema = providerBaseSchema.extend({
+  type: z.string(),
+  displayName: z.string(),
+}).passthrough();
+
 const authStrategySchema = z.object({
   type: z.string(),
   enabled: z.boolean().optional(),
@@ -13,7 +25,7 @@ const authStrategySchema = z.object({
   callbackUrl: z.string().optional(),
   otpProvider: z.string().optional(),
   tenantConfigurable: z.boolean().optional(),
-  strategy: z.any().optional(),
+  strategy: authStrategyImplSchema.optional(),
 });
 
 const apiSchema = z.object({
@@ -35,6 +47,51 @@ const tenancySchema = z.object({
   header: z.string().optional(),
 });
 
+// ── Table Hooks schema ─────────────────────────────────────────
+const tableHooksSchema = z.object({
+  beforeInsert: z.function().optional(),
+  afterInsert: z.function().optional(),
+  beforeUpdate: z.function().optional(),
+  afterUpdate: z.function().optional(),
+  beforeDelete: z.function().optional(),
+  afterDelete: z.function().optional(),
+  validate: z.function().optional(),
+}).passthrough();
+
+// ── Table Action schema ────────────────────────────────────────
+const tableActionSchema = z.object({
+  name: z.string(),
+  label: z.string(),
+  handler: z.function(),
+  icon: z.string().optional(),
+  variant: z.enum(['default', 'danger', 'success', 'warning']).optional(),
+  condition: z.function().optional(),
+  roles: z.array(z.string()).optional(),
+  bulk: z.boolean().optional(),
+  placement: z.array(z.enum(['row', 'toolbar', 'detail'])).optional(),
+  confirm: z.union([
+    z.string(),
+    z.object({ title: z.string(), message: z.string() }),
+  ]).optional(),
+}).passthrough();
+
+// ── Provider Overrides schema ──────────────────────────────────
+const providerOverridesSchema = z.object({
+  database: providerBaseSchema.optional(),
+  api: providerBaseSchema.optional(),
+  token: providerBaseSchema.optional(),
+  ui: providerBaseSchema.optional(),
+}).strict();
+
+// ── Plugin schema ──────────────────────────────────────────────
+const pluginSchema = providerBaseSchema.extend({
+  onInit: z.function().optional(),
+  onSchemaLoaded: z.function().optional(),
+  onReady: z.function().optional(),
+  onRequest: z.function().optional(),
+  onShutdown: z.function().optional(),
+}).passthrough();
+
 const projectConfigSchema = z.object({
   database: z.string({ error: 'database is required' }),
   schema: z.string().optional(),
@@ -44,10 +101,10 @@ const projectConfigSchema = z.object({
   api: apiSchema.optional(),
   auth: authSchema.optional(),
   tenancy: tenancySchema.optional(),
-  hooks: z.record(z.string(), z.any()).optional(),
-  actions: z.record(z.string(), z.any()).optional(),
-  providers: z.any().optional(),
-  plugins: z.array(z.any()).optional(),
+  hooks: z.record(z.string(), tableHooksSchema).optional(),
+  actions: z.record(z.string(), z.array(tableActionSchema)).optional(),
+  providers: providerOverridesSchema.optional(),
+  plugins: z.array(pluginSchema).optional(),
 });
 
 /**

@@ -177,4 +177,300 @@ describe('defineConfig', () => {
       expect(config.auth?.refreshTokenTTL).toBe(86400);
     });
   });
+
+  describe('Typed schema validation — hooks', () => {
+    it('accepts valid hooks with function values', () => {
+      const config = defineConfig({
+        database: validDb,
+        hooks: {
+          users: {
+            beforeInsert: async () => {},
+            afterInsert: async () => {},
+          },
+        },
+      } as Partial<ProjectConfig>);
+      expect(config.hooks).toBeDefined();
+    });
+
+    it('rejects hooks with a non-object value', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          hooks: { users: 'not-an-object' } as unknown as Record<string, object>,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects hooks where a hook field is not a function', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          hooks: {
+            users: { beforeInsert: 'not-a-function' },
+          } as unknown as Record<string, object>,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+  });
+
+  describe('Typed schema validation — actions', () => {
+    it('accepts valid actions with required fields', () => {
+      const config = defineConfig({
+        database: validDb,
+        actions: {
+          orders: [
+            {
+              name: 'approve',
+              label: 'Approve Order',
+              handler: async () => ({ message: 'done' }),
+            },
+          ],
+        },
+      } as Partial<ProjectConfig>);
+      expect(config.actions).toBeDefined();
+    });
+
+    it('rejects actions missing required name field', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          actions: {
+            orders: [{ label: 'Approve', handler: async () => ({}) }],
+          } as unknown as Record<string, object[]>,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects actions missing required label field', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          actions: {
+            orders: [{ name: 'approve', handler: async () => ({}) }],
+          } as unknown as Record<string, object[]>,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects actions missing required handler field', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          actions: {
+            orders: [{ name: 'approve', label: 'Approve' }],
+          } as unknown as Record<string, object[]>,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects actions where handler is not a function', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          actions: {
+            orders: [{ name: 'approve', label: 'Approve', handler: 'bad' }],
+          } as unknown as Record<string, object[]>,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects actions with invalid variant value', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          actions: {
+            orders: [
+              {
+                name: 'approve',
+                label: 'Approve',
+                handler: async () => ({}),
+                variant: 'invalid',
+              },
+            ],
+          } as unknown as Record<string, object[]>,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('accepts actions with valid optional fields', () => {
+      const config = defineConfig({
+        database: validDb,
+        actions: {
+          orders: [
+            {
+              name: 'approve',
+              label: 'Approve Order',
+              handler: async () => ({ message: 'done' }),
+              icon: 'check',
+              variant: 'success',
+              bulk: true,
+              roles: ['admin'],
+              placement: ['row', 'toolbar'],
+            },
+          ],
+        },
+      } as Partial<ProjectConfig>);
+      expect(config.actions).toBeDefined();
+    });
+  });
+
+  describe('Typed schema validation — providers', () => {
+    it('accepts valid provider overrides', () => {
+      const config = defineConfig({
+        database: validDb,
+        providers: {
+          database: { name: 'pg', version: '1.0' },
+          token: { name: 'jwt', version: '1.0' },
+        },
+      } as Partial<ProjectConfig>);
+      expect(config.providers).toBeDefined();
+    });
+
+    it('rejects providers with a non-object value', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          providers: 'not-an-object' as unknown as object,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects provider missing required name field', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          providers: {
+            database: { version: '1.0' },
+          } as unknown as object,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects provider missing required version field', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          providers: {
+            database: { name: 'pg' },
+          } as unknown as object,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects unknown provider keys', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          providers: {
+            unknown: { name: 'x', version: '1.0' },
+          } as unknown as object,
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+  });
+
+  describe('Typed schema validation — plugins', () => {
+    it('accepts valid plugins with name and version', () => {
+      const config = defineConfig({
+        database: validDb,
+        plugins: [
+          { name: 'audit-log', version: '1.0.0' },
+        ],
+      } as Partial<ProjectConfig>);
+      expect(config.plugins).toHaveLength(1);
+    });
+
+    it('rejects plugin missing required name field', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          plugins: [{ version: '1.0.0' }] as unknown as object[],
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects plugin missing required version field', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          plugins: [{ name: 'audit-log' }] as unknown as object[],
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects plugins as non-array', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          plugins: 'not-an-array' as unknown as object[],
+        } as Partial<ProjectConfig>),
+      ).toThrow(ConfigError);
+    });
+
+    it('accepts plugins with optional lifecycle methods', () => {
+      const config = defineConfig({
+        database: validDb,
+        plugins: [
+          {
+            name: 'audit-log',
+            version: '1.0.0',
+            onInit: async () => {},
+            onShutdown: async () => {},
+          },
+        ],
+      } as Partial<ProjectConfig>);
+      expect(config.plugins).toHaveLength(1);
+    });
+  });
+
+  describe('Typed schema validation — strategy', () => {
+    it('accepts valid custom auth strategy object', () => {
+      const config = defineConfig({
+        database: validDb,
+        auth: {
+          strategies: [
+            {
+              type: 'oauth',
+              strategy: {
+                name: 'custom-oauth',
+                version: '1.0',
+                type: 'oauth',
+                displayName: 'Custom OAuth',
+              },
+            },
+          ],
+        },
+      } as Partial<ProjectConfig>);
+      expect(config.auth?.strategies).toHaveLength(1);
+    });
+
+    it('rejects strategy missing required name field', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          auth: {
+            strategies: [
+              {
+                type: 'oauth',
+                strategy: { version: '1.0', type: 'oauth', displayName: 'X' },
+              },
+            ],
+          } as unknown as Partial<ProjectConfig>,
+        }),
+      ).toThrow(ConfigError);
+    });
+
+    it('rejects strategy as a primitive value', () => {
+      expect(() =>
+        defineConfig({
+          database: validDb,
+          auth: {
+            strategies: [
+              { type: 'oauth', strategy: 42 },
+            ],
+          } as unknown as Partial<ProjectConfig>,
+        }),
+      ).toThrow(ConfigError);
+    });
+  });
 });
