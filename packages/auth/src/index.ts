@@ -8,6 +8,8 @@ export { getUserFromRequest, type AuthenticatedRequest } from './context.js';
 export { createLoginHandler } from './routes/login.js';
 export { createLogoutHandler } from './routes/logout.js';
 export { createRefreshHandler } from './routes/refresh.js';
+export type { RevocationStore, RevocationPool } from './revocation.js';
+export { createInMemoryRevocationStore, createDbRevocationStore, hashToken } from './revocation.js';
 export type {
   Operation,
   TablePermission,

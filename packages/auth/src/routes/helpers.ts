@@ -55,18 +55,3 @@ export function json(res: ServerResponse, status: number, data: unknown): void {
   res.writeHead(status, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify(data));
 }
-
-/**
- * In-memory token revocation set.
- * Stores revoked refresh tokens so logout invalidation works.
- * In production this would be backed by Redis or a DB table.
- */
-const revokedTokens = new Set<string>();
-
-export function revokeToken(token: string): void {
-  revokedTokens.add(token);
-}
-
-export function isTokenRevoked(token: string): boolean {
-  return revokedTokens.has(token);
-}

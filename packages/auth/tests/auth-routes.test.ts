@@ -9,6 +9,7 @@ import { hashPassword } from '../src/strategies/password.js';
 import { createLoginHandler } from '../src/routes/login.js';
 import { createLogoutHandler } from '../src/routes/logout.js';
 import { createRefreshHandler } from '../src/routes/refresh.js';
+import { createInMemoryRevocationStore } from '../src/revocation.js';
 import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
 const TEST_SCHEMA = 'public';
@@ -90,9 +91,10 @@ describe('auth routes (integration)', () => {
     );
 
     // Set up the HTTP server with routing
+    const revocationStore = createInMemoryRevocationStore();
     const loginHandler = createLoginHandler(tokenProvider, testDb.pool, TEST_SCHEMA);
-    const logoutHandler = createLogoutHandler(tokenProvider, testDb.pool, TEST_SCHEMA);
-    const refreshHandler = createRefreshHandler(tokenProvider);
+    const logoutHandler = createLogoutHandler(tokenProvider, testDb.pool, TEST_SCHEMA, revocationStore);
+    const refreshHandler = createRefreshHandler(tokenProvider, undefined, revocationStore);
 
     server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
       const url = req.url ?? '';

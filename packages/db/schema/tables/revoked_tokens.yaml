@@ -1,0 +1,23 @@
+table: revoked_tokens
+schema: _simplicity_admin
+comment: "Persisted token revocation — survives server restarts"
+
+columns:
+  - name: token_hash
+    type: text
+    primary_key: true
+
+  - name: revoked_at
+    type: timestamptz
+    default: now()
+
+  - name: expires_at
+    type: timestamptz
+
+indexes:
+  - name: idx_revoked_tokens_expires_at
+    columns: [expires_at]
+
+grants:
+  - to: authenticator
+    privileges: [SELECT, INSERT, DELETE]

@@ -1,7 +1,8 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { TokenProvider, HttpHandler } from '@simplicity-admin/core';
-import { parseBody, json, isTokenRevoked } from './helpers.js';
+import { parseBody, json } from './helpers.js';
 import type { RateLimiter } from '../rate-limit.js';
+import type { RevocationStore } from '../revocation.js';
 
 /**
  * Creates a refresh route handler.
@@ -12,6 +13,7 @@ import type { RateLimiter } from '../rate-limit.js';
 export function createRefreshHandler(
   tokenProvider: TokenProvider,
   rateLimiter?: RateLimiter,
+  revocationStore?: RevocationStore,
 ): HttpHandler {
   return async (req: IncomingMessage, res: ServerResponse) => {
     if (rateLimiter) {
@@ -42,8 +44,8 @@ export function createRefreshHandler(
       return;
     }
 
-    // Check revocation list (B-AUTH-017: logout invalidates refresh token)
-    if (isTokenRevoked(refreshToken)) {
+    // Check revocation store (B-SEC-007: DB-backed revocation)
+    if (revocationStore && (await revocationStore.isRevoked(refreshToken))) {
       json(res, 401, { error: 'Token has been revoked' });
       return;
     }

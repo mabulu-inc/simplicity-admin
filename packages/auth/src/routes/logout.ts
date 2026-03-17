@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { TokenProvider, ConnectionPool, HttpHandler } from '@simplicity-admin/core';
-import { parseBody, json, revokeToken } from './helpers.js';
+import { parseBody, json } from './helpers.js';
+import type { RevocationStore } from '../revocation.js';
 
 /**
  * Creates a logout route handler.
@@ -12,6 +13,7 @@ export function createLogoutHandler(
   tokenProvider: TokenProvider,
   _pool: ConnectionPool,
   _schema: string,
+  revocationStore?: RevocationStore,
 ): HttpHandler {
   return async (req: IncomingMessage, res: ServerResponse) => {
     let body: Record<string, unknown>;
@@ -36,8 +38,12 @@ export function createLogoutHandler(
       // Token is already invalid/expired — still return 200
     }
 
-    // Add to revocation list (B-AUTH-017)
-    revokeToken(refreshToken);
+    // Add to revocation store (B-SEC-007: DB-backed revocation)
+    // Default expiry: 7 days (matches refresh token TTL)
+    if (revocationStore) {
+      const defaultExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+      await revocationStore.revoke(refreshToken, defaultExpiry);
+    }
 
     json(res, 200, { success: true });
   };

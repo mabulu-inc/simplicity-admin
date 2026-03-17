@@ -44,4 +44,11 @@ describe('@simplicity-admin/auth exports', () => {
     const mod = await import('@simplicity-admin/auth');
     expect(typeof mod.createRefreshHandler).toBe('function');
   });
+
+  it('exports revocation store factories and hashToken', async () => {
+    const mod = await import('@simplicity-admin/auth');
+    expect(typeof mod.createInMemoryRevocationStore).toBe('function');
+    expect(typeof mod.createDbRevocationStore).toBe('function');
+    expect(typeof mod.hashToken).toBe('function');
+  });
 });
