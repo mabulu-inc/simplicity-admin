@@ -62,7 +62,6 @@ export async function createAPIServer(
   };
 
   const pgl = postgraphile(preset);
-  await pgl.getSchema();
   const serv = pgl.createServ(grafserv);
   const nodeHandler = serv.createHandler();
 
