@@ -71,6 +71,7 @@ export function scaffold(args: string[]): void {
     ['compose.yaml', renderTemplate(readTemplate('compose.yaml.tmpl'), vars)],
     ['.env.example', renderTemplate(readTemplate('env.example.tmpl'), vars)],
     ['.gitignore', renderTemplate(readTemplate('gitignore.tmpl'), vars)],
+    ['.npmrc', readTemplate('npmrc.tmpl')],
   ];
 
   for (const [filename, content] of files) {
@@ -83,7 +84,7 @@ export function scaffold(args: string[]): void {
   const displayName = dirArg === '.' ? path.basename(process.cwd()) : path.basename(targetDir);
   const cdLine = dirArg === '.' ? '' : `  cd ${displayName}\n`;
   process.stdout.write(
-    `Created ${displayName}/\n\n${cdLine}  npx simplicity-admin dev\n\nConfig: simplicity-admin.config.ts (edit anytime)\n`,
+    `Created ${displayName}/\n\n${cdLine}  pnpm install\n  pnpm dev\n\nConfig: simplicity-admin.config.ts (edit anytime)\n`,
   );
 }
 

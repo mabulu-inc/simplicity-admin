@@ -92,6 +92,7 @@ describe('init command', () => {
     const { stdout, exitCode } = runCLI(['init', projectDir]);
     expect(exitCode).toBe(0);
     expect(stdout).toContain('Created');
-    expect(stdout).toContain('npx simplicity-admin dev');
+    expect(stdout).toContain('pnpm install');
+    expect(stdout).toContain('pnpm dev');
   });
 });
