@@ -168,11 +168,16 @@ describe('RBAC permission engine — integration tests', () => {
     expect(usersTable!.columnPermissions.length).toBeGreaterThan(0);
   });
 
-  it('returns SELECT operations for app_viewer', async () => {
+  it('returns SELECT-only operations for app_viewer (except notifications)', async () => {
     const perms = await getEffectivePermissions(testDb.pool, 'app_viewer');
     for (const table of perms.tables) {
-      for (const op of table.operations) {
-        expect(op).toBe('SELECT');
+      if (table.table === 'simplicity_notifications') {
+        // Viewers can mark notifications as read (UPDATE on id, user_id, read)
+        expect(new Set(table.operations)).toEqual(new Set(['SELECT', 'UPDATE']));
+      } else {
+        for (const op of table.operations) {
+          expect(op).toBe('SELECT');
+        }
       }
     }
   });
