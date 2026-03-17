@@ -8,6 +8,10 @@ description: Get a running admin panel in under five minutes.
 - Node.js 18+
 - A running PostgreSQL database
 
+:::caution[Database Schema]
+SIMPLICITY-ADMIN creates a `_simplicity` schema in your database. On first startup, it creates system tables for users, tenants, memberships, roles, permissions, workflows, dashboards, and notifications. Your application tables in `public` are never modified. You can change the schema name via `systemSchema` in your config. See the [System Schema reference](/reference/system-schema/) for full details.
+:::
+
 ## Scaffold a New Project
 
 ```bash

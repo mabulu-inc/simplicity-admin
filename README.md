@@ -15,6 +15,8 @@ npm run dev
 
 That's it. You have a working admin panel with authentication, auto-generated CRUD, and a GraphQL API.
 
+> **Note:** On first startup, SIMPLICITY-ADMIN creates a `_simplicity` schema in your database with system tables for users, tenants, memberships, roles, permissions, workflows, dashboards, and notifications. Your application tables in `public` are never modified. You can change the schema name via `systemSchema` in your config.
+
 ## Features
 
 - **Zero-config to start** — provide a database URL and get a working admin panel in under 5 minutes

@@ -5,6 +5,10 @@ description: What SIMPLICITY-ADMIN is and why it exists.
 
 SIMPLICITY-ADMIN is a packaged dependency that gives you a production-grade back-office admin suite by pointing it at a PostgreSQL database. No code generation, no boilerplate — install, configure your connection string, and get a fully functional admin panel with GraphQL API, authentication, and role-based access control.
 
+:::caution[Database Schema]
+SIMPLICITY-ADMIN creates a `_simplicity` schema in your database. On first startup, it creates system tables for users, tenants, memberships, roles, permissions, workflows, dashboards, and notifications. Your application tables in `public` are never modified. You can change the schema name via `systemSchema` in your config. See the [System Schema reference](/reference/system-schema/) for full details.
+:::
+
 ## Core Value Proposition
 
 Point at a database. Get an admin panel.

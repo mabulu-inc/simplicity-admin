@@ -58,6 +58,7 @@ export default defineConfig({
             { label: 'Config Options', slug: 'reference/config-options' },
             { label: 'CLI Commands', slug: 'reference/cli-commands' },
             { label: 'Environment Variables', slug: 'reference/environment-variables' },
+            { label: 'System Schema', slug: 'reference/system-schema' },
           ],
         },
       ],
