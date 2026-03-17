@@ -1,6 +1,6 @@
 {
   "name": "@mabulu-inc/simplicity-admin-ui",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "type": "module",
   "svelte": "./dist/index.js",
   "main": "./dist/index.js",
