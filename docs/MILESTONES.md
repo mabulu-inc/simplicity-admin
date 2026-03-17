@@ -101,7 +101,7 @@
 - [x] T-081: begin_session role validation — $0.29
 - [x] T-082: M5 security integration test — $0.78
 
-## M6 — Code Quality & Hardening ($10.95)
+## M6 — Code Quality & Hardening ($12.54)
 
 - [x] T-083: Replace z.any() with typed schemas in core config — $0.63
 - [x] T-084: Add justifying comments to all as any casts — $0.19
@@ -112,6 +112,6 @@
 - [x] T-089: Fix Svelte 5 state_referenced_locally warnings — $0.93
 - [x] T-090: Convert test-support to a workspace package — $1.46
 - [x] T-091: GitHub Actions CI/CD pipeline with package publishing — $0.47
-- [ ] T-092: LICENSE, README, and GitHub Pages documentation site
+- [x] T-092: README and GitHub Pages documentation site — $1.59
 
-**Grand Total: $20.17**
+**Grand Total: $21.76**
