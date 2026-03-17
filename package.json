@@ -14,12 +14,12 @@
     "ralph": "npx @mabulu-inc/ralph loop"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^9.0.0",
-    "turbo": "^2.0.0",
-    "typescript": "^5.5.0",
-    "vitest": "^2.0.0"
+    "@typescript-eslint/eslint-plugin": "^8.57.1",
+    "@typescript-eslint/parser": "^8.57.1",
+    "eslint": "^10.0.3",
+    "turbo": "^2.8.17",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   },
   "packageManager": "pnpm@9.15.0",
   "engines": {

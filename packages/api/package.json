@@ -18,26 +18,26 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@dataplan/json": "1.0.0-rc.5",
-    "@dataplan/pg": "1.0.0-rc.7",
-    "@envelop/core": "^5.0.0",
+    "@dataplan/json": "1.0.0-rc.6",
+    "@dataplan/pg": "1.0.0-rc.8",
+    "@envelop/core": "^5.5.1",
     "@simplicity-admin/core": "workspace:*",
-    "grafast": "1.0.0-rc.8",
-    "grafserv": "1.0.0-rc.6",
+    "grafast": "1.0.0-rc.9",
+    "grafserv": "1.0.0-rc.7",
     "graphile-build": "5.0.0-rc.5",
     "graphile-build-pg": "5.0.0-rc.7",
-    "graphile-config": "1.0.0-rc.5",
-    "graphql": "^16.9.0",
-    "pg": "^8.16.0",
+    "graphile-config": "1.0.0-rc.6",
+    "graphql": "^16.13.1",
+    "pg": "^8.20.0",
     "pg-sql2": "5.0.0-rc.4",
     "postgraphile": "5.0.0-rc.9",
-    "tamedevil": "0.1.0-rc.5"
+    "tamedevil": "0.1.0-rc.6"
   },
   "devDependencies": {
     "@simplicity-admin/db": "workspace:*",
-    "@types/node": "^25.3.5",
-    "@types/pg": "^8.15.4",
-    "typescript": "^5.5.0",
-    "vitest": "^2.0.0"
+    "@types/node": "^25.5.0",
+    "@types/pg": "^8.18.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   }
 }
