@@ -12,7 +12,7 @@ export function createPreset(
   pool: ConnectionPool,
 ): GraphileConfig.Preset {
   // The pool from @simplicity-admin/db wraps pg.Pool — extract the underlying pool
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- justification: ConnectionPool wraps pg.Pool but does not expose the underlying instance; _pool is needed by makePgService which requires a raw pg.Pool
   const rawPool = (pool as any)._pool ?? pool;
 
   const pgService = makePgService({

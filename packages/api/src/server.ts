@@ -41,7 +41,7 @@ export async function createAPIServer(
       context(requestContext) {
         const req = requestContext?.node?.req;
         if (req) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- justification: auth middleware attaches .user to the request, which is not reflected in Grafserv's IncomingMessage type
           const user = (req as any).user;
           if (user) {
             return {

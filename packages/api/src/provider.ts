@@ -22,7 +22,7 @@ export function postgraphileProvider(): APIProvider {
     ): Promise<HttpHandler> {
       // Build a minimal ProjectConfig from APIConfig for createAPIServer
       // In practice, the full config is passed through the app orchestrator
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- justification: __projectConfig is an internal convention to pass ProjectConfig through the APIConfig interface without widening its public API
       const fullConfig = (config as any).__projectConfig as ProjectConfig | undefined;
       if (!fullConfig) {
         throw new Error(
