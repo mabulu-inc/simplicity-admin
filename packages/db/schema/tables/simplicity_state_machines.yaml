@@ -1,7 +1,7 @@
 table: simplicity_state_machines
 comment: "State machine definitions — one per table/column combination"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id

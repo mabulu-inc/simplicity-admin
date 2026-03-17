@@ -1,7 +1,7 @@
 table: simplicity_transition_log
 comment: "Audit log for state machine transitions"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id

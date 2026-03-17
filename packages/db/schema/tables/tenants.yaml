@@ -1,7 +1,7 @@
 table: tenants
 comment: "Tenants for multi-tenancy isolation"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id

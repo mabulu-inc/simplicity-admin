@@ -1,7 +1,7 @@
 table: simplicity_notification_rules
 comment: "Notification rules — define triggers, conditions, templates, and delivery channels"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id

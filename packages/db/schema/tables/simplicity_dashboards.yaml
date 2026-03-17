@@ -1,7 +1,7 @@
 table: simplicity_dashboards
 comment: "Dashboard definitions — customizable landing pages with widget layouts"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id

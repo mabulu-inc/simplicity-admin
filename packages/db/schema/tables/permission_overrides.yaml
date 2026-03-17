@@ -1,7 +1,7 @@
 table: simplicity_permission_overrides
 comment: "UI-defined permission overrides — can only DENY, never exceed code ceiling"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id

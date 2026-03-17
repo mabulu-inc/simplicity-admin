@@ -25,7 +25,7 @@ describe('bootstrap', () => {
     await destroyTestDb(testDb);
   });
 
-  it('creates system tables', async () => {
+  it('creates core system tables', async () => {
     const tables = await testDb.pool.query<{ table_name: string }>(
       `SELECT table_name FROM information_schema.tables WHERE table_schema = $1 ORDER BY table_name`,
       [testSchema],
@@ -34,6 +34,22 @@ describe('bootstrap', () => {
     expect(tableNames).toContain('users');
     expect(tableNames).toContain('tenants');
     expect(tableNames).toContain('memberships');
+  });
+
+  it('creates all schema-defined tables via simplicity-schema', async () => {
+    const tables = await testDb.pool.query<{ table_name: string }>(
+      `SELECT table_name FROM information_schema.tables WHERE table_schema = $1 ORDER BY table_name`,
+      [testSchema],
+    );
+    const tableNames = tables.rows.map((r) => r.table_name);
+    // These tables exist in the YAML schema but were NOT in the old hand-written DDL
+    expect(tableNames).toContain('simplicity_permission_overrides');
+    expect(tableNames).toContain('simplicity_dashboards');
+    expect(tableNames).toContain('simplicity_notification_rules');
+    expect(tableNames).toContain('simplicity_notifications');
+    expect(tableNames).toContain('simplicity_state_machines');
+    expect(tableNames).toContain('simplicity_transition_log');
+    expect(tableNames).toContain('simplicity_widgets');
   });
 
   it('creates users table with correct columns', async () => {
@@ -150,5 +166,21 @@ describe('bootstrap', () => {
       `SELECT email FROM ${testSchema}.users WHERE email = 'admin@localhost'`,
     );
     expect(users.rows.length).toBe(1);
+  });
+
+  it('wraps errors in DatabaseError', async () => {
+    const badPool: ConnectionPool = {
+      query: () => Promise.reject(new Error('connection refused')),
+      withClient: () => Promise.reject(new Error('connection refused')),
+      end: () => Promise.resolve(),
+    };
+
+    const config = defineConfig({
+      database: 'postgres://bad:bad@localhost:1/nope',
+      schema: testSchema,
+      systemSchema: testSchema,
+    });
+
+    await expect(bootstrap(badPool, config)).rejects.toThrow(/Bootstrap failed/);
   });
 });

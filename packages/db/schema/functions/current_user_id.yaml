@@ -5,5 +5,11 @@ replace: true
 body: |
   SELECT current_setting('app.user_id')::uuid;
 grants:
-  - to: [anon, app_viewer, app_editor, app_admin]
+  - to: anon
+    privileges: [EXECUTE]
+  - to: app_viewer
+    privileges: [EXECUTE]
+  - to: app_editor
+    privileges: [EXECUTE]
+  - to: app_admin
     privileges: [EXECUTE]

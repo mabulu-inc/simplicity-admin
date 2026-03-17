@@ -1,7 +1,7 @@
 table: simplicity_widgets
 comment: "Widget definitions — data-driven UI components for dashboards"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id

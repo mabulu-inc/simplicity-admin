@@ -14,11 +14,14 @@ import { bootstrap } from './bootstrap.js';
  * Wraps existing connection, introspection, and bootstrap modules.
  */
 export function postgresProvider(): DatabaseProvider {
+  let connectionUrl = '';
+
   return {
     name: 'postgres',
     version: '0.0.1',
 
     async connect(url: string): Promise<ConnectionPool> {
+      connectionUrl = url;
       const pool = createPool(url);
       // Verify connectivity by running a trivial query
       await pool.query('SELECT 1');
@@ -30,10 +33,8 @@ export function postgresProvider(): DatabaseProvider {
     },
 
     async migrate(pool: ConnectionPool, config: MigrationConfig): Promise<MigrationResult> {
-      // Currently delegates to bootstrap for system schema setup.
-      // Full simplicity-schema diff/apply migration will be added in a later task.
       await bootstrap(pool, {
-        database: '', // Not used by bootstrap (it uses the pool directly)
+        database: connectionUrl,
         schema: config.schema ?? 'public',
       });
       return {

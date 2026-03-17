@@ -1,7 +1,7 @@
 table: memberships
 comment: "Links users to tenants with a functional role"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id

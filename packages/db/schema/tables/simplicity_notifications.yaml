@@ -1,7 +1,7 @@
 table: simplicity_notifications
 comment: "User notifications — in-app and email delivery records"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id

@@ -18,6 +18,7 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
+    "@mabulu-inc/simplicity-schema": "^0.2.1",
     "@simplicity-admin/core": "workspace:*",
     "pg": "^8.20.0"
   },

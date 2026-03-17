@@ -48,7 +48,7 @@ describe('Schema YAML files — structure validation', () => {
 
     it('uses timestamps mixin', () => {
       const schema = loadYaml('tables/users.yaml') as Record<string, unknown>;
-      expect(schema.use).toEqual(expect.arrayContaining(['timestamps']));
+      expect(schema.mixins).toEqual(expect.arrayContaining(['timestamps']));
     });
   });
 
@@ -76,7 +76,7 @@ describe('Schema YAML files — structure validation', () => {
 
     it('uses timestamps mixin', () => {
       const schema = loadYaml('tables/tenants.yaml') as Record<string, unknown>;
-      expect(schema.use).toEqual(expect.arrayContaining(['timestamps']));
+      expect(schema.mixins).toEqual(expect.arrayContaining(['timestamps']));
     });
   });
 
@@ -117,7 +117,7 @@ describe('Schema YAML files — structure validation', () => {
 
     it('uses timestamps mixin', () => {
       const schema = loadYaml('tables/memberships.yaml') as Record<string, unknown>;
-      expect(schema.use).toEqual(expect.arrayContaining(['timestamps']));
+      expect(schema.mixins).toEqual(expect.arrayContaining(['timestamps']));
     });
   });
 

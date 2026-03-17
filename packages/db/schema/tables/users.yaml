@@ -1,7 +1,7 @@
 table: users
 comment: "System users — authentication and identity"
 
-use: [timestamps]
+mixins: [timestamps]
 
 columns:
   - name: id
