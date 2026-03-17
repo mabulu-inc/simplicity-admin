@@ -46,3 +46,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
 
       - run: pnpm check
+
+      - name: Build docs site
+        working-directory: docs-site
+        run: pnpm install --ignore-workspace && pnpm build
