@@ -16,6 +16,9 @@ args:
     default: "'false'"
 body: |
   BEGIN
+    IF p_role NOT IN ('anon', 'app_viewer', 'app_editor', 'app_admin') THEN
+      RAISE EXCEPTION 'invalid role: %', p_role;
+    END IF;
     EXECUTE format('set local role %I', p_role);
     PERFORM set_config('app.user_id', p_user_id, true);
     IF p_tenant_id <> '' THEN
