@@ -4,12 +4,23 @@ import { resolve } from 'node:path';
 const PROJECT_ROOT = resolve(import.meta.dirname, '..', '..');
 const COMPOSE_FILE = resolve(PROJECT_ROOT, 'compose.yaml');
 
+function isPostgresReachable(): boolean {
+  try {
+    execSync('pg_isready', { stdio: 'pipe', timeout: 5_000 });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * Start the Postgres container using Docker Compose.
  * The --wait flag blocks until the healthcheck passes.
  * Idempotent: calling when already running is safe.
+ * Skipped when Postgres is already reachable (e.g. CI service container).
  */
 export async function startPostgres(): Promise<void> {
+  if (isPostgresReachable()) return;
   execSync(`docker compose -f "${COMPOSE_FILE}" up -d --wait`, {
     cwd: PROJECT_ROOT,
     stdio: 'pipe',
