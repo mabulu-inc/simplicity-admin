@@ -11,7 +11,7 @@ description: Get a running admin panel in under five minutes.
 ## Scaffold a New Project
 
 ```bash
-npx simplicity-admin init my-admin
+pnpm create @mabulu-inc/simplicity-admin my-admin
 cd my-admin
 ```
 
@@ -37,7 +37,7 @@ Open `http://localhost:3000/admin` in your browser. SIMPLICITY-ADMIN introspects
 The quickest path. The `init` command creates a full project with configuration, scripts, and starter files.
 
 ```bash
-npx simplicity-admin init my-admin
+pnpm create @mabulu-inc/simplicity-admin my-admin
 cd my-admin
 npm run dev
 ```

@@ -7,7 +7,7 @@ A packaged dependency that gives any developer a fully functional, production-gr
 ## Quick Start
 
 ```bash
-npx simplicity-admin init my-admin
+pnpm create @mabulu-inc/simplicity-admin my-admin
 cd my-admin
 # Edit simplicity-admin.config.ts with your DATABASE_URL
 npm run dev
