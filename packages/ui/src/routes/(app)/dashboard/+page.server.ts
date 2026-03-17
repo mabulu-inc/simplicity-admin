@@ -5,6 +5,7 @@ import {
 	getDefaultDashboard,
 	listDashboards,
 	executeWidgetQuery,
+	mapWidgetRow,
 } from '$lib/dashboards/manager.js';
 import type { Widget } from '$lib/dashboards/types.js';
 
@@ -34,12 +35,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			`SELECT * FROM simplicity_widgets WHERE id = ANY($1)`,
 			[widgetIds],
 		);
-		widgets = result.rows.map((row) => ({
-			id: row.id,
-			type: row.type as Widget['type'],
-			title: row.title,
-			config: row.config as unknown as Widget['config'],
-		}));
+		widgets = result.rows.map(mapWidgetRow);
 	}
 
 	// Execute each widget query, capturing errors per-widget

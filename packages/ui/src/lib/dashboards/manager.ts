@@ -1,7 +1,51 @@
 // packages/ui/src/lib/dashboards/manager.ts — CRUD for dashboards and widgets
 
+import { z } from 'zod';
 import type { ConnectionPool } from '@simplicity-admin/core';
 import type { Dashboard, Widget, WidgetLayout, StatConfig, TableConfig, ChartConfig } from './types.js';
+
+// ── Zod schemas for widget config validation ────────────────────
+
+const statConfigSchema = z.object({
+	query: z.string(),
+	format: z.enum(['number', 'currency', 'percent']).optional(),
+	prefix: z.string().optional(),
+	suffix: z.string().optional(),
+	trend: z
+		.object({
+			query: z.string(),
+		})
+		.optional(),
+});
+
+const tableConfigSchema = z.object({
+	query: z.string(),
+	columns: z.array(z.object({ key: z.string(), label: z.string() })),
+	limit: z.number().optional(),
+});
+
+const chartConfigSchema = z.object({
+	type: z.enum(['bar', 'line', 'pie', 'donut']),
+	query: z.string(),
+	colors: z.array(z.string()).optional(),
+});
+
+/** Validates raw DB config against the expected schema for the given widget type. */
+export function parseWidgetConfig(
+	type: Widget['type'],
+	raw: Record<string, unknown>,
+): Widget['config'] {
+	switch (type) {
+		case 'stat':
+			return statConfigSchema.parse(raw) as StatConfig;
+		case 'table':
+			return tableConfigSchema.parse(raw) as TableConfig;
+		case 'chart':
+			return chartConfigSchema.parse(raw) as ChartConfig;
+		default:
+			throw new Error(`Unknown widget type: ${type as string}`);
+	}
+}
 
 // ── Row types for DB mapping ────────────────────────────────────
 
@@ -47,7 +91,23 @@ function toWidget(row: WidgetRow): Widget {
 		id: row.id,
 		type: row.type,
 		title: row.title,
-		config: row.config as unknown as Widget['config'],
+		config: parseWidgetConfig(row.type, row.config),
+	};
+}
+
+/** Maps a raw widget DB row to a typed Widget. Exported for use in page loaders. */
+export function mapWidgetRow(row: {
+	id: string;
+	type: string;
+	title: string;
+	config: Record<string, unknown>;
+}): Widget {
+	const type = row.type as Widget['type'];
+	return {
+		id: row.id,
+		type,
+		title: row.title,
+		config: parseWidgetConfig(type, row.config),
 	};
 }
 

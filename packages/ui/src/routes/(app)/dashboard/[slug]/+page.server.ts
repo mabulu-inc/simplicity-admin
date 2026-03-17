@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getPool } from '$lib/server/db.js';
-import { getDashboardBySlug, executeWidgetQuery } from '$lib/dashboards/manager.js';
+import { getDashboardBySlug, executeWidgetQuery, mapWidgetRow } from '$lib/dashboards/manager.js';
 import type { Widget } from '$lib/dashboards/types.js';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
@@ -30,12 +30,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			`SELECT * FROM simplicity_widgets WHERE id = ANY($1)`,
 			[widgetIds],
 		);
-		widgets = result.rows.map((row) => ({
-			id: row.id,
-			type: row.type as Widget['type'],
-			title: row.title,
-			config: row.config as unknown as Widget['config'],
-		}));
+		widgets = result.rows.map(mapWidgetRow);
 	}
 
 	// Execute widget queries

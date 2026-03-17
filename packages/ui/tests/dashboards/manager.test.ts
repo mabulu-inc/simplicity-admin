@@ -11,6 +11,7 @@ import {
 	createWidget,
 	updateWidget,
 	deleteWidget,
+	parseWidgetConfig,
 } from '../../src/lib/dashboards/manager.js';
 import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
 
@@ -198,6 +199,83 @@ describe('Dashboard Manager (integration)', () => {
 		it('returns null when no default for role', async () => {
 			const dashboard = await getDefaultDashboard(testDb.pool, 'app_editor');
 			expect(dashboard).toBeNull();
+		});
+	});
+
+	describe('parseWidgetConfig', () => {
+		it('parses valid stat config', () => {
+			const config = parseWidgetConfig('stat', { query: 'SELECT 1', format: 'number' });
+			expect(config).toEqual({ query: 'SELECT 1', format: 'number' });
+		});
+
+		it('parses valid table config', () => {
+			const config = parseWidgetConfig('table', {
+				query: 'SELECT 1',
+				columns: [{ key: 'id', label: 'ID' }],
+			});
+			expect(config).toEqual({
+				query: 'SELECT 1',
+				columns: [{ key: 'id', label: 'ID' }],
+			});
+		});
+
+		it('parses valid chart config', () => {
+			const config = parseWidgetConfig('chart', {
+				type: 'bar',
+				query: 'SELECT 1',
+			});
+			expect(config).toEqual({ type: 'bar', query: 'SELECT 1' });
+		});
+
+		it('throws on missing query in stat config', () => {
+			expect(() => parseWidgetConfig('stat', { format: 'number' })).toThrow();
+		});
+
+		it('throws on missing columns in table config', () => {
+			expect(() => parseWidgetConfig('table', { query: 'SELECT 1' })).toThrow();
+		});
+
+		it('throws on missing type in chart config', () => {
+			expect(() => parseWidgetConfig('chart', { query: 'SELECT 1' })).toThrow();
+		});
+
+		it('throws on completely malformed config', () => {
+			expect(() => parseWidgetConfig('stat', { bogus: true })).toThrow();
+		});
+
+		it('throws on unknown widget type', () => {
+			expect(() => parseWidgetConfig('unknown' as 'stat', { query: 'SELECT 1' })).toThrow();
+		});
+
+		it('strips unknown properties', () => {
+			const config = parseWidgetConfig('stat', { query: 'SELECT 1', extra: 'field' });
+			expect(config).toEqual({ query: 'SELECT 1' });
+			expect('extra' in config).toBe(false);
+		});
+	});
+
+	describe('Widget with malformed DB config', () => {
+		it('rejects widget with malformed config from DB', async () => {
+			// Insert a widget with invalid config directly via SQL to simulate corrupt DB data
+			const result = await testDb.pool.query<{ id: string }>(
+				`INSERT INTO simplicity_widgets (type, title, config)
+				 VALUES ('stat', 'Bad Widget', '{"bogus": true}')
+				 RETURNING id`,
+			);
+
+			// Attempting to read this widget through the CRUD layer should throw
+			const widgetResult = await testDb.pool.query<{ id: string; type: string; title: string; config: Record<string, unknown> }>(
+				'SELECT * FROM simplicity_widgets WHERE id = $1',
+				[result.rows[0].id],
+			);
+			const row = widgetResult.rows[0];
+
+			expect(() =>
+				parseWidgetConfig(row.type as 'stat' | 'table' | 'chart', row.config),
+			).toThrow();
+
+			// Clean up
+			await testDb.pool.query('DELETE FROM simplicity_widgets WHERE id = $1', [result.rows[0].id]);
 		});
 	});
 
