@@ -1,11 +1,13 @@
 import type { Handle } from '@sveltejs/kit';
+import { sequence } from '@sveltejs/kit/hooks';
 import { jwtTokenProvider } from '@simplicity-admin/auth';
+import { securityHeaders } from '$lib/server/security-headers.js';
 
 const tokenProvider = jwtTokenProvider({
 	secret: process.env.SIMPLICITY_ADMIN_AUTH_SECRET ?? 'development-secret',
 });
 
-export const handle: Handle = async ({ event, resolve }) => {
+const auth: Handle = async ({ event, resolve }) => {
 	const token = event.cookies.get('access_token');
 
 	if (token) {
@@ -25,3 +27,5 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	return resolve(event);
 };
+
+export const handle = sequence(securityHeaders, auth);
