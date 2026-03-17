@@ -47,7 +47,7 @@ describe('README.md', () => {
 
   it('includes quick start instructions', () => {
     readme = readFile('README.md');
-    expect(readme).toContain('npx simplicity-admin init');
+    expect(readme).toContain('pnpm create @mabulu-inc/simplicity-admin');
     expect(readme).toContain('npm run dev');
   });
 
