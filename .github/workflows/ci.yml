@@ -15,21 +15,21 @@ jobs:
 
     services:
       postgres:
-        image: postgres:16
+        image: postgres:latest
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: simplicity_test
+          POSTGRES_USER: simplicity
+          POSTGRES_PASSWORD: simplicity
+          POSTGRES_DB: simplicity_admin
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U postgres"
+          --health-cmd="pg_isready -U simplicity -d simplicity_admin"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
 
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/simplicity_test
+      DATABASE_URL: postgresql://simplicity:simplicity@localhost:5432/simplicity_admin
 
     steps:
       - uses: actions/checkout@v4
