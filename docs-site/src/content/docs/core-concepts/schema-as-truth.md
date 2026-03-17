@@ -76,7 +76,7 @@ SIMPLICITY-ADMIN uses two schemas:
 
 Your tables. SIMPLICITY-ADMIN introspects this schema and generates the admin interface. Configure it with the `schema` option in your config file.
 
-### System Schema (`_simplicity_admin`)
+### System Schema (`_simplicity`)
 
 Created automatically on first startup. Stores internal state: user accounts, sessions, role assignments, saved views, and audit logs. This schema is managed entirely by SIMPLICITY-ADMIN via simplicity-schema and should not be modified manually.
 

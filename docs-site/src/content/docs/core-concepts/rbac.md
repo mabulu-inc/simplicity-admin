@@ -69,4 +69,4 @@ A user can be assigned multiple roles. At login, the user's effective permission
 
 ## Super-Admins
 
-Super-admin users bypass all permission checks. This role is intended for initial setup and emergency access only. Super-admin status is set directly in the `_simplicity_admin.users` table and cannot be assigned through the UI.
+Super-admin users bypass all permission checks. This role is intended for initial setup and emergency access only. Super-admin status is set directly in the `_simplicity.users` table and cannot be assigned through the UI.

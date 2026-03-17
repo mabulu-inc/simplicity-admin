@@ -87,7 +87,7 @@ The admin panel is now available at `/admin` alongside your existing routes.
 
 1. SIMPLICITY-ADMIN connects to your PostgreSQL database
 2. Introspects the schema (tables, columns, foreign keys, enums)
-3. Creates a system schema (`_simplicity_admin`) for internal state
+3. Creates a system schema (`_simplicity`) for internal state
 4. Generates a GraphQL API via PostGraphile V5
 5. Serves the SvelteKit admin UI
 

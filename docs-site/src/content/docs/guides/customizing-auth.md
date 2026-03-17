@@ -95,4 +95,4 @@ export default defineConfig({
 });
 ```
 
-SIMPLICITY-ADMIN uses your provider for all authentication operations. The RBAC engine continues to work normally — it resolves roles from the user record in the `_simplicity_admin` schema regardless of how the user was authenticated.
+SIMPLICITY-ADMIN uses your provider for all authentication operations. The RBAC engine continues to work normally — it resolves roles from the user record in the `_simplicity` schema regardless of how the user was authenticated.

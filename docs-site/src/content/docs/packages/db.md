@@ -35,7 +35,7 @@ On startup, the `db` package queries `information_schema` to build a complete `S
 
 ### Introspection Scope
 
-Only the configured application schema is introspected (default: `public`). System schemas (`pg_catalog`, `information_schema`, `_simplicity_admin`) are excluded.
+Only the configured application schema is introspected (default: `public`). System schemas (`pg_catalog`, `information_schema`, `_simplicity`) are excluded.
 
 ```ts
 export default defineConfig({
@@ -46,7 +46,7 @@ export default defineConfig({
 
 ## System Schema Bootstrap
 
-On first startup, the `db` package creates the `_simplicity_admin` system schema using simplicity-schema. This schema stores:
+On first startup, the `db` package creates the `_simplicity` system schema using simplicity-schema. This schema stores:
 
 - **Users** — Admin user accounts (email, password hash, roles)
 - **Sessions** — Active refresh tokens

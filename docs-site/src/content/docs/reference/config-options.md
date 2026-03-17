@@ -26,7 +26,7 @@ database: 'postgres://user:password@localhost:5432/mydb'
 ### `systemSchema`
 
 - **Type:** `string`
-- **Default:** `'_simplicity_admin'`
+- **Default:** `'_simplicity'`
 - **Description:** Schema name for SIMPLICITY-ADMIN internal tables (users, sessions, roles, audit log).
 
 ### `port`
