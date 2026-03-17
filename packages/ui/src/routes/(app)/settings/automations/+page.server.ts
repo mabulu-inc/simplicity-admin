@@ -6,6 +6,8 @@ import {
 	createAutomation,
 	updateAutomation,
 	deleteAutomation,
+	automationConditionsSchema,
+	automationActionsSchema,
 } from '@simplicity-admin/core';
 import type { Automation, AutomationTrigger } from '@simplicity-admin/core';
 
@@ -50,20 +52,31 @@ export const actions: Actions = {
 			throw error(400, 'Missing required fields');
 		}
 
-		let conditions = [];
+		let conditionsParsed: unknown;
 		try {
-			conditions = JSON.parse(conditionsRaw) as unknown[];
+			conditionsParsed = JSON.parse(conditionsRaw);
 		} catch {
 			throw error(400, 'Invalid conditions JSON');
 		}
+		const conditionsResult = automationConditionsSchema.safeParse(conditionsParsed);
+		if (!conditionsResult.success) {
+			throw error(400, 'Invalid conditions structure');
+		}
+		const conditions = conditionsResult.data;
 
 		let actions = [];
 		if (actionsRaw) {
+			let actionsParsed: unknown;
 			try {
-				actions = JSON.parse(actionsRaw) as unknown[];
+				actionsParsed = JSON.parse(actionsRaw);
 			} catch {
 				throw error(400, 'Invalid actions JSON');
 			}
+			const actionsResult = automationActionsSchema.safeParse(actionsParsed);
+			if (!actionsResult.success) {
+				throw error(400, 'Invalid actions structure');
+			}
+			actions = actionsResult.data;
 		}
 
 		const trigger: AutomationTrigger = {

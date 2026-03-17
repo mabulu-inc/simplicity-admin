@@ -5,6 +5,7 @@ import {
 	listStateMachines,
 	createStateMachine,
 	deleteStateMachine,
+	transitionsSchema,
 } from '@simplicity-admin/core';
 import type { StateMachine, StateDefinition } from '@simplicity-admin/core';
 
@@ -52,14 +53,20 @@ export const actions: Actions = {
 			return { name, label: name.charAt(0).toUpperCase() + name.slice(1) };
 		});
 
-		// Parse transitions: JSON array
+		// Parse and validate transitions: JSON array
 		let transitions = [];
 		if (transitionsRaw) {
+			let transitionsParsed: unknown;
 			try {
-				transitions = JSON.parse(transitionsRaw) as unknown[];
+				transitionsParsed = JSON.parse(transitionsRaw);
 			} catch {
 				throw error(400, 'Invalid transitions JSON');
 			}
+			const transitionsResult = transitionsSchema.safeParse(transitionsParsed);
+			if (!transitionsResult.success) {
+				throw error(400, 'Invalid transitions structure');
+			}
+			transitions = transitionsResult.data;
 		}
 
 		const pool = getPool();

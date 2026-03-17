@@ -122,6 +122,16 @@ export {
 export type { ActionExecutorContext, ActionExecutorResult } from './workflow/actions.js';
 export { executeHook, executeAction } from './workflow/actions.js';
 
+// Workflow Zod schemas
+export {
+  automationConditionSchema,
+  automationActionSchema,
+  automationConditionsSchema,
+  automationActionsSchema,
+  transitionSchema,
+  transitionsSchema,
+} from './workflow/schemas.js';
+
 // Workflow engine & management
 export { WorkflowEngine } from './workflow/engine.js';
 export {
