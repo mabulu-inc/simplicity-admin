@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { getSchemaMeta, getPool, SCHEMA } from '$lib/server/db.js';
+import { requireAdmin } from '$lib/server/require-admin.js';
 import {
 	getEffectivePermissions,
 	listOverrides,
@@ -37,14 +38,7 @@ export interface ColumnPermissionRow {
 }
 
 export const load: PageServerLoad = async ({ locals, url }) => {
-	if (!locals.user) {
-		throw error(401, 'Not authenticated');
-	}
-
-	// Only admins can manage permissions
-	if (locals.user.activeRole !== 'app_admin' && !locals.user.superAdmin) {
-		throw error(403, 'Only admins can manage permissions');
-	}
+	requireAdmin(locals.user);
 
 	const selectedRole = url.searchParams.get('role') ?? 'app_viewer';
 	const pool = getPool();
@@ -99,12 +93,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 export const actions: Actions = {
 	toggle: async ({ request, locals }) => {
-		if (!locals.user) {
-			throw error(401, 'Not authenticated');
-		}
-		if (locals.user.activeRole !== 'app_admin' && !locals.user.superAdmin) {
-			throw error(403, 'Only admins can manage permissions');
-		}
+		requireAdmin(locals.user);
 
 		const formData = await request.formData();
 		const role = formData.get('role') as string;
