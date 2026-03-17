@@ -32,9 +32,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: docs-site
-        run: pnpm install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+        run: pnpm install --frozen-lockfile --ignore-workspace
 
       - name: Build site
         working-directory: docs-site
