@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { createPool } from '@simplicity-admin/db';
+import { createPool } from '@mabulu-inc/simplicity-admin-db';
 
 /**
  * M4 End-to-End Smoke Test

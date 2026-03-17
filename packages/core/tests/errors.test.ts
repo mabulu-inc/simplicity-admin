@@ -6,7 +6,7 @@ import {
   ValidationError,
   HookError,
   ActionError,
-} from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
 
 describe('Error Classes', () => {
   describe('ConfigError', () => {

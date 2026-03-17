@@ -30,12 +30,12 @@ That's it. You have a working admin panel with authentication, auto-generated CR
 
 | Package | Description |
 |---------|-------------|
-| `@simplicity-admin/core` | Config system, metadata model, provider interfaces, plugin registry |
-| `@simplicity-admin/db` | Database connection, schema introspection, bootstrap via simplicity-schema |
-| `@simplicity-admin/auth` | JWT authentication, bcrypt password hashing, RBAC engine |
-| `@simplicity-admin/api` | PostGraphile V5 GraphQL API, optional REST adapter |
-| `@simplicity-admin/ui` | SvelteKit admin UI with auto-generated views and components |
-| `@simplicity-admin/cli` | CLI commands: init, dev, build, generate |
+| `@mabulu-inc/simplicity-admin-core` | Config system, metadata model, provider interfaces, plugin registry |
+| `@mabulu-inc/simplicity-admin-db` | Database connection, schema introspection, bootstrap via simplicity-schema |
+| `@mabulu-inc/simplicity-admin-auth` | JWT authentication, bcrypt password hashing, RBAC engine |
+| `@mabulu-inc/simplicity-admin-api` | PostGraphile V5 GraphQL API, optional REST adapter |
+| `@mabulu-inc/simplicity-admin-ui` | SvelteKit admin UI with auto-generated views and components |
+| `@mabulu-inc/simplicity-admin-cli` | CLI commands: init, dev, build, generate |
 
 ## Documentation
 

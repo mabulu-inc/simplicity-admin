@@ -1,6 +1,6 @@
 // packages/ui/src/lib/graphql/query-builder.ts — GraphQL query/mutation string builders
 
-import type { TableMeta, RelationMeta } from '@simplicity-admin/core';
+import type { TableMeta, RelationMeta } from '@mabulu-inc/simplicity-admin-core';
 
 export interface ListOptions {
   page: number;

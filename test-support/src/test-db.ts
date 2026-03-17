@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { createPool } from '@simplicity-admin/db';
-import type { ConnectionPool } from '@simplicity-admin/core';
+import { createPool } from '@mabulu-inc/simplicity-admin-db';
+import type { ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
 
 const DEFAULT_URL = process.env['DATABASE_URL'] ?? 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';
 

@@ -8,14 +8,14 @@ The RBAC (Role-Based Access Control) module provides column-level permission man
 
 ## Package Location
 
-- Package: `@simplicity-admin/auth` (RBAC is part of the auth package)
+- Package: `@mabulu-inc/simplicity-admin-auth` (RBAC is part of the auth package)
 - Source: `packages/auth/src/rbac/`
 - Tests: `packages/auth/tests/rbac/`
 
 ## Dependencies
 
-- `@simplicity-admin/core` — metadata types, config types
-- `@simplicity-admin/db` — connection pool, introspection
+- `@mabulu-inc/simplicity-admin-core` — metadata types, config types
+- `@mabulu-inc/simplicity-admin-db` — connection pool, introspection
 
 ## Public API
 

@@ -40,7 +40,7 @@ Format for each entry:
 - .gitignore
 - .env.example
 - compose.yaml (PostgreSQL 16)
-- packages/core/package.json (@simplicity-admin/core)
+- packages/core/package.json (@mabulu-inc/simplicity-admin-core)
 - packages/core/tsconfig.json
 - packages/core/vitest.config.ts
 - packages/core/src/index.ts (empty re-export)
@@ -57,9 +57,9 @@ Format for each entry:
 - packages/core/src/errors.ts (ConfigError, ProviderError, PluginError, ValidationError, HookError, ActionError)
 - packages/core/src/index.ts (added error re-exports)
 - packages/core/tests/errors.test.ts (22 tests)
-- packages/core/vitest.config.ts (added resolve alias for @simplicity-admin/core)
+- packages/core/vitest.config.ts (added resolve alias for @mabulu-inc/simplicity-admin-core)
 **Test results**: 23 passed, 0 failed
-**Review**: All 6 error classes match spec error table (CORE_001–CORE_012 codes). Each extends Error, has correct name property, supports error codes, and ProviderError/PluginError/HookError/ActionError support cause chaining. All exported from @simplicity-admin/core. instanceof works correctly across classes. No circular deps. vitest alias added so tests resolve package imports to source.
+**Review**: All 6 error classes match spec error table (CORE_001–CORE_012 codes). Each extends Error, has correct name property, supports error codes, and ProviderError/PluginError/HookError/ActionError support cause chaining. All exported from @mabulu-inc/simplicity-admin-core. instanceof works correctly across classes. No circular deps. vitest alias added so tests resolve package imports to source.
 **Notes**: —
 
 ### 2026-03-08 — T-003: Core config types + Zod schema
@@ -101,7 +101,7 @@ Format for each entry:
 - packages/core/tests/column-types.test.ts (46 tests)
 - packages/core/src/index.ts (added metadata type and function re-exports)
 **Test results**: 111 passed, 0 failed
-**Review**: All metadata interfaces match spec exactly (ColumnMeta, TableMeta, RelationMeta, EnumMeta, SchemaMeta). ColumnType is a union type covering all specified values. mapPgType() maps all common PG types including aliases (character varying→varchar, int4→integer, float8→double, bool→boolean, timestamp with time zone→timestamptz, etc.). Array types detected via "[]" suffix and "ARRAY" keyword. Unknown types return 'unknown' per B-CORE-014. All types and mapPgType exported from @simplicity-admin/core. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: All metadata interfaces match spec exactly (ColumnMeta, TableMeta, RelationMeta, EnumMeta, SchemaMeta). ColumnType is a union type covering all specified values. mapPgType() maps all common PG types including aliases (character varying→varchar, int4→integer, float8→double, bool→boolean, timestamp with time zone→timestamptz, etc.). Array types detected via "[]" suffix and "ARRAY" keyword. Unknown types return 'unknown' per B-CORE-014. All types and mapPgType exported from @mabulu-inc/simplicity-admin-core. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-006: Core provider interfaces + registry
@@ -114,7 +114,7 @@ Format for each entry:
 - packages/core/tests/registry.test.ts (12 tests)
 - packages/core/src/index.ts (added provider type and registry re-exports)
 **Test results**: 123 passed, 0 failed
-**Review**: All provider interfaces match spec exactly (Provider, DatabaseProvider, APIProvider, TokenProvider, AuthStrategy, UIProvider, ConnectionPool, etc.). ProviderRegistry implements register/get/has/initAll/shutdownAll per B-CORE-007/008/009. get() throws ProviderError with CORE_004 for unregistered types. initAll() wraps init failures in ProviderError with CORE_005 and cause chaining. initAll/shutdownAll skip providers without init/shutdown methods. createRegistry() returns new ProviderRegistry instance. All types and ProviderRegistry exported from @simplicity-admin/core. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: All provider interfaces match spec exactly (Provider, DatabaseProvider, APIProvider, TokenProvider, AuthStrategy, UIProvider, ConnectionPool, etc.). ProviderRegistry implements register/get/has/initAll/shutdownAll per B-CORE-007/008/009. get() throws ProviderError with CORE_004 for unregistered types. initAll() wraps init failures in ProviderError with CORE_005 and cause chaining. initAll/shutdownAll skip providers without init/shutdown methods. createRegistry() returns new ProviderRegistry instance. All types and ProviderRegistry exported from @mabulu-inc/simplicity-admin-core. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-007: Core plugin types + manager
@@ -127,7 +127,7 @@ Format for each entry:
 - packages/core/tests/plugins.test.ts (10 tests)
 - packages/core/src/index.ts (added plugin type and PluginManager re-exports)
 **Test results**: 133 passed, 0 failed
-**Review**: All plugin interfaces match spec exactly (Plugin with 5 lifecycle hooks, AppContext, RequestContext). PluginManager.runHook() executes hooks in registration order (B-CORE-010). onSchemaLoaded chains transformations — each plugin receives previous plugin's output (B-CORE-011). Plugins without a given hook are silently skipped. Hook failures wrapped in PluginError with CORE_006 code, plugin name, hook name, and cause chaining. All types and PluginManager exported from @simplicity-admin/core. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: All plugin interfaces match spec exactly (Plugin with 5 lifecycle hooks, AppContext, RequestContext). PluginManager.runHook() executes hooks in registration order (B-CORE-010). onSchemaLoaded chains transformations — each plugin receives previous plugin's output (B-CORE-011). Plugins without a given hook are silently skipped. Hook failures wrapped in PluginError with CORE_006 code, plugin name, hook name, and cause chaining. All types and PluginManager exported from @mabulu-inc/simplicity-admin-core. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-008: Core index — re-export all public API
@@ -137,21 +137,21 @@ Format for each entry:
 **Files created/modified**:
 - packages/core/tests/exports.test.ts (20 tests verifying all public API exports)
 **Test results**: 153 passed, 0 failed
-**Review**: All runtime exports verified (defineConfig, loadConfig, resolveConfig, DEFAULT_CONFIG, mapPgType, ProviderRegistry, createRegistry, PluginManager, all 6 error classes). Type exports verified compilable (ProjectConfig, SchemaMeta, Provider, Plugin, ColumnType). Single import path `import { ... } from '@simplicity-admin/core'` works for all exports. index.ts already had all re-exports from T-002–T-007. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: All runtime exports verified (defineConfig, loadConfig, resolveConfig, DEFAULT_CONFIG, mapPgType, ProviderRegistry, createRegistry, PluginManager, all 6 error classes). Type exports verified compilable (ProjectConfig, SchemaMeta, Provider, Plugin, ColumnType). Single import path `import { ... } from '@mabulu-inc/simplicity-admin-core'` works for all exports. index.ts already had all re-exports from T-002–T-007. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
-### 2026-03-08 — T-009: Initialize @simplicity-admin/db package
+### 2026-03-08 — T-009: Initialize @mabulu-inc/simplicity-admin-db package
 **Status**: DONE
 **Commit**: df741c6
 **Duration**: ~3 min
 **Files created/modified**:
-- packages/db/package.json (@simplicity-admin/db, depends on @simplicity-admin/core)
+- packages/db/package.json (@mabulu-inc/simplicity-admin-db, depends on @mabulu-inc/simplicity-admin-core)
 - packages/db/tsconfig.json
-- packages/db/vitest.config.ts (aliases for @simplicity-admin/db and @simplicity-admin/core)
+- packages/db/vitest.config.ts (aliases for @mabulu-inc/simplicity-admin-db and @mabulu-inc/simplicity-admin-core)
 - packages/db/src/index.ts (empty re-export)
 - packages/db/tests/smoke.test.ts (1 test)
 **Test results**: 154 passed, 0 failed
-**Review**: Package follows same structure as core. Depends on @simplicity-admin/core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
+**Review**: Package follows same structure as core. Depends on @mabulu-inc/simplicity-admin-core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
 **Notes**: —
 
 ### 2026-03-08 — T-010: DB connection manager
@@ -279,18 +279,18 @@ Format for each entry:
 **Review**: postgresProvider() returns a DatabaseProvider with name='postgres', version='0.0.1'. connect() wraps createPool() and verifies connectivity with a SELECT 1 query. introspect() delegates to introspectSchema(). migrate() delegates to bootstrap() for system schema setup (full simplicity-schema diff/apply to be added later). generate() is a no-op placeholder for B-DB-017 (simplicity-schema YAML generation from DB). All 4 DatabaseProvider methods implemented. Provider is stateless — each call to postgresProvider() creates a fresh instance. All 6 integration tests use real Postgres. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: migrate() currently wraps bootstrap() only. Full simplicity-schema migration (diff + apply) will be implemented when simplicity-schema engine is built.
 
-### 2026-03-08 — T-019: Initialize @simplicity-admin/auth package
+### 2026-03-08 — T-019: Initialize @mabulu-inc/simplicity-admin-auth package
 **Status**: DONE
 **Commit**: fd61771
 **Duration**: ~3 min
 **Files created/modified**:
-- packages/auth/package.json (@simplicity-admin/auth, depends on @simplicity-admin/core)
+- packages/auth/package.json (@mabulu-inc/simplicity-admin-auth, depends on @mabulu-inc/simplicity-admin-core)
 - packages/auth/tsconfig.json
-- packages/auth/vitest.config.ts (aliases for @simplicity-admin/auth and @simplicity-admin/core)
+- packages/auth/vitest.config.ts (aliases for @mabulu-inc/simplicity-admin-auth and @mabulu-inc/simplicity-admin-core)
 - packages/auth/src/index.ts (empty re-export)
 - packages/auth/tests/smoke.test.ts (1 test)
 **Test results**: 269 passed, 0 failed
-**Review**: Package follows same structure as core and db. Depends on @simplicity-admin/core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
+**Review**: Package follows same structure as core and db. Depends on @mabulu-inc/simplicity-admin-core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
 **Notes**: —
 
 ### 2026-03-08 — T-020: Password utilities
@@ -303,7 +303,7 @@ Format for each entry:
 - packages/auth/tests/password.test.ts (4 tests)
 - packages/auth/package.json (added bcrypt, @types/bcrypt dependencies)
 **Test results**: 273 passed, 0 failed
-**Review**: hashPassword() uses bcrypt with SALT_ROUNDS=12 (≥12 per spec). Returns $2b$ prefixed hash (B-AUTH-007). verifyPassword() returns true for correct password (B-AUTH-008), false for wrong password (B-AUTH-009). Both functions exported from @simplicity-admin/auth. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: hashPassword() uses bcrypt with SALT_ROUNDS=12 (≥12 per spec). Returns $2b$ prefixed hash (B-AUTH-007). verifyPassword() returns true for correct password (B-AUTH-008), false for wrong password (B-AUTH-009). Both functions exported from @mabulu-inc/simplicity-admin-auth. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-021: JWT token provider
@@ -317,7 +317,7 @@ Format for each entry:
 - packages/auth/tests/jwt.test.ts (6 tests)
 - packages/auth/package.json (added jsonwebtoken, @types/jsonwebtoken dependencies)
 **Test results**: 279 passed, 0 failed
-**Review**: jwtTokenProvider() returns a TokenProvider with name='jwt', version='0.0.1'. sign() produces valid JWT with tokenType='access' claim (B-AUTH-001). verify() decodes and returns correct TokenPayload (B-AUTH-002). verify() throws AuthError with AUTH_002 for expired tokens (B-AUTH-003). verify() throws AuthError with AUTH_003 for invalid signatures (B-AUTH-004). refresh() returns new TokenPair with fresh access and refresh tokens using separate TTLs (B-AUTH-005). refresh() throws AuthError with AUTH_004 for expired refresh tokens (B-AUTH-006). Access and refresh tokens are distinguishable via tokenType claim. Default TTLs: 15 min access, 7 days refresh. AuthError class supports code and cause chaining. All exported from @simplicity-admin/auth. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: jwtTokenProvider() returns a TokenProvider with name='jwt', version='0.0.1'. sign() produces valid JWT with tokenType='access' claim (B-AUTH-001). verify() decodes and returns correct TokenPayload (B-AUTH-002). verify() throws AuthError with AUTH_002 for expired tokens (B-AUTH-003). verify() throws AuthError with AUTH_003 for invalid signatures (B-AUTH-004). refresh() returns new TokenPair with fresh access and refresh tokens using separate TTLs (B-AUTH-005). refresh() throws AuthError with AUTH_004 for expired refresh tokens (B-AUTH-006). Access and refresh tokens are distinguishable via tokenType claim. Default TTLs: 15 min access, 7 days refresh. AuthError class supports code and cause chaining. All exported from @mabulu-inc/simplicity-admin-auth. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-022: Auth middleware
@@ -330,7 +330,7 @@ Format for each entry:
 - packages/auth/src/index.ts (added middleware and context re-exports)
 - packages/auth/tests/middleware.test.ts (6 tests)
 **Test results**: 285 passed, 0 failed
-**Review**: createAuthMiddleware() returns HttpMiddleware that extracts Bearer token from Authorization header. Valid token → decodes payload via tokenProvider.verify(), populates req.user with userId, tenantId, roles, activeRole, superAdmin, calls next() (B-AUTH-010). Missing token or non-Bearer auth → req.user undefined, next() called for public route support (B-AUTH-011). Invalid/expired token → 401 response with JSON { error: "Invalid token" } (B-AUTH-012). AuthenticatedRequest extends IncomingMessage with optional user property. getUserFromRequest() safely extracts user from any IncomingMessage. All exported from @simplicity-admin/auth. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: createAuthMiddleware() returns HttpMiddleware that extracts Bearer token from Authorization header. Valid token → decodes payload via tokenProvider.verify(), populates req.user with userId, tenantId, roles, activeRole, superAdmin, calls next() (B-AUTH-010). Missing token or non-Bearer auth → req.user undefined, next() called for public route support (B-AUTH-011). Invalid/expired token → 401 response with JSON { error: "Invalid token" } (B-AUTH-012). AuthenticatedRequest extends IncomingMessage with optional user property. getUserFromRequest() safely extracts user from any IncomingMessage. All exported from @mabulu-inc/simplicity-admin-auth. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-023: Login/logout/refresh routes
@@ -343,7 +343,7 @@ Format for each entry:
 - packages/auth/src/routes/logout.ts (createLogoutHandler — token revocation)
 - packages/auth/src/routes/refresh.ts (createRefreshHandler — token pair refresh with revocation check)
 - packages/auth/tests/auth-routes.test.ts (8 integration tests)
-- packages/auth/vitest.config.ts (added @simplicity-admin/db alias for integration tests)
+- packages/auth/vitest.config.ts (added @mabulu-inc/simplicity-admin-db alias for integration tests)
 **Test results**: 293 passed, 0 failed
 **Review**: createLoginHandler() handles POST /auth/login with password strategy. Queries users table by email, verifies bcrypt password, fetches memberships for role/tenant resolution (B-AUTH-013/014/015/016). Returns same "Invalid credentials" error for missing email and wrong password — no email enumeration (B-AUTH-014/015). JWT payload includes userId, tenantId, roles, activeRole, authStrategy. Highest-privilege role is default activeRole (B-AUTH-016). Super-admin login sets superAdmin: true and defaults to app_admin role with first/default tenant (B-AUTH-027). createLogoutHandler() accepts refresh token and adds to in-memory revocation set (B-AUTH-017). createRefreshHandler() checks revocation set before refreshing token pair, returns 401 for revoked tokens (B-AUTH-018). Default admin (admin@localhost / changeme) can log in after bootstrap. All 8 integration tests use real Postgres with full bootstrap. No circular deps. Lint, typecheck, test all pass.
 **Notes**: Token revocation uses in-memory Set — suitable for M1. Production would use Redis or a DB table.
@@ -356,21 +356,21 @@ Format for each entry:
 - packages/auth/src/index.ts (added route handler re-exports)
 - packages/auth/tests/exports.test.ts (8 tests)
 **Test results**: 301 passed, 0 failed
-**Review**: All public API functions importable from single `@simplicity-admin/auth` path: hashPassword, verifyPassword, jwtTokenProvider, AuthError, createAuthMiddleware, getUserFromRequest, createLoginHandler, createLogoutHandler, createRefreshHandler. HttpMiddleware and AuthenticatedRequest types also exported. All 8 export tests verify runtime availability via dynamic import. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: All public API functions importable from single `@mabulu-inc/simplicity-admin-auth` path: hashPassword, verifyPassword, jwtTokenProvider, AuthError, createAuthMiddleware, getUserFromRequest, createLoginHandler, createLogoutHandler, createRefreshHandler. HttpMiddleware and AuthenticatedRequest types also exported. All 8 export tests verify runtime availability via dynamic import. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
-### 2026-03-08 — T-025: Initialize @simplicity-admin/api package
+### 2026-03-08 — T-025: Initialize @mabulu-inc/simplicity-admin-api package
 **Status**: DONE
 **Commit**: 47e76fb
 **Duration**: ~3 min
 **Files created/modified**:
-- packages/api/package.json (@simplicity-admin/api, depends on @simplicity-admin/core)
+- packages/api/package.json (@mabulu-inc/simplicity-admin-api, depends on @mabulu-inc/simplicity-admin-core)
 - packages/api/tsconfig.json
-- packages/api/vitest.config.ts (aliases for @simplicity-admin/api and @simplicity-admin/core)
+- packages/api/vitest.config.ts (aliases for @mabulu-inc/simplicity-admin-api and @mabulu-inc/simplicity-admin-core)
 - packages/api/src/index.ts (empty re-export)
 - packages/api/tests/smoke.test.ts (1 test)
 **Test results**: 302 passed, 0 failed
-**Review**: Package follows same structure as core, db, and auth. Depends on @simplicity-admin/core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
+**Review**: Package follows same structure as core, db, and auth. Depends on @mabulu-inc/simplicity-admin-core via workspace protocol. Build, typecheck, lint, test all pass. No circular deps. AC met: package builds and imports.
 **Notes**: —
 
 ### 2026-03-08 — T-026: pgSettings mapper
@@ -382,7 +382,7 @@ Format for each entry:
 - packages/api/tests/pg-settings.test.ts (2 tests)
 - packages/api/src/index.ts (added export)
 **Test results**: 304 passed, 0 failed
-**Review**: createPgSettingsFromToken() maps TokenPayload to pgSettings per B-API-011/012. Sets `role` to activeRole, `app.user_id` to userId. Includes `app.tenant_id` only when tenantId is present (B-API-012). Exported from @simplicity-admin/api. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: createPgSettingsFromToken() maps TokenPayload to pgSettings per B-API-011/012. Sets `role` to activeRole, `app.user_id` to userId. Includes `app.tenant_id` only when tenantId is present (B-API-012). Exported from @mabulu-inc/simplicity-admin-api. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-027: PostGraphile preset
@@ -395,7 +395,7 @@ Format for each entry:
 - packages/api/tests/preset.test.ts (5 tests)
 - packages/api/package.json (updated postgraphile to V5 rc.5)
 **Test results**: 306 passed, 0 failed
-**Review**: createPreset() returns a valid PostGraphile V5 preset per B-API-001. Extends PostGraphileAmberPreset, configures pgServices with makePgService from @dataplan/pg/adaptors/pg targeting 'public' schema, and sets grafserv.graphiql from config. Updated postgraphile dependency from V4 (4.14.1) to V5 (5.0.0-rc.5) to match spec requirement. All 5 tests verify: preset has extends array, pgServices configuration, correct schema target, graphiql enabled/disabled. Exported from @simplicity-admin/api. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: createPreset() returns a valid PostGraphile V5 preset per B-API-001. Extends PostGraphileAmberPreset, configures pgServices with makePgService from @dataplan/pg/adaptors/pg targeting 'public' schema, and sets grafserv.graphiql from config. Updated postgraphile dependency from V4 (4.14.1) to V5 (5.0.0-rc.5) to match spec requirement. All 5 tests verify: preset has extends array, pgServices configuration, correct schema target, graphiql enabled/disabled. Exported from @mabulu-inc/simplicity-admin-api. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-028: API server
@@ -408,27 +408,27 @@ Format for each entry:
 - packages/api/src/index.ts (added server and provider re-exports)
 - packages/api/tests/server.test.ts (6 integration tests)
 - packages/api/package.json (upgraded PostGraphile V5 packages to compatible rc versions)
-- packages/api/vitest.config.ts (added @simplicity-admin/db alias)
+- packages/api/vitest.config.ts (added @mabulu-inc/simplicity-admin-db alias)
 - pnpm-lock.yaml (updated)
 **Test results**: 320 passed, 0 failed
 **Review**: createAPIServer() creates a full PostGraphile V5 GraphQL server per B-API-002. Uses postgraphile() + grafserv for Node.js HTTP handling. pgSettings are set from JWT payload via grafast context callback, mapping authenticated user to PostgreSQL role and session settings (B-API-011/012). GraphiQL enabled/disabled via config.api.graphiql (B-API-003). All 6 integration tests use real Postgres with a test schema containing a contacts table. Tests verify: GraphQL query returns data, create mutation works, list query returns created records, update mutation works (via updateContactByRowId in V5), delete mutation works (via deleteContactByRowId in V5), and GraphiQL serves HTML in dev mode. postgraphileProvider() wraps createAPIServer() as the default APIProvider with shutdown support. Fixed PostGraphile V5 package version incompatibility (grafast rc.7 → rc.8 to resolve markSyncAndSafe error). No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: Upgraded PostGraphile V5 RC packages for version compatibility: postgraphile→rc.9, grafast→rc.8, @dataplan/pg→rc.7. PostGraphile V5 uses `updateContactByRowId`/`deleteContactByRowId` naming convention instead of V4's `updateContactById`.
 
-### 2026-03-08 — T-029: Initialize @simplicity-admin/ui package
+### 2026-03-08 — T-029: Initialize @mabulu-inc/simplicity-admin-ui package
 **Status**: DONE
 **Commit**: e59689c
 **Duration**: ~5 min
 **Files created/modified**:
-- packages/ui/package.json (@simplicity-admin/ui, Svelte 5, SvelteKit 2, Tailwind CSS v4)
+- packages/ui/package.json (@mabulu-inc/simplicity-admin-ui, Svelte 5, SvelteKit 2, Tailwind CSS v4)
 - packages/ui/svelte.config.js (vitePreprocess)
 - packages/ui/vite.config.ts (svelte plugin for dev/test)
 - packages/ui/tsconfig.json (extends tsconfig.base.json)
-- packages/ui/vitest.config.ts (aliases for @simplicity-admin/ui and @simplicity-admin/core)
+- packages/ui/vitest.config.ts (aliases for @mabulu-inc/simplicity-admin-ui and @mabulu-inc/simplicity-admin-core)
 - packages/ui/src/lib/index.ts (empty re-export)
 - packages/ui/tests/smoke.test.ts (1 test)
 - .gitignore (added .svelte-kit/)
 **Test results**: 321 passed, 0 failed
-**Review**: Package follows same structure as core/db/auth/api. Uses @sveltejs/package for library builds (svelte-package command). Depends on @simplicity-admin/core via workspace protocol. @sveltejs/vite-plugin-svelte v5 used for vite 6 compatibility. Build produces dist/ with JS and declaration files. .svelte-kit/ added to gitignore (generated directory). No circular deps. Lint, typecheck, build, test all pass.
+**Review**: Package follows same structure as core/db/auth/api. Uses @sveltejs/package for library builds (svelte-package command). Depends on @mabulu-inc/simplicity-admin-core via workspace protocol. @sveltejs/vite-plugin-svelte v5 used for vite 6 compatibility. Build produces dist/ with JS and declaration files. .svelte-kit/ added to gitignore (generated directory). No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-030: Design tokens + theming
@@ -458,7 +458,7 @@ Format for each entry:
 - packages/ui/src/lib/index.ts (added field-map re-exports)
 - packages/ui/tests/field-map.test.ts (35 tests)
 **Test results**: 360 passed, 0 failed
-**Review**: getFieldComponent() maps all ColumnTypes to correct FieldComponent values per B-UI-025: text→TextArea, varchar/char→TextInput, all numeric types→NumberInput, boolean→Toggle, enum→Select, date→DatePicker, timestamp/timestamptz→DateTimePicker, json/jsonb→JSONEditor, array→TagInput, uuid with _id suffix (FK heuristic)→RelationPicker, uuid (plain)→TextInput, time/timetz→TextInput, unknown→TextInput (fallback per error handling spec). getDisplayFormatter() returns formatters: booleans→✓/✗ (B-UI-007), dates→locale string via toLocaleDateString (B-UI-008), enums→title case with underscore-to-space, nulls/undefined→em dash "—", all others→String(). Both functions exported from @simplicity-admin/ui. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: getFieldComponent() maps all ColumnTypes to correct FieldComponent values per B-UI-025: text→TextArea, varchar/char→TextInput, all numeric types→NumberInput, boolean→Toggle, enum→Select, date→DatePicker, timestamp/timestamptz→DateTimePicker, json/jsonb→JSONEditor, array→TagInput, uuid with _id suffix (FK heuristic)→RelationPicker, uuid (plain)→TextInput, time/timetz→TextInput, unknown→TextInput (fallback per error handling spec). getDisplayFormatter() returns formatters: booleans→✓/✗ (B-UI-007), dates→locale string via toLocaleDateString (B-UI-008), enums→title case with underscore-to-space, nulls/undefined→em dash "—", all others→String(). Both functions exported from @mabulu-inc/simplicity-admin-ui. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-032: DataTable component
@@ -529,7 +529,7 @@ Format for each entry:
 - packages/ui/tests/crud/query-builder.test.ts (13 tests)
 - packages/ui/src/lib/index.ts (added query builder re-exports)
 **Test results**: 436 passed, 0 failed
-**Review**: All 5 query builder functions implemented per B-CRUD-019/020 and PostGraphile V5 naming conventions. buildListQuery() generates paginated queries with allTableName(first:, offset:, orderBy:) pattern, supports column filtering for RBAC (third optional parameter). buildDetailQuery() generates single-record queries via tableByRowId(rowId:) with one-to-many relation subqueries (dealsByContactId pattern). buildCreateMutation() uses createTable(input:) pattern. buildUpdateMutation() uses updateTableByRowId(input:) pattern. buildDeleteMutation() uses deleteTableByRowId(input:) pattern. All functions correctly convert snake_case column names to camelCase (PostGraphile convention) and table names to PascalCase. Singularize helper handles common English pluralization patterns. Column filtering works for RBAC — only specified columns appear in selection set. All types and functions exported from @simplicity-admin/ui. No circular deps. Lint, typecheck, build, test all pass.
+**Review**: All 5 query builder functions implemented per B-CRUD-019/020 and PostGraphile V5 naming conventions. buildListQuery() generates paginated queries with allTableName(first:, offset:, orderBy:) pattern, supports column filtering for RBAC (third optional parameter). buildDetailQuery() generates single-record queries via tableByRowId(rowId:) with one-to-many relation subqueries (dealsByContactId pattern). buildCreateMutation() uses createTable(input:) pattern. buildUpdateMutation() uses updateTableByRowId(input:) pattern. buildDeleteMutation() uses deleteTableByRowId(input:) pattern. All functions correctly convert snake_case column names to camelCase (PostGraphile convention) and table names to PascalCase. Singularize helper handles common English pluralization patterns. Column filtering works for RBAC — only specified columns appear in selection set. All types and functions exported from @mabulu-inc/simplicity-admin-ui. No circular deps. Lint, typecheck, build, test all pass.
 **Notes**: —
 
 ### 2026-03-08 — T-037: Admin app — SvelteKit entry point + auth gate
@@ -555,7 +555,7 @@ Format for each entry:
 - packages/ui/vite.config.ts (switched to sveltekit plugin)
 - packages/ui/tsconfig.json (extends .svelte-kit/tsconfig.json, skipLibCheck for vite version conflict)
 - packages/ui/tests/components/auto-form.test.ts (fixed ColumnMeta test fixtures with missing required properties)
-- packages/ui/package.json (added @simplicity-admin/auth, @simplicity-admin/db, @sveltejs/adapter-node, @sveltejs/kit, @playwright/test)
+- packages/ui/package.json (added @mabulu-inc/simplicity-admin-auth, @mabulu-inc/simplicity-admin-db, @sveltejs/adapter-node, @sveltejs/kit, @playwright/test)
 - pnpm-lock.yaml
 **Test results**: 436 passed (vitest), 5 passed (Playwright E2E)
 **Review**: SvelteKit app boots with auth gate per task spec. hooks.server.ts reads access_token cookie and verifies JWT via jwtTokenProvider (B-AUTH-010/011/012). (app) route group has layout.server.ts that redirects unauthenticated users to /login (302). Login page renders email/password form with data-testid attributes for E2E testing. Login flow: POST /api/auth/login verifies password against DB, resolves user roles/tenant/super_admin status, issues JWT token pair. POST /api/auth/session sets HttpOnly cookies (access_token 15min, refresh_token 7d) with secure flag in production. DELETE /api/auth/session clears cookies for logout. (app) layout wraps content in Shell component with sidebar and topbar. Admin home shows welcome message with user email and role. No email enumeration — same "Invalid credentials" for missing user and wrong password. All 5 E2E Playwright tests pass: unauthenticated redirect, login form renders, valid login succeeds, invalid login shows error, authenticated user sees shell. Typecheck passes (0 errors, 2 warnings from AutoForm). No circular deps. No regressions.
@@ -589,7 +589,7 @@ Format for each entry:
 **Test results**: 121 passed (vitest), 16 passed (Playwright E2E: 5 auth-gate + 6 list-view + 5 crud-views)
 **Review**: Create view at /[table]/new renders AutoForm in create mode — PK and default/generated columns hidden (B-CRUD-009). Server action parses JSON from FormData _data field, filters to valid non-PK non-generated columns, skips empty values for columns with defaults, executes parameterized INSERT (B-CRUD-011). Edit view at /[table]/[id] loads record by PK, pre-populates AutoForm (B-CRUD-013). Update action builds SET clauses for non-PK columns only (B-CRUD-014). Delete action with FK constraint error handling returns friendly message (B-CRUD-016/017/018). Confirmation dialog with overlay/modal pattern. AutoForm validates required fields client-side (B-CRUD-010). Fixed unused `json` import lint error. All SQL uses parameterized queries preventing injection. Typecheck 0 errors. No regressions.
 
-### 2026-03-08 — T-040: Initialize @simplicity-admin/cli package
+### 2026-03-08 — T-040: Initialize @mabulu-inc/simplicity-admin-cli package
 **Status**: DONE
 **Commit**: 69f6094
 **Duration**: ~5 min
@@ -609,7 +609,7 @@ Format for each entry:
 **Duration**: ~8 min
 **Files created/modified**:
 - packages/cli/src/commands/init.ts (runInit function: scaffolds project directory with templates)
-- packages/cli/src/templates/package.json.tmpl (project name, @simplicity-admin/cli dependency)
+- packages/cli/src/templates/package.json.tmpl (project name, @mabulu-inc/simplicity-admin-cli dependency)
 - packages/cli/src/templates/config.ts.tmpl (DATABASE_URL placeholder, port, auth config)
 - packages/cli/src/templates/compose.yaml.tmpl (PostgreSQL 16 with project-named DB)
 - packages/cli/src/templates/env.example.tmpl (placeholder values only)
@@ -617,7 +617,7 @@ Format for each entry:
 - packages/cli/src/cli.ts (wired init command into switch, async main)
 - packages/cli/tests/init.test.ts (6 integration tests)
 **Test results**: 130 passed (vitest), 16 passed (Playwright E2E)
-**Review**: Init command creates expected file structure per B-CLI-001c (non-interactive defaults). Templates use {{VAR}} substitution. package.json includes @simplicity-admin/cli dependency. Config has DATABASE_URL placeholder. Rejects non-empty directories per B-CLI-002 (CLI_001 error). Supports "." for current directory per B-CLI-003. Prints success message with next steps per B-CLI-001g. .env.example contains only placeholders, no real credentials per security spec. No circular deps. Typecheck and build pass. No regressions.
+**Review**: Init command creates expected file structure per B-CLI-001c (non-interactive defaults). Templates use {{VAR}} substitution. package.json includes @mabulu-inc/simplicity-admin-cli dependency. Config has DATABASE_URL placeholder. Rejects non-empty directories per B-CLI-002 (CLI_001 error). Supports "." for current directory per B-CLI-003. Prints success message with next steps per B-CLI-001g. .env.example contains only placeholders, no real credentials per security spec. No circular deps. Typecheck and build pass. No regressions.
 
 ### 2026-03-08 — T-042: CLI dev command
 **Status**: DONE
@@ -626,7 +626,7 @@ Format for each entry:
 **Files created/modified**:
 - packages/cli/src/commands/dev.ts (runDev: loads config, connects DB, bootstraps, starts API+auth server with routing)
 - packages/cli/src/cli.ts (wired dev command into switch)
-- packages/cli/package.json (added @simplicity-admin/api, auth, db dependencies)
+- packages/cli/package.json (added @mabulu-inc/simplicity-admin-api, auth, db dependencies)
 - packages/cli/src/commands/init.ts (removed unused InitOptions interface — lint fix)
 - packages/cli/tests/dev.test.ts (4 integration tests)
 - pnpm-lock.yaml (updated workspace links)
@@ -665,7 +665,7 @@ Format for each entry:
 - packages/auth/src/index.ts (re-export RBAC types)
 - packages/auth/tests/rbac/types.test.ts (4 type smoke tests)
 **Test results**: 147 passed (vitest), 0 failed
-**Review**: Permission types match spec exactly (rbac.md §Public API §Permission Types). Operation is a string union of SELECT/INSERT/UPDATE/DELETE. ColumnPermission maps column→allowed operations. TablePermission groups table/schema/operations/columnPermissions. EffectivePermissions wraps role+tables. All types exported from @simplicity-admin/auth public API. 4 tests verify correct shapes. Typecheck, lint, build all pass. No circular deps. No regressions.
+**Review**: Permission types match spec exactly (rbac.md §Public API §Permission Types). Operation is a string union of SELECT/INSERT/UPDATE/DELETE. ColumnPermission maps column→allowed operations. TablePermission groups table/schema/operations/columnPermissions. EffectivePermissions wraps role+tables. All types exported from @mabulu-inc/simplicity-admin-auth public API. 4 tests verify correct shapes. Typecheck, lint, build all pass. No circular deps. No regressions.
 **Notes**: —
 
 ### 2026-03-08 — T-046: RBAC permission engine
@@ -677,7 +677,7 @@ Format for each entry:
 - packages/auth/src/index.ts (re-export engine functions)
 - packages/auth/tests/rbac/engine.test.ts (13 unit tests + 5 integration tests)
 **Test results**: 475 passed, 5 skipped (DB integration), 0 failed
-**Review**: Engine implements all four functions per rbac.md spec. Pure functions (canAccess, canAccessColumn, getAccessibleColumns) operate on EffectivePermissions data structure — no DB dependency. getEffectivePermissions reads from information_schema.role_table_grants and role_column_grants, builds TablePermission with column-level detail, and handles both table-level and column-level PostgreSQL grants. For table-level grants, populates all columns from information_schema.columns. Schema filter supported. 13 unit tests cover all spec behaviors (B-RBAC-001 through B-RBAC-004). 5 integration tests verify DB reads (skipped without DB). All exported from @simplicity-admin/auth. Lint, typecheck, build pass. No regressions.
+**Review**: Engine implements all four functions per rbac.md spec. Pure functions (canAccess, canAccessColumn, getAccessibleColumns) operate on EffectivePermissions data structure — no DB dependency. getEffectivePermissions reads from information_schema.role_table_grants and role_column_grants, builds TablePermission with column-level detail, and handles both table-level and column-level PostgreSQL grants. For table-level grants, populates all columns from information_schema.columns. Schema filter supported. 13 unit tests cover all spec behaviors (B-RBAC-001 through B-RBAC-004). 5 integration tests verify DB reads (skipped without DB). All exported from @mabulu-inc/simplicity-admin-auth. Lint, typecheck, build pass. No regressions.
 **Notes**: —
 
 ### 2026-03-08 — T-047: RBAC UI overrides
@@ -771,7 +771,7 @@ Format for each entry:
 - packages/db/schema/tables/simplicity_dashboards.yaml (system table for dashboards)
 - packages/db/schema/tables/simplicity_widgets.yaml (system table for widgets)
 - packages/ui/tests/dashboards/manager.test.ts (13 integration tests)
-- packages/ui/vitest.config.ts (added @simplicity-admin/db alias)
+- packages/ui/vitest.config.ts (added @mabulu-inc/simplicity-admin-db alias)
 **Test results**: 515 passed, 5 skipped (DB integration), 0 failed
 **Review**: Types match spec interfaces exactly. Manager implements all CRUD functions from spec signature. listDashboards correctly filters by role (includes dashboards with matching role or empty roles array). getDefaultDashboard returns first default dashboard matching role. System table YAMLs follow existing conventions (timestamps mixin, uuid PK, grants by role). Integration tests verify all CRUD operations, role filtering, and default dashboard lookup. No circular dependencies. All T-053 ACs met.
 **Notes**: First M3 task — begins dashboards milestone.

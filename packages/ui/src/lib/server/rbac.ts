@@ -1,14 +1,14 @@
 // Server-side RBAC utilities for filtering columns/operations by role permissions.
 
-import type { TableMeta, ColumnMeta, ConnectionPool } from '@simplicity-admin/core';
+import type { TableMeta, ColumnMeta, ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
 import {
 	getEffectivePermissions,
 	getAccessibleColumns,
 	canAccess,
 	listOverrides,
 	mergeOverrides,
-} from '@simplicity-admin/auth';
-import type { EffectivePermissions } from '@simplicity-admin/auth';
+} from '@mabulu-inc/simplicity-admin-auth';
+import type { EffectivePermissions } from '@mabulu-inc/simplicity-admin-auth';
 
 export interface TableRbacInfo {
 	/** Columns the user can SELECT (visible in list/detail views) */

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import type { ConnectionPool, QueryResult } from '@simplicity-admin/core';
+import type { ConnectionPool, QueryResult } from '@mabulu-inc/simplicity-admin-core';
 import type { EffectivePermissions } from '../../src/rbac/types.js';
 import type { PermissionOverride } from '../../src/rbac/overrides.js';
 

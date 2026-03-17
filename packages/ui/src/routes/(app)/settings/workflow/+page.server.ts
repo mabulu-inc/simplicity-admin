@@ -7,8 +7,8 @@ import {
 	createStateMachine,
 	deleteStateMachine,
 	transitionsSchema,
-} from '@simplicity-admin/core';
-import type { StateMachine, StateDefinition } from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
+import type { StateMachine, StateDefinition } from '@mabulu-inc/simplicity-admin-core';
 
 export interface WorkflowPageData {
 	machines: StateMachine[];

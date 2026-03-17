@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { TokenProvider, HttpHandler } from '@simplicity-admin/core';
+import type { TokenProvider, HttpHandler } from '@mabulu-inc/simplicity-admin-core';
 import { parseBody, json } from './helpers.js';
 import type { RateLimiter } from '../rate-limit.js';
 import type { RevocationStore } from '../revocation.js';

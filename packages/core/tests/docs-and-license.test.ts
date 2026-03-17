@@ -62,7 +62,7 @@ describe('README.md', () => {
     readme = readFile('README.md');
     const packages = ['core', 'db', 'auth', 'api', 'ui', 'cli'];
     for (const pkg of packages) {
-      expect(readme).toContain(`@simplicity-admin/${pkg}`);
+      expect(readme).toContain(`@mabulu-inc/simplicity-admin-${pkg}`);
     }
   });
 

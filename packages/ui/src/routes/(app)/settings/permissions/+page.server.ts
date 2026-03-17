@@ -8,8 +8,8 @@ import {
 	mergeOverrides,
 	saveOverride,
 	removeOverride,
-} from '@simplicity-admin/auth';
-import type { Operation, PermissionOverride } from '@simplicity-admin/auth';
+} from '@mabulu-inc/simplicity-admin-auth';
+import type { Operation, PermissionOverride } from '@mabulu-inc/simplicity-admin-auth';
 
 /** The functional roles that can be managed via the permissions UI */
 const MANAGEABLE_ROLES = ['app_viewer', 'app_editor', 'app_admin'] as const;

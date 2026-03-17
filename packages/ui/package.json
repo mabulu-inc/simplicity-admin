@@ -1,5 +1,5 @@
 {
-  "name": "@simplicity-admin/ui",
+  "name": "@mabulu-inc/simplicity-admin-ui",
   "version": "0.1.0",
   "type": "module",
   "svelte": "./dist/index.js",
@@ -23,13 +23,13 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo .svelte-kit"
   },
   "dependencies": {
-    "@simplicity-admin/auth": "workspace:^",
-    "@simplicity-admin/core": "workspace:*",
-    "@simplicity-admin/db": "workspace:^"
+    "@mabulu-inc/simplicity-admin-auth": "workspace:^",
+    "@mabulu-inc/simplicity-admin-core": "workspace:*",
+    "@mabulu-inc/simplicity-admin-db": "workspace:^"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@simplicity-admin/test-support": "workspace:*",
+    "@mabulu-inc/simplicity-admin-test-support": "workspace:*",
     "@sveltejs/adapter-node": "^5.5.4",
     "@sveltejs/kit": "^2.55.0",
     "@sveltejs/package": "^2.5.7",

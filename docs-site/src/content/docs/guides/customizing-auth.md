@@ -25,7 +25,7 @@ This example delegates authentication to an external OIDC provider while keeping
 
 ```ts
 // lib/oidc-auth-provider.ts
-import type { AuthProvider } from '@simplicity-admin/core';
+import type { AuthProvider } from '@mabulu-inc/simplicity-admin-core';
 import { jwtVerify, SignJWT } from 'jose';
 
 const OIDC_ISSUER = 'https://auth.example.com';
@@ -84,7 +84,7 @@ Pass your provider in the config:
 
 ```ts
 // simplicity-admin.config.ts
-import { defineConfig } from '@simplicity-admin/core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 import { createOIDCAuthProvider } from './lib/oidc-auth-provider';
 
 export default defineConfig({

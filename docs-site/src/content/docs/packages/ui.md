@@ -1,11 +1,11 @@
 ---
-title: "@simplicity-admin/ui"
+title: "@mabulu-inc/simplicity-admin-ui"
 description: SvelteKit admin interface with metadata-driven rendering and theming.
 ---
 
 The `ui` package implements the `UIProvider` interface from `core`. It is a SvelteKit application that renders the admin interface based on introspected schema metadata.
 
-**Dependencies:** `@simplicity-admin/core`
+**Dependencies:** `@mabulu-inc/simplicity-admin-core`
 
 ## Metadata-Driven Rendering
 

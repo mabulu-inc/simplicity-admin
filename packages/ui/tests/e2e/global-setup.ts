@@ -1,5 +1,5 @@
-import { createPool, bootstrap } from '@simplicity-admin/db';
-import { defineConfig } from '@simplicity-admin/core';
+import { createPool, bootstrap } from '@mabulu-inc/simplicity-admin-db';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 import bcrypt from 'bcrypt';
 
 const TEST_URL = 'postgres://simplicity:simplicity@localhost:5432/simplicity_admin';

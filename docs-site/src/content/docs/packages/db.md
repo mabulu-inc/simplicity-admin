@@ -1,11 +1,11 @@
 ---
-title: "@simplicity-admin/db"
+title: "@mabulu-inc/simplicity-admin-db"
 description: PostgreSQL connection pooling, schema introspection, and system schema bootstrap.
 ---
 
 The `db` package implements the `DatabaseProvider` interface from `core`. It manages the PostgreSQL connection, introspects the database schema, and bootstraps the internal system schema.
 
-**Dependencies:** `@simplicity-admin/core`, `simplicity-schema`
+**Dependencies:** `@mabulu-inc/simplicity-admin-core`, `simplicity-schema`
 
 ## Connection Pooling
 

@@ -1,6 +1,6 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import type { ConnectionPool } from '@simplicity-admin/core';
+import type { ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
 import {
 	createDashboard,
 	updateDashboard,
@@ -13,7 +13,7 @@ import {
 	deleteWidget,
 	parseWidgetConfig,
 } from '../../src/lib/dashboards/manager.js';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 describe('Dashboard Manager (integration)', () => {
 	let testDb: TestDb;

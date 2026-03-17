@@ -8,7 +8,7 @@ import type {
   ConnectionPool,
   ProjectConfig,
   SchemaMeta,
-} from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
 import { createPgSettingsFromToken } from './graphql/pg-settings.js';
 
 const { Pool } = pg;

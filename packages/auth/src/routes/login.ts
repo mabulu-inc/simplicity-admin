@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { TokenProvider, ConnectionPool, HttpHandler } from '@simplicity-admin/core';
+import type { TokenProvider, ConnectionPool, HttpHandler } from '@mabulu-inc/simplicity-admin-core';
 import bcrypt from 'bcrypt';
 import { verifyPassword } from '../strategies/password.js';
 import { parseBody, json } from './helpers.js';

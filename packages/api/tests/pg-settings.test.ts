@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { createPgSettingsFromToken } from '@simplicity-admin/api';
-import type { TokenPayload } from '@simplicity-admin/core';
+import { createPgSettingsFromToken } from '@mabulu-inc/simplicity-admin-api';
+import type { TokenPayload } from '@mabulu-inc/simplicity-admin-core';
 
 describe('createPgSettingsFromToken', () => {
   it('maps userId, role, and tenantId to pgSettings keys', () => {

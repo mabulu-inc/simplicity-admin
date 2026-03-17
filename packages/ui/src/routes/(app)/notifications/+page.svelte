@@ -1,6 +1,6 @@
 <script lang="ts">
 	import NotificationList from '$lib/components/notifications/NotificationList.svelte';
-	import type { Notification } from '@simplicity-admin/core';
+	import type { Notification } from '@mabulu-inc/simplicity-admin-core';
 
 	interface NotificationsPageProps {
 		data: {

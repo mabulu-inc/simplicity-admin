@@ -1,4 +1,4 @@
-import type { ConnectionPool, ProjectConfig } from '@simplicity-admin/core';
+import type { ConnectionPool, ProjectConfig } from '@mabulu-inc/simplicity-admin-core';
 import { resolveConfig, runAll, createLogger, closePool } from '@mabulu-inc/simplicity-schema';
 import { DatabaseError } from './errors.js';
 import { escapeIdentifier } from './escape.js';

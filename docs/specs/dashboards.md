@@ -15,8 +15,8 @@ The dashboards module provides customizable dashboard pages with data widgets. D
 
 ## Dependencies
 
-- `@simplicity-admin/core` — config types, metadata types
-- `@simplicity-admin/ui` — Shell layout, theming
+- `@mabulu-inc/simplicity-admin-core` — config types, metadata types
+- `@mabulu-inc/simplicity-admin-ui` — Shell layout, theming
 - GraphQL API — widget data queries
 
 ## Public API

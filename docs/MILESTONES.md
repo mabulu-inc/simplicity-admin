@@ -14,7 +14,7 @@
 - [x] T-006: Core provider interfaces + registry
 - [x] T-007: Core plugin types + manager
 - [x] T-008: Core index — re-export all public API
-- [x] T-009: Initialize @simplicity-admin/db package
+- [x] T-009: Initialize @mabulu-inc/simplicity-admin-db package
 - [x] T-010: DB connection manager
 - [x] T-011: DB introspection — list tables
 - [x] T-012: DB introspection — columns
@@ -24,17 +24,17 @@
 - [x] T-016: System schema YAML (simplicity-schema)
 - [x] T-017: DB bootstrap orchestrator
 - [x] T-018: DB provider (default DatabaseProvider)
-- [x] T-019: Initialize @simplicity-admin/auth package
+- [x] T-019: Initialize @mabulu-inc/simplicity-admin-auth package
 - [x] T-020: Password utilities
 - [x] T-021: JWT provider
 - [x] T-022: Auth middleware
 - [x] T-023: Login/logout/refresh routes
 - [x] T-024: Auth index — re-export all public API
-- [x] T-025: Initialize @simplicity-admin/api package
+- [x] T-025: Initialize @mabulu-inc/simplicity-admin-api package
 - [x] T-026: pgSettings mapper
 - [x] T-027: PostGraphile preset
 - [x] T-028: API server
-- [x] T-029: Initialize @simplicity-admin/ui package
+- [x] T-029: Initialize @mabulu-inc/simplicity-admin-ui package
 - [x] T-030: Design tokens + theming
 - [x] T-031: Field type mapping
 - [x] T-032: DataTable component
@@ -45,7 +45,7 @@
 - [x] T-037: Admin app — SvelteKit entry point + auth gate
 - [x] T-038: Admin app — dynamic list view
 - [x] T-039: Admin app — dynamic create/edit/delete views
-- [x] T-040: Initialize @simplicity-admin/cli package
+- [x] T-040: Initialize @mabulu-inc/simplicity-admin-cli package
 - [x] T-041: CLI init command
 - [x] T-042: CLI dev command
 - [x] T-043: CLI generate + migrate commands

@@ -14,8 +14,8 @@ The navigation module provides role-based, customizable navigation menus for the
 
 ## Dependencies
 
-- `@simplicity-admin/core` — metadata types, config types
-- `@simplicity-admin/auth` — RBAC (effective permissions for the current user)
+- `@mabulu-inc/simplicity-admin-core` — metadata types, config types
+- `@mabulu-inc/simplicity-admin-auth` — RBAC (effective permissions for the current user)
 
 ## Public API
 

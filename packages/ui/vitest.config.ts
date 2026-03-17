@@ -6,10 +6,10 @@ export default defineConfig({
 	plugins: [svelte({ hot: false, preprocess: [] })],
 	resolve: {
 		alias: {
-			'@simplicity-admin/ui': path.resolve(__dirname, 'src/lib/index.ts'),
-			'@simplicity-admin/core': path.resolve(__dirname, '../core/src/index.ts'),
-			'@simplicity-admin/db': path.resolve(__dirname, '../db/src/index.ts'),
-			'@simplicity-admin/test-support': path.resolve(__dirname, '../../test-support/src/index.ts'),
+			'@mabulu-inc/simplicity-admin-ui': path.resolve(__dirname, 'src/lib/index.ts'),
+			'@mabulu-inc/simplicity-admin-core': path.resolve(__dirname, '../core/src/index.ts'),
+			'@mabulu-inc/simplicity-admin-db': path.resolve(__dirname, '../db/src/index.ts'),
+			'@mabulu-inc/simplicity-admin-test-support': path.resolve(__dirname, '../../test-support/src/index.ts'),
 			'$lib': path.resolve(__dirname, 'src/lib'),
 		},
 		conditions: ['browser'],

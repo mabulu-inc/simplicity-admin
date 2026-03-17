@@ -1,8 +1,8 @@
 // Server-side database utilities for SvelteKit load functions.
 // Provides a cached connection pool and schema metadata.
 
-import { createPool, introspectSchema } from '@simplicity-admin/db';
-import type { ConnectionPool, SchemaMeta, TableMeta } from '@simplicity-admin/core';
+import { createPool, introspectSchema } from '@mabulu-inc/simplicity-admin-db';
+import type { ConnectionPool, SchemaMeta, TableMeta } from '@mabulu-inc/simplicity-admin-core';
 
 const DB_URL =
 	process.env.SIMPLICITY_ADMIN_DATABASE ??

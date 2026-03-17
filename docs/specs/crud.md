@@ -4,7 +4,7 @@
 
 ## Overview
 
-The CRUD module provides auto-generated list views, detail views, and forms driven by the database metadata model. It is not a separate package — CRUD functionality is implemented as SvelteKit routes in `@simplicity-admin/ui` that consume `SchemaMeta` from the API. This spec defines the data flow and component behavior.
+The CRUD module provides auto-generated list views, detail views, and forms driven by the database metadata model. It is not a separate package — CRUD functionality is implemented as SvelteKit routes in `@mabulu-inc/simplicity-admin-ui` that consume `SchemaMeta` from the API. This spec defines the data flow and component behavior.
 
 ## Package Location
 
@@ -14,8 +14,8 @@ The CRUD module provides auto-generated list views, detail views, and forms driv
 
 ## Dependencies
 
-- `@simplicity-admin/core` — metadata types (TableMeta, ColumnMeta, RelationMeta)
-- `@simplicity-admin/ui` — DataTable, AutoForm, Shell components
+- `@mabulu-inc/simplicity-admin-core` — metadata types (TableMeta, ColumnMeta, RelationMeta)
+- `@mabulu-inc/simplicity-admin-ui` — DataTable, AutoForm, Shell components
 - GraphQL API (via HTTP) — all data operations go through the API layer
 
 ## Public API

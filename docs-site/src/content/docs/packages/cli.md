@@ -1,5 +1,5 @@
 ---
-title: "@simplicity-admin/cli"
+title: "@mabulu-inc/simplicity-admin-cli"
 description: CLI tool for scaffolding, development, building, and schema generation.
 ---
 
@@ -83,7 +83,7 @@ npx simplicity-admin generate
 Or install globally:
 
 ```bash
-npm install -g @simplicity-admin/cli
+npm install -g @mabulu-inc/simplicity-admin-cli
 simplicity-admin dev
 ```
 

@@ -15,7 +15,7 @@ import type {
 	TransitionResult,
 	TransitionLogEntry,
 	AutomationResult,
-} from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
 
 describe('Workflow types smoke test', () => {
 	it('StateMachine type is structurally valid', () => {

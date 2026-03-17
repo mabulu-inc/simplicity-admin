@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { getPool } from '$lib/server/db.js';
-import { listRules, createRule, updateRule, deleteRule } from '@simplicity-admin/core';
-import type { NotificationChannel, TriggerEvent, NotificationRule } from '@simplicity-admin/core';
+import { listRules, createRule, updateRule, deleteRule } from '@mabulu-inc/simplicity-admin-core';
+import type { NotificationChannel, TriggerEvent, NotificationRule } from '@mabulu-inc/simplicity-admin-core';
 
 export interface NotificationRulesPageData {
 	rules: NotificationRule[];

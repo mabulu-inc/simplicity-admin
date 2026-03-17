@@ -55,11 +55,11 @@ Generates a complete starter project with config file, Docker Compose for Postgr
 
 ### 4b. npm install + config (Existing project)
 ```bash
-npm install @simplicity-admin/core @simplicity-admin/db @simplicity-admin/api @simplicity-admin/auth @simplicity-admin/ui
+npm install @mabulu-inc/simplicity-admin-core @mabulu-inc/simplicity-admin-db @mabulu-inc/simplicity-admin-api @mabulu-inc/simplicity-admin-auth @mabulu-inc/simplicity-admin-ui
 ```
 ```typescript
 // simplicity-admin.config.ts
-import { defineConfig } from '@simplicity-admin/core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 
 export default defineConfig({
   database: process.env.DATABASE_URL,
@@ -72,7 +72,7 @@ npx simplicity-admin dev
 ### 4c. Embeddable Middleware (Full control)
 ```typescript
 import express from 'express';
-import { createAdmin } from '@simplicity-admin/core';
+import { createAdmin } from '@mabulu-inc/simplicity-admin-core';
 
 const app = express();
 
@@ -285,7 +285,7 @@ SIMPLICITY-ADMIN is licensed under the **Business Source License (BSL 1.1)**.
 
 | Term | Definition |
 |------|-----------|
-| **Provider** | A swappable implementation of a capability (e.g., AuthProvider, DatabaseAdapter). Defined as a TypeScript interface in `@simplicity-admin/core`. |
+| **Provider** | A swappable implementation of a capability (e.g., AuthProvider, DatabaseAdapter). Defined as a TypeScript interface in `@mabulu-inc/simplicity-admin-core`. |
 | **Functional role** | A database role representing a permission level (e.g., `app_admin`, `app_editor`, `app_viewer`). Not tied to individual users — users are assigned to roles via memberships. |
 | **Tenant** | An isolated workspace within the application. All data is scoped to a tenant via `tenant_id` foreign keys and RLS policies. Invisible if multi-tenancy is not configured. |
 | **Membership** | The association of a user to a tenant with a specific role. A user can be a member of multiple tenants with different roles. |

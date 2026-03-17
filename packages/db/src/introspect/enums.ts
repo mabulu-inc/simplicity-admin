@@ -1,4 +1,4 @@
-import type { ConnectionPool, EnumMeta } from '@simplicity-admin/core';
+import type { ConnectionPool, EnumMeta } from '@mabulu-inc/simplicity-admin-core';
 import { DatabaseError } from '../errors.js';
 
 /**

@@ -1,4 +1,4 @@
-import type { ColumnMeta } from '@simplicity-admin/core';
+import type { ColumnMeta } from '@mabulu-inc/simplicity-admin-core';
 
 export type FieldComponent =
   | 'TextInput' | 'NumberInput' | 'Toggle' | 'Select'

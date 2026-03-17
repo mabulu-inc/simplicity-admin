@@ -31,7 +31,7 @@ vi.mock('$lib/server/db.js', () => ({
 	getPool: () => ({}),
 }));
 
-vi.mock('@simplicity-admin/core', () => ({
+vi.mock('@mabulu-inc/simplicity-admin-core', () => ({
 	createAutomation: vi.fn().mockResolvedValue({ id: '1' }),
 	createStateMachine: vi.fn().mockResolvedValue({ id: '1' }),
 	automationConditionsSchema,

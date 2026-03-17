@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { postgresProvider } from '@simplicity-admin/db';
-import type { DatabaseProvider, ConnectionPool, SchemaMeta } from '@simplicity-admin/core';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { postgresProvider } from '@mabulu-inc/simplicity-admin-db';
+import type { DatabaseProvider, ConnectionPool, SchemaMeta } from '@mabulu-inc/simplicity-admin-core';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 describe('postgresProvider', () => {
   let testDb: TestDb;

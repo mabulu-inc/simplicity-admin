@@ -1,5 +1,5 @@
 {
-  "name": "@simplicity-admin/cli",
+  "name": "@mabulu-inc/simplicity-admin-cli",
   "version": "0.1.0",
   "type": "module",
   "bin": {
@@ -21,10 +21,10 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@simplicity-admin/api": "workspace:*",
-    "@simplicity-admin/auth": "workspace:*",
-    "@simplicity-admin/core": "workspace:*",
-    "@simplicity-admin/db": "workspace:*"
+    "@mabulu-inc/simplicity-admin-api": "workspace:*",
+    "@mabulu-inc/simplicity-admin-auth": "workspace:*",
+    "@mabulu-inc/simplicity-admin-core": "workspace:*",
+    "@mabulu-inc/simplicity-admin-db": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",

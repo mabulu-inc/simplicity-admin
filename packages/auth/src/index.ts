@@ -1,4 +1,4 @@
-// @simplicity-admin/auth — public API
+// @mabulu-inc/simplicity-admin-auth — public API
 export { createRateLimiter, type RateLimiter, type RateLimitOptions, type RateLimitResult } from './rate-limit.js';
 export { hashPassword, verifyPassword } from './strategies/password.js';
 export { jwtTokenProvider } from './providers/jwt.js';

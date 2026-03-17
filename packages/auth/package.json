@@ -1,5 +1,5 @@
 {
-  "name": "@simplicity-admin/auth",
+  "name": "@mabulu-inc/simplicity-admin-auth",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -18,7 +18,7 @@
     "clean": "rm -rf dist .turbo *.tsbuildinfo"
   },
   "dependencies": {
-    "@simplicity-admin/core": "workspace:*",
+    "@mabulu-inc/simplicity-admin-core": "workspace:*",
     "bcrypt": "^6.0.0",
     "jsonwebtoken": "^9.0.3"
   },

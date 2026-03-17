@@ -55,7 +55,7 @@ describe('init command', () => {
 
     const pkg = JSON.parse(readFileSync(path.join(projectDir, 'package.json'), 'utf-8'));
     expect(pkg.dependencies).toBeDefined();
-    expect(pkg.dependencies['@simplicity-admin/cli']).toBeDefined();
+    expect(pkg.dependencies['@mabulu-inc/simplicity-admin-cli']).toBeDefined();
   });
 
   it('generated config has DATABASE_URL placeholder', () => {

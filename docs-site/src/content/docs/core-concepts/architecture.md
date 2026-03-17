@@ -34,22 +34,22 @@ interface UIProvider {
 }
 ```
 
-Each built-in package (`@simplicity-admin/db`, `@simplicity-admin/api`, `@simplicity-admin/auth`, `@simplicity-admin/ui`) implements one of these interfaces. To replace a subsystem, implement the interface and register it in your config's `providers` object.
+Each built-in package (`@mabulu-inc/simplicity-admin-db`, `@mabulu-inc/simplicity-admin-api`, `@mabulu-inc/simplicity-admin-auth`, `@mabulu-inc/simplicity-admin-ui`) implements one of these interfaces. To replace a subsystem, implement the interface and register it in your config's `providers` object.
 
 ## Package Dependency Graph
 
 ```
-@simplicity-admin/core          (zero dependencies on other @simplicity-admin packages)
+@mabulu-inc/simplicity-admin-core          (zero dependencies on other @simplicity-admin packages)
   |
-  +-- @simplicity-admin/db      (depends on core + simplicity-schema)
+  +-- @mabulu-inc/simplicity-admin-db      (depends on core + simplicity-schema)
   |     |
-  |     +-- @simplicity-admin/api   (depends on core + db)
+  |     +-- @mabulu-inc/simplicity-admin-api   (depends on core + db)
   |     |
-  |     +-- @simplicity-admin/auth  (depends on core + db)
+  |     +-- @mabulu-inc/simplicity-admin-auth  (depends on core + db)
   |
-  +-- @simplicity-admin/ui      (depends on core only)
+  +-- @mabulu-inc/simplicity-admin-ui      (depends on core only)
   |
-  +-- @simplicity-admin/cli     (depends on all other packages)
+  +-- @mabulu-inc/simplicity-admin-cli     (depends on all other packages)
 ```
 
 **Key design rule:** `core` has zero dependencies on other `@simplicity-admin` packages. It defines interfaces, configuration, and the metadata model. Everything else depends on `core`.

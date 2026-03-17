@@ -1,8 +1,8 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import bcrypt from 'bcrypt';
-import { jwtTokenProvider, verifyPassword } from '@simplicity-admin/auth';
-import { createPool } from '@simplicity-admin/db';
+import { jwtTokenProvider, verifyPassword } from '@mabulu-inc/simplicity-admin-auth';
+import { createPool } from '@mabulu-inc/simplicity-admin-db';
 
 /**
  * Pre-computed bcrypt hash used for dummy comparisons when the user is not found.

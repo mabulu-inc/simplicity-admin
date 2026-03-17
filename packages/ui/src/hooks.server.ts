@@ -1,6 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import { jwtTokenProvider } from '@simplicity-admin/auth';
+import { jwtTokenProvider } from '@mabulu-inc/simplicity-admin-auth';
 import { securityHeaders } from '$lib/server/security-headers.js';
 
 const tokenProvider = jwtTokenProvider({

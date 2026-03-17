@@ -3,7 +3,7 @@ import {
 	automationConditionsSchema,
 	automationActionsSchema,
 	transitionsSchema,
-} from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
 
 describe('automationConditionsSchema', () => {
 	it('accepts valid conditions array', () => {

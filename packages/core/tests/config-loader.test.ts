@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { resolve, join } from 'node:path';
 import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { loadConfig, resolveConfig } from '@simplicity-admin/core';
-import { ConfigError } from '@simplicity-admin/core';
+import { loadConfig, resolveConfig } from '@mabulu-inc/simplicity-admin-core';
+import { ConfigError } from '@mabulu-inc/simplicity-admin-core';
 
 describe('resolveConfig', () => {
   it('returns a valid ProjectConfig with defaults applied', () => {

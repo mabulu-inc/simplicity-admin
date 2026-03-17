@@ -1,11 +1,11 @@
 ---
-title: "@simplicity-admin/api"
+title: "@mabulu-inc/simplicity-admin-api"
 description: PostGraphile V5 GraphQL API with optional REST adapter.
 ---
 
 The `api` package implements the `APIProvider` interface from `core`. It uses PostGraphile V5 to auto-generate a GraphQL API from the introspected database schema.
 
-**Dependencies:** `@simplicity-admin/core`, `@simplicity-admin/db`
+**Dependencies:** `@mabulu-inc/simplicity-admin-core`, `@mabulu-inc/simplicity-admin-db`
 
 ## GraphQL API
 

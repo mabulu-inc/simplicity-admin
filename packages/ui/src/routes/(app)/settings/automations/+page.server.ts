@@ -9,8 +9,8 @@ import {
 	deleteAutomation,
 	automationConditionsSchema,
 	automationActionsSchema,
-} from '@simplicity-admin/core';
-import type { Automation, AutomationTrigger } from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
+import type { Automation, AutomationTrigger } from '@mabulu-inc/simplicity-admin-core';
 
 export interface AutomationsPageData {
 	automations: Automation[];

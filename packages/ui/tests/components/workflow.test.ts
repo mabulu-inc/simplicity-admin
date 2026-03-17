@@ -2,7 +2,7 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/svelte';
 import StateBadge from '../../src/lib/components/workflow/StateBadge.svelte';
 import TransitionButtons from '../../src/lib/components/workflow/TransitionButtons.svelte';
-import type { StateDefinition, Transition } from '@simplicity-admin/core';
+import type { StateDefinition, Transition } from '@mabulu-inc/simplicity-admin-core';
 
 afterEach(() => cleanup());
 

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import type { TokenProvider, TokenPayload, TokenPair } from '@simplicity-admin/core';
-import type { AuthConfig } from '@simplicity-admin/core';
-import { ConfigError } from '@simplicity-admin/core';
+import type { TokenProvider, TokenPayload, TokenPair } from '@mabulu-inc/simplicity-admin-core';
+import type { AuthConfig } from '@mabulu-inc/simplicity-admin-core';
+import { ConfigError } from '@mabulu-inc/simplicity-admin-core';
 import { AuthError } from '../errors.js';
 
 const DEFAULT_SECRET = 'development-secret';

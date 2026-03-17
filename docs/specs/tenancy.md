@@ -6,7 +6,7 @@
 
 The tenancy module provides first-class multi-tenancy support that is architecturally present from day one but completely invisible when not configured. When enabled, it provides row-level data isolation via PostgreSQL RLS, tenant resolution from incoming requests, and a tenant-switching UI.
 
-Multi-tenancy is NOT a separate package — it is woven into `@simplicity-admin/core` (config types), `@simplicity-admin/db` (tenant_scoped mixin, RLS policies), `@simplicity-admin/auth` (tenant in JWT, membership model), and `@simplicity-admin/ui` (tenant switcher). This spec documents the cross-cutting concerns.
+Multi-tenancy is NOT a separate package — it is woven into `@mabulu-inc/simplicity-admin-core` (config types), `@mabulu-inc/simplicity-admin-db` (tenant_scoped mixin, RLS policies), `@mabulu-inc/simplicity-admin-auth` (tenant in JWT, membership model), and `@mabulu-inc/simplicity-admin-ui` (tenant switcher). This spec documents the cross-cutting concerns.
 
 ## Package Location
 

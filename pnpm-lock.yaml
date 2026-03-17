@@ -38,7 +38,7 @@ importers:
       '@envelop/core':
         specifier: ^5.5.1
         version: 5.5.1
-      '@simplicity-admin/core':
+      '@mabulu-inc/simplicity-admin-core':
         specifier: workspace:*
         version: link:../core
       grafast:
@@ -72,7 +72,7 @@ importers:
         specifier: 0.1.0-rc.6
         version: 0.1.0-rc.6
     devDependencies:
-      '@simplicity-admin/db':
+      '@mabulu-inc/simplicity-admin-db':
         specifier: workspace:*
         version: link:../db
       '@types/node':
@@ -90,7 +90,7 @@ importers:
 
   packages/auth:
     dependencies:
-      '@simplicity-admin/core':
+      '@mabulu-inc/simplicity-admin-core':
         specifier: workspace:*
         version: link:../core
       bcrypt:
@@ -118,16 +118,16 @@ importers:
 
   packages/cli:
     dependencies:
-      '@simplicity-admin/api':
+      '@mabulu-inc/simplicity-admin-api':
         specifier: workspace:*
         version: link:../api
-      '@simplicity-admin/auth':
+      '@mabulu-inc/simplicity-admin-auth':
         specifier: workspace:*
         version: link:../auth
-      '@simplicity-admin/core':
+      '@mabulu-inc/simplicity-admin-core':
         specifier: workspace:*
         version: link:../core
-      '@simplicity-admin/db':
+      '@mabulu-inc/simplicity-admin-db':
         specifier: workspace:*
         version: link:../db
     devDependencies:
@@ -168,12 +168,12 @@ importers:
 
   packages/db:
     dependencies:
+      '@mabulu-inc/simplicity-admin-core':
+        specifier: workspace:*
+        version: link:../core
       '@mabulu-inc/simplicity-schema':
         specifier: ^0.2.1
         version: 0.2.1
-      '@simplicity-admin/core':
-        specifier: workspace:*
-        version: link:../core
       pg:
         specifier: ^8.20.0
         version: 8.20.0
@@ -202,22 +202,22 @@ importers:
 
   packages/ui:
     dependencies:
-      '@simplicity-admin/auth':
+      '@mabulu-inc/simplicity-admin-auth':
         specifier: workspace:^
         version: link:../auth
-      '@simplicity-admin/core':
+      '@mabulu-inc/simplicity-admin-core':
         specifier: workspace:*
         version: link:../core
-      '@simplicity-admin/db':
+      '@mabulu-inc/simplicity-admin-db':
         specifier: workspace:^
         version: link:../db
     devDependencies:
+      '@mabulu-inc/simplicity-admin-test-support':
+        specifier: workspace:*
+        version: link:../../test-support
       '@playwright/test':
         specifier: ^1.58.2
         version: 1.58.2
-      '@simplicity-admin/test-support':
-        specifier: workspace:*
-        version: link:../../test-support
       '@sveltejs/adapter-node':
         specifier: ^5.5.4
         version: 5.5.4(@sveltejs/kit@2.55.0(@sveltejs/vite-plugin-svelte@7.0.0(svelte@5.53.12)(vite@8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(tsx@4.21.0)(yaml@2.8.2)))(svelte@5.53.12)(typescript@5.9.3)(vite@8.0.0(@types/node@25.5.0)(esbuild@0.27.4)(tsx@4.21.0)(yaml@2.8.2)))
@@ -272,10 +272,10 @@ importers:
 
   test-support:
     dependencies:
-      '@simplicity-admin/core':
+      '@mabulu-inc/simplicity-admin-core':
         specifier: workspace:*
         version: link:../packages/core
-      '@simplicity-admin/db':
+      '@mabulu-inc/simplicity-admin-db':
         specifier: workspace:*
         version: link:../packages/db
     devDependencies:

@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 
-describe('@simplicity-admin/ui', () => {
+describe('@mabulu-inc/simplicity-admin-ui', () => {
 	it('package imports successfully', async () => {
-		const mod = await import('@simplicity-admin/ui');
+		const mod = await import('@mabulu-inc/simplicity-admin-ui');
 		expect(mod).toBeDefined();
 	});
 });

@@ -1,5 +1,5 @@
 import pg from 'pg';
-import type { ConnectionPool, QueryResult, PoolClient } from '@simplicity-admin/core';
+import type { ConnectionPool, QueryResult, PoolClient } from '@mabulu-inc/simplicity-admin-core';
 import { DatabaseError, maskConnectionUrl } from './errors.js';
 
 const { Pool } = pg;

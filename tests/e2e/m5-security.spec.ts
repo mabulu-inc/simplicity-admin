@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { jwtTokenProvider, createRateLimiter } from '@simplicity-admin/auth';
-import { sanitizeDbError } from '@simplicity-admin/db';
-import { ConfigError } from '@simplicity-admin/core';
+import { jwtTokenProvider, createRateLimiter } from '@mabulu-inc/simplicity-admin-auth';
+import { sanitizeDbError } from '@mabulu-inc/simplicity-admin-db';
+import { ConfigError } from '@mabulu-inc/simplicity-admin-core';
 
 /**
  * M5 End-to-End Security Integration Test

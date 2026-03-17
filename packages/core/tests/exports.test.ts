@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import * as core from '@simplicity-admin/core';
+import * as core from '@mabulu-inc/simplicity-admin-core';
 
 describe('Core public API exports', () => {
   describe('Config functions', () => {

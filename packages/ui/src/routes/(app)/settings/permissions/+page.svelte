@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Operation } from '@simplicity-admin/auth';
+	import type { Operation } from '@mabulu-inc/simplicity-admin-auth';
 	import type { PermissionsPageData, TablePermissionRow, ColumnPermissionRow } from './+page.server.js';
 
 	interface PermissionsPageProps {

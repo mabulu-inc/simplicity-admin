@@ -12,7 +12,7 @@
            │                  │                       │
            ▼                  ▼                       ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    @simplicity-admin/core                           │
+│                    @mabulu-inc/simplicity-admin-core                           │
 │        Config System │ Plugin Registry │ Metadata Model      │
 │                Provider Interfaces + Defaults                │
 └─────────┬──────────┬──────────┬──────────┬──────────────────┘
@@ -35,7 +35,7 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
-All three consumption modes (CLI scaffold, npm package, middleware) converge on the same `@simplicity-admin/core` engine. The only difference is how the core is instantiated:
+All three consumption modes (CLI scaffold, npm package, middleware) converge on the same `@mabulu-inc/simplicity-admin-core` engine. The only difference is how the core is instantiated:
 
 - **CLI scaffold**: Generates a project that imports and configures the core
 - **npm install**: Developer writes a config file; `npx simplicity-admin dev` loads it
@@ -45,12 +45,12 @@ All three consumption modes (CLI scaffold, npm package, middleware) converge on 
 
 ```mermaid
 graph TD
-    CORE["@simplicity-admin/core<br/>Config, Types, Plugin Registry"]
-    DB["@simplicity-admin/db<br/>Introspection, simplicity-schema, Bootstrap"]
-    API["@simplicity-admin/api<br/>PostGraphile V5, REST adapter"]
-    AUTH["@simplicity-admin/auth<br/>JWT, Middleware, RBAC"]
-    UI["@simplicity-admin/ui<br/>SvelteKit, Components, Theming"]
-    CLI["@simplicity-admin/cli<br/>init, dev, build, generate"]
+    CORE["@mabulu-inc/simplicity-admin-core<br/>Config, Types, Plugin Registry"]
+    DB["@mabulu-inc/simplicity-admin-db<br/>Introspection, simplicity-schema, Bootstrap"]
+    API["@mabulu-inc/simplicity-admin-api<br/>PostGraphile V5, REST adapter"]
+    AUTH["@mabulu-inc/simplicity-admin-auth<br/>JWT, Middleware, RBAC"]
+    UI["@mabulu-inc/simplicity-admin-ui<br/>SvelteKit, Components, Theming"]
+    CLI["@mabulu-inc/simplicity-admin-cli<br/>init, dev, build, generate"]
     SF["@mabulu-inc/simplicity-schema<br/>Declarative DDL, Migrations"]
 
     DB --> CORE
@@ -79,7 +79,7 @@ graph TD
 
 Every swappable capability follows the same pattern:
 
-### 3a. Interface Definition (in `@simplicity-admin/core`)
+### 3a. Interface Definition (in `@mabulu-inc/simplicity-admin-core`)
 
 ```typescript
 // packages/core/src/providers/types.ts
@@ -118,10 +118,10 @@ export interface UIProvider extends Provider {
 
 ```typescript
 // simplicity-admin.config.ts
-import { defineConfig } from '@simplicity-admin/core';
-import { postgresProvider } from '@simplicity-admin/db';
-import { postgraphileProvider } from '@simplicity-admin/api';
-import { jwtProvider } from '@simplicity-admin/auth';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
+import { postgresProvider } from '@mabulu-inc/simplicity-admin-db';
+import { postgraphileProvider } from '@mabulu-inc/simplicity-admin-api';
+import { jwtProvider } from '@mabulu-inc/simplicity-admin-auth';
 
 export default defineConfig({
   database: process.env.DATABASE_URL,
@@ -137,7 +137,7 @@ export default defineConfig({
 ### 3c. Custom Provider (swap example)
 
 ```typescript
-import { defineConfig } from '@simplicity-admin/core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 import { myCustomAuth } from './my-auth-provider';
 
 export default defineConfig({
@@ -171,7 +171,7 @@ simplicity-admin/
 │
 ├── packages/
 │   ├── core/
-│   │   ├── package.json      # @simplicity-admin/core
+│   │   ├── package.json      # @mabulu-inc/simplicity-admin-core
 │   │   ├── tsconfig.json
 │   │   └── src/
 │   │       ├── index.ts              # Public API re-exports
@@ -191,7 +191,7 @@ simplicity-admin/
 │   │           └── manager.ts        # Plugin loading + execution
 │   │
 │   ├── db/
-│   │   ├── package.json      # @simplicity-admin/db
+│   │   ├── package.json      # @mabulu-inc/simplicity-admin-db
 │   │   ├── tsconfig.json
 │   │   ├── schema/                   # simplicity-schema YAML (system schema)
 │   │   │   ├── tables/
@@ -225,7 +225,7 @@ simplicity-admin/
 │   │           └── enums.ts          # Enum discovery
 │   │
 │   ├── api/
-│   │   ├── package.json      # @simplicity-admin/api
+│   │   ├── package.json      # @mabulu-inc/simplicity-admin-api
 │   │   ├── tsconfig.json
 │   │   └── src/
 │   │       ├── index.ts              # Public API re-exports
@@ -239,7 +239,7 @@ simplicity-admin/
 │   │       └── server.ts             # HTTP server (API layer)
 │   │
 │   ├── auth/
-│   │   ├── package.json      # @simplicity-admin/auth
+│   │   ├── package.json      # @mabulu-inc/simplicity-admin-auth
 │   │   ├── tsconfig.json
 │   │   └── src/
 │   │       ├── index.ts              # Public API re-exports
@@ -256,7 +256,7 @@ simplicity-admin/
 │   │           └── refresh.ts        # POST /auth/refresh
 │   │
 │   ├── ui/
-│   │   ├── package.json      # @simplicity-admin/ui
+│   │   ├── package.json      # @mabulu-inc/simplicity-admin-ui
 │   │   ├── svelte.config.js
 │   │   ├── vite.config.ts
 │   │   ├── tsconfig.json
@@ -286,7 +286,7 @@ simplicity-admin/
 │   │               └── +page.svelte              # Dashboard / home
 │   │
 │   └── cli/
-│       ├── package.json      # @simplicity-admin/cli
+│       ├── package.json      # @mabulu-inc/simplicity-admin-cli
 │       ├── tsconfig.json
 │       └── src/
 │           ├── index.ts              # CLI entry point
@@ -316,7 +316,7 @@ When a developer scaffolds or creates a project that uses simplicity-admin, thei
 
 ```
 my-admin/
-├── package.json                  # @simplicity-admin/* as dependencies
+├── package.json                  # @mabulu-inc/simplicity-admin-* as dependencies
 ├── simplicity-admin.config.ts    # Config: database, auth, hooks, actions
 ├── compose.yaml                  # PostgreSQL container
 ├── .env                          # DATABASE_URL, secrets
@@ -557,7 +557,7 @@ This metadata model drives everything downstream: PostGraphile schema, UI compon
 
 ### 6c. System vs Application Schema
 
-- **System schema** (`_simplicity_admin`): Owned by the framework. Contains `users`, `tenants`, `memberships`. Managed by simplicity-schema YAML shipped with `@simplicity-admin/db`. Never modified by the developer directly. The underscore prefix signals "framework-owned".
+- **System schema** (`_simplicity_admin`): Owned by the framework. Contains `users`, `tenants`, `memberships`. Managed by simplicity-schema YAML shipped with `@mabulu-inc/simplicity-admin-db`. Never modified by the developer directly. The underscore prefix signals "framework-owned".
 - **Application schema**: Owned by the developer. By default, this is `public` — all business tables live in one schema. Developers who prefer modular, namespaced schemas can configure `schema` to a custom name (e.g., `'crm'`, `'inventory'`) or use multiple schemas by pointing different simplicity-admin instances at different schemas within the same database.
 
 These are separate PostgreSQL schemas. The framework's system tables never collide with the developer's tables regardless of how the developer organizes their application schemas.
@@ -610,7 +610,7 @@ api: {
 ### 7c. Swapping the API Provider
 
 ```typescript
-import { defineConfig } from '@simplicity-admin/core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 import { myCustomAPI } from './my-api';
 
 export default defineConfig({
@@ -630,7 +630,7 @@ The custom provider must implement the `APIProvider` interface: `createHandler(p
 The admin UI is a SvelteKit application that:
 - Communicates with the API layer via HTTP (GraphQL queries/mutations)
 - Is metadata-driven: the UI reads `SchemaMeta` + `ViewDefinition` and renders components dynamically
-- Ships as a library package (`@simplicity-admin/ui`) that can be embedded or run standalone
+- Ships as a library package (`@mabulu-inc/simplicity-admin-ui`) that can be embedded or run standalone
 
 ### 8b. View Layer
 
@@ -881,7 +881,7 @@ RBAC is enforced at **three independent layers** — all must agree:
 
 ### 13c. Input Validation
 
-- **SQL identifiers**: All table/column names interpolated into SQL use `escapeIdentifier()` from `@simplicity-admin/db`
+- **SQL identifiers**: All table/column names interpolated into SQL use `escapeIdentifier()` from `@mabulu-inc/simplicity-admin-db`
 - **SQL values**: All values use parameterized queries (`$1`, `$2`) — never interpolated
 - **Request bodies**: Size-limited (default 1 MB) to prevent memory exhaustion
 - **Error responses**: Database errors are sanitized before returning to clients; no internal schema details leaked
@@ -936,10 +936,10 @@ Test connection: `postgres://admin:admin@localhost:5432/project_dev`
 
 ### 14c. Test Utilities
 
-`@simplicity-admin/core` exports test utilities:
+`@mabulu-inc/simplicity-admin-core` exports test utilities:
 
 ```typescript
-import { createTestPool, seedTestData, cleanupTestData } from '@simplicity-admin/core/testing';
+import { createTestPool, seedTestData, cleanupTestData } from '@mabulu-inc/simplicity-admin-core/testing';
 ```
 
 ### 14d. TDD Workflow

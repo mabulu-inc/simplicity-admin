@@ -1,11 +1,11 @@
 ---
-title: "@simplicity-admin/auth"
+title: "@mabulu-inc/simplicity-admin-auth"
 description: JWT authentication, bcrypt password hashing, and the RBAC engine.
 ---
 
 The `auth` package implements the `AuthProvider` interface from `core`. It handles authentication (JWT tokens, password hashing) and authorization (role-based permission resolution).
 
-**Dependencies:** `@simplicity-admin/core`, `@simplicity-admin/db`
+**Dependencies:** `@mabulu-inc/simplicity-admin-core`, `@mabulu-inc/simplicity-admin-db`
 
 ## JWT Authentication
 

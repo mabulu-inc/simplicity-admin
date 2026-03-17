@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
-import { loadConfig } from '@simplicity-admin/core';
-import { postgresProvider } from '@simplicity-admin/db';
-import type { ProjectConfig, ConnectionPool } from '@simplicity-admin/core';
+import { loadConfig } from '@mabulu-inc/simplicity-admin-core';
+import { postgresProvider } from '@mabulu-inc/simplicity-admin-db';
+import type { ProjectConfig, ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
 
 /**
  * Parse CLI args for the migrate command.

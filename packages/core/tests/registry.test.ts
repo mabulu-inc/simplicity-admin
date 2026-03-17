@@ -3,8 +3,8 @@ import {
   createRegistry,
   ProviderRegistry,
   ProviderError,
-} from '@simplicity-admin/core';
-import type { Provider } from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
+import type { Provider } from '@mabulu-inc/simplicity-admin-core';
 
 function makeProvider(overrides: Partial<Provider> = {}): Provider {
   return { name: 'test-provider', version: '1.0.0', ...overrides };

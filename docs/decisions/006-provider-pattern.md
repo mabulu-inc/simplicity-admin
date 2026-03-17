@@ -16,9 +16,9 @@ Options considered:
 
 ### Design:
 
-1. **Interfaces live in `@simplicity-admin/core`**: Each swappable capability is defined as a TypeScript interface (`DatabaseProvider`, `APIProvider`, `AuthProvider`, `UIProvider`).
+1. **Interfaces live in `@mabulu-inc/simplicity-admin-core`**: Each swappable capability is defined as a TypeScript interface (`DatabaseProvider`, `APIProvider`, `AuthProvider`, `UIProvider`).
 
-2. **Default implementations live in their own packages**: `@simplicity-admin/db` exports `postgresProvider()`, `@simplicity-admin/api` exports `postgraphileProvider()`, etc.
+2. **Default implementations live in their own packages**: `@mabulu-inc/simplicity-admin-db` exports `postgresProvider()`, `@mabulu-inc/simplicity-admin-api` exports `postgraphileProvider()`, etc.
 
 3. **Registration via config object**:
 ```typescript

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { ColumnMeta } from '@simplicity-admin/core';
+import type { ColumnMeta } from '@mabulu-inc/simplicity-admin-core';
 import { getFieldComponent, getDisplayFormatter } from '../src/lib/components/field-map.js';
 import type { FieldComponent } from '../src/lib/components/field-map.js';
 

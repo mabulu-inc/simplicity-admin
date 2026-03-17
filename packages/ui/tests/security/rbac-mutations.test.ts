@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { isHttpError } from '@sveltejs/kit';
-import type { ColumnMeta } from '@simplicity-admin/core';
+import type { ColumnMeta } from '@mabulu-inc/simplicity-admin-core';
 import type { TableRbacInfo } from '$lib/server/rbac.js';
 import {
 	requireAuth,

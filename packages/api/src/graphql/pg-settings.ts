@@ -1,4 +1,4 @@
-import type { TokenPayload } from '@simplicity-admin/core';
+import type { TokenPayload } from '@mabulu-inc/simplicity-admin-core';
 
 export function createPgSettingsFromToken(payload: TokenPayload): Record<string, string> {
   const settings: Record<string, string> = {

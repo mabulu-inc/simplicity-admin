@@ -1,4 +1,4 @@
-import type { ConnectionPool, RelationMeta } from '@simplicity-admin/core';
+import type { ConnectionPool, RelationMeta } from '@mabulu-inc/simplicity-admin-core';
 import { DatabaseError } from '../errors.js';
 
 /**

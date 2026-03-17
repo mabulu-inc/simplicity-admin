@@ -4,18 +4,18 @@
 
 ## Overview
 
-The database module (`@simplicity-admin/db`) handles PostgreSQL connectivity, schema introspection, system schema bootstrapping via simplicity-schema, and provides the default `DatabaseProvider` implementation. It converts live PostgreSQL schemas into the `SchemaMeta` model that drives all downstream modules.
+The database module (`@mabulu-inc/simplicity-admin-db`) handles PostgreSQL connectivity, schema introspection, system schema bootstrapping via simplicity-schema, and provides the default `DatabaseProvider` implementation. It converts live PostgreSQL schemas into the `SchemaMeta` model that drives all downstream modules.
 
 ## Package Location
 
-- Package: `@simplicity-admin/db`
+- Package: `@mabulu-inc/simplicity-admin-db`
 - Source: `packages/db/src/`
 - Tests: `packages/db/tests/`
 - System schema YAML: `packages/db/schema/`
 
 ## Dependencies
 
-- `@simplicity-admin/core` — metadata types, provider interface, config types
+- `@mabulu-inc/simplicity-admin-core` — metadata types, provider interface, config types
 - `@mabulu-inc/simplicity-schema` — declarative DDL, migration, DB introspection
 - `pg` — PostgreSQL client (connection pooling)
 
@@ -29,7 +29,7 @@ The database module (`@simplicity-admin/db`) handles PostgreSQL connectivity, sc
 export function createPool(url: string): ConnectionPool;
 ```
 
-`ConnectionPool` implements the interface from `@simplicity-admin/core/providers/types`.
+`ConnectionPool` implements the interface from `@mabulu-inc/simplicity-admin-core/providers/types`.
 
 ### Introspection
 

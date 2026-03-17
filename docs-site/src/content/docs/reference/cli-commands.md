@@ -3,7 +3,7 @@ title: CLI Commands Reference
 description: Complete reference for all simplicity-admin CLI commands.
 ---
 
-All commands are available via `npx simplicity-admin` or globally if `@simplicity-admin/cli` is installed.
+All commands are available via `npx simplicity-admin` or globally if `@mabulu-inc/simplicity-admin-cli` is installed.
 
 ## `init`
 

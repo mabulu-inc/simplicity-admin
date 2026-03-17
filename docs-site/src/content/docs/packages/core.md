@@ -1,5 +1,5 @@
 ---
-title: "@simplicity-admin/core"
+title: "@mabulu-inc/simplicity-admin-core"
 description: Configuration, metadata model, provider interfaces, and plugin system.
 ---
 
@@ -10,7 +10,7 @@ The `core` package is the foundation of SIMPLICITY-ADMIN. It has zero dependenci
 Configuration is validated at startup using a Zod schema. Invalid configuration throws a descriptive error before any connections are made.
 
 ```ts
-import { defineConfig } from '@simplicity-admin/core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 
 export default defineConfig({
   database: process.env.DATABASE_URL,
@@ -75,7 +75,7 @@ Plugins hook into the SIMPLICITY-ADMIN lifecycle. They execute in the order they
 | `onShutdown` | On graceful server shutdown |
 
 ```ts
-import type { Plugin } from '@simplicity-admin/core';
+import type { Plugin } from '@mabulu-inc/simplicity-admin-core';
 
 const myPlugin: Plugin = {
   name: 'my-plugin',

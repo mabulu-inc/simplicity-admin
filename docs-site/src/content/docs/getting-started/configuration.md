@@ -8,7 +8,7 @@ description: Configure SIMPLICITY-ADMIN via the config file, environment variabl
 Create `simplicity-admin.config.ts` at your project root:
 
 ```ts
-import { defineConfig } from '@simplicity-admin/core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 
 export default defineConfig({
   database: process.env.DATABASE_URL,

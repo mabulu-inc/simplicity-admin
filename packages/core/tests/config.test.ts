@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { defineConfig, ConfigError } from '@simplicity-admin/core';
-import type { ProjectConfig } from '@simplicity-admin/core';
+import { defineConfig, ConfigError } from '@mabulu-inc/simplicity-admin-core';
+import type { ProjectConfig } from '@mabulu-inc/simplicity-admin-core';
 
 describe('defineConfig', () => {
   const validDb = 'postgres://localhost/mydb';

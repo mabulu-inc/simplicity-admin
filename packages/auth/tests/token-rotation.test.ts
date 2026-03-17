@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import jwt from 'jsonwebtoken';
-import type { TokenPayload } from '@simplicity-admin/core';
+import type { TokenPayload } from '@mabulu-inc/simplicity-admin-core';
 import { jwtTokenProvider } from '../src/providers/jwt.js';
 import { createInMemoryRevocationStore } from '../src/revocation.js';
 import { createRefreshHandler } from '../src/routes/refresh.js';

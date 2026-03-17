@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import type { ConnectionPool } from '@simplicity-admin/core';
-import { defineConfig } from '@simplicity-admin/core';
+import type { ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 import { bootstrap } from '../src/bootstrap.js';
 import bcrypt from 'bcrypt';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 describe('bootstrap', () => {
   let testDb: TestDb;

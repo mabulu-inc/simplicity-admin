@@ -4,18 +4,18 @@
 
 ## Overview
 
-The auth module (`@simplicity-admin/auth`) provides multi-strategy authentication and JWT token management. Multiple authentication strategies can be active simultaneously — for example, email/password + Twilio Verify OTP + Office 365 OAuth. Strategies are configurable at the app level and optionally per-tenant (e.g., tenant A uses Google Workspace OAuth, tenant B uses Office 365). The token layer (JWT sign/verify/refresh) is constant; only the identity verification method varies.
+The auth module (`@mabulu-inc/simplicity-admin-auth`) provides multi-strategy authentication and JWT token management. Multiple authentication strategies can be active simultaneously — for example, email/password + Twilio Verify OTP + Office 365 OAuth. Strategies are configurable at the app level and optionally per-tenant (e.g., tenant A uses Google Workspace OAuth, tenant B uses Office 365). The token layer (JWT sign/verify/refresh) is constant; only the identity verification method varies.
 
 ## Package Location
 
-- Package: `@simplicity-admin/auth`
+- Package: `@mabulu-inc/simplicity-admin-auth`
 - Source: `packages/auth/src/`
 - Tests: `packages/auth/tests/`
 
 ## Dependencies
 
-- `@simplicity-admin/core` — provider interfaces (TokenProvider, AuthStrategy), config types
-- `@simplicity-admin/db` — connection pool (to query users/memberships/strategy configs)
+- `@mabulu-inc/simplicity-admin-core` — provider interfaces (TokenProvider, AuthStrategy), config types
+- `@mabulu-inc/simplicity-admin-db` — connection pool (to query users/memberships/strategy configs)
 - `jsonwebtoken` — JWT sign/verify
 - `bcrypt` — password hashing (for password strategy)
 

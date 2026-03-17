@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { ConfigError, defineConfig } from '@simplicity-admin/core';
+import { ConfigError, defineConfig } from '@mabulu-inc/simplicity-admin-core';
 
 describe('JWT secret validation', () => {
   const originalEnv = process.env.NODE_ENV;
@@ -13,7 +13,7 @@ describe('JWT secret validation', () => {
   describe('production guard', () => {
     it('throws ConfigError when secret is "development-secret" in production', async () => {
       process.env.NODE_ENV = 'production';
-      const { jwtTokenProvider } = await import('@simplicity-admin/auth');
+      const { jwtTokenProvider } = await import('@mabulu-inc/simplicity-admin-auth');
       expect(() => jwtTokenProvider({ secret: 'development-secret' })).toThrow(
         /development.?secret/i,
       );
@@ -28,7 +28,7 @@ describe('JWT secret validation', () => {
 
     it('throws ConfigError when secret is shorter than 32 characters in production', async () => {
       process.env.NODE_ENV = 'production';
-      const { jwtTokenProvider } = await import('@simplicity-admin/auth');
+      const { jwtTokenProvider } = await import('@mabulu-inc/simplicity-admin-auth');
       expect(() => jwtTokenProvider({ secret: 'short-secret' })).toThrow(/32/);
       try {
         jwtTokenProvider({ secret: 'short-secret' });
@@ -41,7 +41,7 @@ describe('JWT secret validation', () => {
 
     it('throws ConfigError when no secret is provided in production', async () => {
       process.env.NODE_ENV = 'production';
-      const { jwtTokenProvider } = await import('@simplicity-admin/auth');
+      const { jwtTokenProvider } = await import('@mabulu-inc/simplicity-admin-auth');
       try {
         jwtTokenProvider();
         expect.unreachable('should have thrown');
@@ -52,7 +52,7 @@ describe('JWT secret validation', () => {
 
     it('accepts a strong secret (>= 32 chars) in production', async () => {
       process.env.NODE_ENV = 'production';
-      const { jwtTokenProvider } = await import('@simplicity-admin/auth');
+      const { jwtTokenProvider } = await import('@mabulu-inc/simplicity-admin-auth');
       const strongSecret = 'a-very-strong-production-secret-that-is-long-enough';
       expect(() => jwtTokenProvider({ secret: strongSecret })).not.toThrow();
     });
@@ -62,7 +62,7 @@ describe('JWT secret validation', () => {
     it('allows default secret in development with a warning', async () => {
       process.env.NODE_ENV = 'development';
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const { jwtTokenProvider } = await import('@simplicity-admin/auth');
+      const { jwtTokenProvider } = await import('@mabulu-inc/simplicity-admin-auth');
       expect(() => jwtTokenProvider()).not.toThrow();
       expect(warnSpy).toHaveBeenCalledWith(
         expect.stringMatching(/development.?secret/i),
@@ -72,7 +72,7 @@ describe('JWT secret validation', () => {
     it('does not warn when a strong secret is provided in development', async () => {
       process.env.NODE_ENV = 'development';
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      const { jwtTokenProvider } = await import('@simplicity-admin/auth');
+      const { jwtTokenProvider } = await import('@mabulu-inc/simplicity-admin-auth');
       const strongSecret = 'a-very-strong-production-secret-that-is-long-enough';
       jwtTokenProvider({ secret: strongSecret });
       expect(warnSpy).not.toHaveBeenCalled();

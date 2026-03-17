@@ -11,7 +11,7 @@ The admin UI needs a frontend framework. Options considered:
 4. Server-rendered (HTMX/template engine): No JavaScript framework needed
 
 ## Decision
-**SvelteKit 2 + Svelte 5** as the default UI framework. The admin UI is packaged as `@simplicity-admin/ui` and ships as a SvelteKit library.
+**SvelteKit 2 + Svelte 5** as the default UI framework. The admin UI is packaged as `@mabulu-inc/simplicity-admin-ui` and ships as a SvelteKit library.
 
 Key reasons:
 - **Performance**: Svelte compiles to vanilla JS — smaller bundles, faster initial load
@@ -21,7 +21,7 @@ Key reasons:
 
 The UI provider is swappable via the provider pattern. A developer who needs React can implement the `UIProvider` interface and mount their own admin frontend.
 
-The UI communicates with the API layer via HTTP (GraphQL queries/mutations). It does NOT directly import `@simplicity-admin/db` or `@simplicity-admin/api` — this ensures the UI can be replaced without touching the backend.
+The UI communicates with the API layer via HTTP (GraphQL queries/mutations). It does NOT directly import `@mabulu-inc/simplicity-admin-db` or `@mabulu-inc/simplicity-admin-api` — this ensures the UI can be replaced without touching the backend.
 
 Design tokens (CSS custom properties) provide theming:
 - Light and dark themes ship by default

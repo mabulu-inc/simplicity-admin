@@ -4,21 +4,21 @@
 
 ## Overview
 
-The CLI module (`@simplicity-admin/cli`) provides the command-line interface for scaffolding projects, running the development server, building for production, and generating schema files. It is the primary entry point for developers using the framework.
+The CLI module (`@mabulu-inc/simplicity-admin-cli`) provides the command-line interface for scaffolding projects, running the development server, building for production, and generating schema files. It is the primary entry point for developers using the framework.
 
 ## Package Location
 
-- Package: `@simplicity-admin/cli`
+- Package: `@mabulu-inc/simplicity-admin-cli`
 - Source: `packages/cli/src/`
 - Tests: `packages/cli/tests/`
 
 ## Dependencies
 
-- `@simplicity-admin/core` — config loader
-- `@simplicity-admin/db` — bootstrap, simplicity-schema integration
-- `@simplicity-admin/api` — API server
-- `@simplicity-admin/auth` — auth setup
-- `@simplicity-admin/ui` — UI server
+- `@mabulu-inc/simplicity-admin-core` — config loader
+- `@mabulu-inc/simplicity-admin-db` — bootstrap, simplicity-schema integration
+- `@mabulu-inc/simplicity-admin-api` — API server
+- `@mabulu-inc/simplicity-admin-auth` — auth setup
+- `@mabulu-inc/simplicity-admin-ui` — UI server
 
 ## Public API
 

@@ -4,18 +4,18 @@
 
 ## Overview
 
-The API module (`@simplicity-admin/api`) provides the auto-generated API layer. The default implementation uses PostGraphile V5 to generate a complete GraphQL API from PostgreSQL. An optional REST adapter provides RESTful endpoints from the same metadata. The API layer is swappable via the provider pattern.
+The API module (`@mabulu-inc/simplicity-admin-api`) provides the auto-generated API layer. The default implementation uses PostGraphile V5 to generate a complete GraphQL API from PostgreSQL. An optional REST adapter provides RESTful endpoints from the same metadata. The API layer is swappable via the provider pattern.
 
 ## Package Location
 
-- Package: `@simplicity-admin/api`
+- Package: `@mabulu-inc/simplicity-admin-api`
 - Source: `packages/api/src/`
 - Tests: `packages/api/tests/`
 
 ## Dependencies
 
-- `@simplicity-admin/core` — provider interface, config types, metadata types
-- `@simplicity-admin/db` — connection pool, metadata for PostGraphile configuration
+- `@mabulu-inc/simplicity-admin-core` — provider interface, config types, metadata types
+- `@mabulu-inc/simplicity-admin-db` — connection pool, metadata for PostGraphile configuration
 - `postgraphile` — PostGraphile V5 (Graphile Crystal)
 - `grafserv` — HTTP handler for PostGraphile V5
 

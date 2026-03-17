@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
 import { getTableRbacInfo } from '$lib/server/rbac.js';
-import { escapeIdentifier } from '@simplicity-admin/db';
+import { escapeIdentifier } from '@mabulu-inc/simplicity-admin-db';
 
 export const load: PageServerLoad = async ({ params, url, locals }) => {
 	const tableName = params.table;

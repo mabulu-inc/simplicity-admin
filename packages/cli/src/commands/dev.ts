@@ -1,19 +1,19 @@
 import { createServer } from 'node:http';
-import { loadConfig } from '@simplicity-admin/core';
-import { createPool, bootstrap, introspectSchema } from '@simplicity-admin/db';
-import { createAPIServer } from '@simplicity-admin/api';
+import { loadConfig } from '@mabulu-inc/simplicity-admin-core';
+import { createPool, bootstrap, introspectSchema } from '@mabulu-inc/simplicity-admin-db';
+import { createAPIServer } from '@mabulu-inc/simplicity-admin-api';
 import {
   createAuthMiddleware,
   jwtTokenProvider,
   createLoginHandler,
   createLogoutHandler,
   createRefreshHandler,
-} from '@simplicity-admin/auth';
+} from '@mabulu-inc/simplicity-admin-auth';
 import type {
   ProjectConfig,
   HttpHandler,
   ConnectionPool,
-} from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
 
 /**
  * Run the dev server: load config, bootstrap DB, start API + auth.

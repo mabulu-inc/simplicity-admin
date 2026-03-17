@@ -105,7 +105,7 @@ database: 'postgres://user:password@localhost:5432/mydb'
 
 - **Type:** `object`
 - **Default:** `{}`
-- **Description:** Custom provider overrides. Keys: `database`, `api`, `auth`, `ui`. Values must implement the corresponding provider interface from `@simplicity-admin/core`.
+- **Description:** Custom provider overrides. Keys: `database`, `api`, `auth`, `ui`. Values must implement the corresponding provider interface from `@mabulu-inc/simplicity-admin-core`.
 
 ```ts
 providers: {

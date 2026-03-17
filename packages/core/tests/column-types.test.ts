@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mapPgType } from '@simplicity-admin/core';
+import { mapPgType } from '@mabulu-inc/simplicity-admin-core';
 import type {
   ColumnType,
   ColumnMeta,
@@ -7,7 +7,7 @@ import type {
   RelationMeta,
   EnumMeta,
   SchemaMeta,
-} from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
 
 describe('mapPgType', () => {
   describe('text types', () => {

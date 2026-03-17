@@ -96,11 +96,11 @@ describe('Publish workflow (.github/workflows/publish.yml)', () => {
     expect(workflow.name).toBeDefined();
   });
 
-  it('triggers only on pushes to main', () => {
+  it('triggers only on version tags', () => {
     workflow = loadWorkflow('publish.yml');
     const on = workflow.on as Record<string, unknown>;
     const push = on.push as Record<string, unknown>;
-    expect(push.branches).toContain('main');
+    expect(push.tags).toContain('v*');
 
     // Should NOT trigger on pull_request
     expect(on.pull_request).toBeUndefined();

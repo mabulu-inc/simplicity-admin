@@ -15,8 +15,8 @@ The notifications module provides event-driven notifications through multiple ch
 
 ## Dependencies
 
-- `@simplicity-admin/core` — event system, config types
-- `@simplicity-admin/db` — connection pool (notification storage, rule storage)
+- `@mabulu-inc/simplicity-admin-core` — event system, config types
+- `@mabulu-inc/simplicity-admin-db` — connection pool (notification storage, rule storage)
 - `nodemailer` — SMTP email delivery (default email provider)
 
 ## Public API

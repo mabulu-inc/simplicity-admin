@@ -1,7 +1,7 @@
 // packages/ui/src/lib/nav/builder.ts — Navigation builder
 
-import type { SchemaMeta } from '@simplicity-admin/core';
-import type { EffectivePermissions } from '@simplicity-admin/auth';
+import type { SchemaMeta } from '@mabulu-inc/simplicity-admin-core';
+import type { EffectivePermissions } from '@mabulu-inc/simplicity-admin-auth';
 import type { NavConfig, NavItem, NavItemConfig } from './types.js';
 
 /** System schemas whose tables should not appear in auto-generated navigation */

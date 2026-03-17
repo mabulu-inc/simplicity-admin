@@ -12,7 +12,7 @@ The framework needs a database strategy. Options considered:
 PostgreSQL offers unique features critical to the framework's security model: Row-Level Security (RLS), column-level GRANT permissions, functional database roles, and stored functions. These features provide database-level enforcement of access control — not just application-layer middleware that can be bypassed.
 
 ## Decision
-**PostgreSQL-first with clean seams.** The framework is built to deeply leverage PostgreSQL features (RLS, grants, roles, functions). The `DatabaseProvider` interface in `@simplicity-admin/core` provides the seam for future database adapters, but the initial implementation assumes PostgreSQL.
+**PostgreSQL-first with clean seams.** The framework is built to deeply leverage PostgreSQL features (RLS, grants, roles, functions). The `DatabaseProvider` interface in `@mabulu-inc/simplicity-admin-core` provides the seam for future database adapters, but the initial implementation assumes PostgreSQL.
 
 Schema management uses `@mabulu-inc/simplicity-schema` for declarative DDL via YAML files. simplicity-schema handles table creation, enum management, role definitions, RLS policies, column-level grants, triggers, functions, and zero-downtime migrations.
 

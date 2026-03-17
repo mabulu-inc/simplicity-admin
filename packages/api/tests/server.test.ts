@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
-import { defineConfig } from '@simplicity-admin/core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 import { createAPIServer } from '../src/server.js';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 describe('API server', () => {
   let testDb: TestDb;

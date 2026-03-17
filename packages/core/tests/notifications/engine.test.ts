@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { NotificationEngine } from '../../src/notifications/engine.js';
 import { evaluateCondition, interpolateTemplate } from '../../src/notifications/rules.js';
-import type { ConnectionPool, QueryResult } from '@simplicity-admin/core';
+import type { ConnectionPool, QueryResult } from '@mabulu-inc/simplicity-admin-core';
 import type { DataEvent, EmailProvider, NotificationRule } from '../../src/notifications/types.js';
 
 // ── Helpers ────────────────────────────────────────────────────

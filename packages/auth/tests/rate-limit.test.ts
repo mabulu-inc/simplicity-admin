@@ -4,12 +4,12 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { createRateLimiter, type RateLimiter } from '../src/rate-limit.js';
 import { createLoginHandler } from '../src/routes/login.js';
 import { createRefreshHandler } from '../src/routes/refresh.js';
-import type { TokenProvider, ConnectionPool } from '@simplicity-admin/core';
-import { defineConfig } from '@simplicity-admin/core';
+import type { TokenProvider, ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 import { bootstrap } from '../../db/src/bootstrap.js';
 import { jwtTokenProvider } from '../src/providers/jwt.js';
 import { hashPassword } from '../src/strategies/password.js';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 describe('rate-limit', () => {
   let limiter: RateLimiter;

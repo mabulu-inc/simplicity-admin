@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { TableMeta, RelationMeta } from '@simplicity-admin/core';
+import type { TableMeta, RelationMeta } from '@mabulu-inc/simplicity-admin-core';
 import {
   buildListQuery,
   buildDetailQuery,

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import type { EffectivePermissions } from '@simplicity-admin/auth';
+import type { EffectivePermissions } from '@mabulu-inc/simplicity-admin-auth';
 
 import {
   canAccess,
@@ -7,8 +7,8 @@ import {
   getAccessibleColumns,
   getEffectivePermissions,
 } from '../../src/rbac/engine.js';
-import { defineConfig } from '@simplicity-admin/core';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 /**
  * Fixture: permissions for app_viewer with SELECT on contacts (id, name, email)
@@ -147,7 +147,7 @@ describe('RBAC permission engine — integration tests', () => {
       systemSchema: 'public',
     });
 
-    const { bootstrap } = await import('@simplicity-admin/db');
+    const { bootstrap } = await import('@mabulu-inc/simplicity-admin-db');
     await bootstrap(testDb.pool, config);
   });
 

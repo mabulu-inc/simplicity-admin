@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/svelte';
-import type { ColumnMeta } from '@simplicity-admin/core';
+import type { ColumnMeta } from '@mabulu-inc/simplicity-admin-core';
 
 import AutoForm from '../../src/lib/components/AutoForm.svelte';
 import ConfirmDialog from '../../src/lib/components/ConfirmDialog.svelte';

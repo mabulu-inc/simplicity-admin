@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 import { getPool } from '$lib/server/db.js';
-import { NotificationEngine } from '@simplicity-admin/core';
+import { NotificationEngine } from '@mabulu-inc/simplicity-admin-core';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) {

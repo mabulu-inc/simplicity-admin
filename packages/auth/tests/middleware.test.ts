@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { IncomingMessage, ServerResponse } from 'node:http';
-import { createAuthMiddleware, type AuthenticatedRequest, getUserFromRequest } from '@simplicity-admin/auth';
-import { jwtTokenProvider } from '@simplicity-admin/auth';
-import type { TokenProvider, TokenPayload, ConnectionPool } from '@simplicity-admin/core';
+import { createAuthMiddleware, type AuthenticatedRequest, getUserFromRequest } from '@mabulu-inc/simplicity-admin-auth';
+import { jwtTokenProvider } from '@mabulu-inc/simplicity-admin-auth';
+import type { TokenProvider, TokenPayload, ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
 
 function createMockPool(): ConnectionPool {
   return {

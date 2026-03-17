@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { introspectRelations } from '../src/introspect/relations.js';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 const TEST_SCHEMA = 'test_introspect_relations';
 

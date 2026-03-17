@@ -4,8 +4,8 @@ import path from 'node:path';
 export default defineConfig({
   resolve: {
     alias: {
-      '@simplicity-admin/core': path.resolve(__dirname, '../packages/core/src/index.ts'),
-      '@simplicity-admin/db': path.resolve(__dirname, '../packages/db/src/index.ts'),
+      '@mabulu-inc/simplicity-admin-core': path.resolve(__dirname, '../packages/core/src/index.ts'),
+      '@mabulu-inc/simplicity-admin-db': path.resolve(__dirname, '../packages/db/src/index.ts'),
     },
   },
   test: {

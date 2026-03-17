@@ -9,7 +9,7 @@ SIMPLICITY-ADMIN can run as middleware inside your existing Node.js application.
 
 ```ts
 import express from 'express';
-import { createAdmin } from '@simplicity-admin/core';
+import { createAdmin } from '@mabulu-inc/simplicity-admin-core';
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.listen(3000, () => {
 ```ts
 import Fastify from 'fastify';
 import middie from '@fastify/middie';
-import { createAdmin } from '@simplicity-admin/core';
+import { createAdmin } from '@mabulu-inc/simplicity-admin-core';
 
 const fastify = Fastify();
 

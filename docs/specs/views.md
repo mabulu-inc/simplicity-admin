@@ -24,9 +24,9 @@ View definitions are separate from simplicity-schema YAML files — schema defin
 
 ## Dependencies
 
-- `@simplicity-admin/core` — view types, view loader
-- `@simplicity-admin/db` — view override and saved view storage
-- `@simplicity-admin/ui` — view rendering, customization UI
+- `@mabulu-inc/simplicity-admin-core` — view types, view loader
+- `@mabulu-inc/simplicity-admin-db` — view override and saved view storage
+- `@mabulu-inc/simplicity-admin-ui` — view rendering, customization UI
 
 ## Public API
 

@@ -1,5 +1,5 @@
-import type { ColumnMeta, ConnectionPool } from '@simplicity-admin/core';
-import { mapPgType } from '@simplicity-admin/core';
+import type { ColumnMeta, ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
+import { mapPgType } from '@mabulu-inc/simplicity-admin-core';
 import { DatabaseError } from '../errors.js';
 
 /**

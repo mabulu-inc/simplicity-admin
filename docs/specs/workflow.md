@@ -19,9 +19,9 @@ Both can be defined code-first (in config) or managed via the admin UI. State ma
 
 ## Dependencies
 
-- `@simplicity-admin/core` — config types, notification engine (for actions)
-- `@simplicity-admin/db` — connection pool, data event hooks
-- `@simplicity-admin/auth` — RBAC (transition guards reference roles)
+- `@mabulu-inc/simplicity-admin-core` — config types, notification engine (for actions)
+- `@mabulu-inc/simplicity-admin-db` — connection pool, data event hooks
+- `@mabulu-inc/simplicity-admin-auth` — RBAC (transition guards reference roles)
 
 ## Public API
 

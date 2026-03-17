@@ -3,8 +3,8 @@ import type { PageServerLoad, Actions } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
 import { getTableRbacInfo } from '$lib/server/rbac.js';
 import { requireAuth, requireUpdate, requireDelete, getWritableColumnNames } from '$lib/server/rbac-guards.js';
-import { getStateMachine } from '@simplicity-admin/core';
-import { escapeIdentifier, sanitizeDbError } from '@simplicity-admin/db';
+import { getStateMachine } from '@mabulu-inc/simplicity-admin-core';
+import { escapeIdentifier, sanitizeDbError } from '@mabulu-inc/simplicity-admin-db';
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const tableName = params.table;

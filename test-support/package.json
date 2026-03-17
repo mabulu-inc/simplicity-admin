@@ -1,5 +1,5 @@
 {
-  "name": "@simplicity-admin/test-support",
+  "name": "@mabulu-inc/simplicity-admin-test-support",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -15,8 +15,8 @@
     "clean": "rm -rf .turbo"
   },
   "dependencies": {
-    "@simplicity-admin/core": "workspace:*",
-    "@simplicity-admin/db": "workspace:*"
+    "@mabulu-inc/simplicity-admin-core": "workspace:*",
+    "@mabulu-inc/simplicity-admin-db": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",

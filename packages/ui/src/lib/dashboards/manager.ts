@@ -1,7 +1,7 @@
 // packages/ui/src/lib/dashboards/manager.ts — CRUD for dashboards and widgets
 
 import { z } from 'zod';
-import type { ConnectionPool } from '@simplicity-admin/core';
+import type { ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
 import type { Dashboard, Widget, WidgetLayout, StatConfig, TableConfig, ChartConfig } from './types.js';
 
 // ── Zod schemas for widget config validation ────────────────────

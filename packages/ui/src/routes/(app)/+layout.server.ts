@@ -1,8 +1,8 @@
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { getSchemaMeta, getPool, SCHEMA } from '$lib/server/db.js';
-import { getEffectivePermissions, listOverrides, mergeOverrides } from '@simplicity-admin/auth';
-import { NotificationEngine } from '@simplicity-admin/core';
+import { getEffectivePermissions, listOverrides, mergeOverrides } from '@mabulu-inc/simplicity-admin-auth';
+import { NotificationEngine } from '@mabulu-inc/simplicity-admin-core';
 import { buildNavItems } from '$lib/nav/builder.js';
 import type { NavItem } from '$lib/nav/types.js';
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { createPreset } from '@simplicity-admin/api';
-import type { APIConfig, ConnectionPool } from '@simplicity-admin/core';
+import { createPreset } from '@mabulu-inc/simplicity-admin-api';
+import type { APIConfig, ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
 
 describe('createPreset', () => {
   const mockPool = {

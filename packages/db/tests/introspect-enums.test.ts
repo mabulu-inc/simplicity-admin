@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { createPool } from '@simplicity-admin/db';
+import { createPool } from '@mabulu-inc/simplicity-admin-db';
 import { introspectEnums } from '../src/introspect/enums.js';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 const TEST_SCHEMA = 'test_introspect_enums';
 

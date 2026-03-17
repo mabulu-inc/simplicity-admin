@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { jwtTokenProvider, AuthError } from '@simplicity-admin/auth';
-import type { TokenPayload } from '@simplicity-admin/core';
+import { jwtTokenProvider, AuthError } from '@mabulu-inc/simplicity-admin-auth';
+import type { TokenPayload } from '@mabulu-inc/simplicity-admin-core';
 
 const SECRET = 'test-secret-key-that-is-long-enough';
 

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { buildNavItems, humanizeTableName } from '../../src/lib/nav/builder.js';
-import type { SchemaMeta, TableMeta } from '@simplicity-admin/core';
-import type { EffectivePermissions } from '@simplicity-admin/auth';
+import type { SchemaMeta, TableMeta } from '@mabulu-inc/simplicity-admin-core';
+import type { EffectivePermissions } from '@mabulu-inc/simplicity-admin-auth';
 import type { NavConfig } from '../../src/lib/nav/types.js';
 
 function makeTable(name: string, schema = 'public'): TableMeta {

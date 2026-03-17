@@ -1,4 +1,4 @@
-import type { ConnectionPool } from '@simplicity-admin/core';
+import type { ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
 import type { EffectivePermissions, Operation } from './types.js';
 import { AuthError } from '../errors.js';
 

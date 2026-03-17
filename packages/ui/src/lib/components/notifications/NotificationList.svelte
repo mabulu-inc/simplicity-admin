@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Notification } from '@simplicity-admin/core';
+	import type { Notification } from '@mabulu-inc/simplicity-admin-core';
 
 	interface NotificationListProps {
 		notifications: Notification[];

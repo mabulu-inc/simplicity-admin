@@ -47,13 +47,13 @@ npm run dev
 Add SIMPLICITY-ADMIN to an existing Node.js project as a dependency.
 
 ```bash
-npm install @simplicity-admin/core @simplicity-admin/db @simplicity-admin/api @simplicity-admin/auth @simplicity-admin/ui
+npm install @mabulu-inc/simplicity-admin-core @mabulu-inc/simplicity-admin-db @mabulu-inc/simplicity-admin-api @mabulu-inc/simplicity-admin-auth @mabulu-inc/simplicity-admin-ui
 ```
 
 Create a `simplicity-admin.config.ts` at your project root:
 
 ```ts
-import { defineConfig } from '@simplicity-admin/core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 
 export default defineConfig({
   database: process.env.DATABASE_URL,
@@ -66,7 +66,7 @@ Mount SIMPLICITY-ADMIN inside an existing Express (or any Node.js HTTP framework
 
 ```ts
 import express from 'express';
-import { createAdmin } from '@simplicity-admin/core';
+import { createAdmin } from '@mabulu-inc/simplicity-admin-core';
 
 const app = express();
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Transition } from '@simplicity-admin/core';
+	import type { Transition } from '@mabulu-inc/simplicity-admin-core';
 
 	interface Props {
 		transitions: Transition[];

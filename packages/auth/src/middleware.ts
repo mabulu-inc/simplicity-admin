@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { TokenProvider, ConnectionPool, ProjectConfig } from '@simplicity-admin/core';
+import type { TokenProvider, ConnectionPool, ProjectConfig } from '@mabulu-inc/simplicity-admin-core';
 import type { AuthenticatedRequest } from './context.js';
 
 export type HttpMiddleware = (

@@ -4,7 +4,7 @@ import type {
   MigrationConfig,
   MigrationResult,
   SchemaMeta,
-} from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
 import { createPool } from './connection.js';
 import { introspectSchema } from './introspect/index.js';
 import { bootstrap } from './bootstrap.js';

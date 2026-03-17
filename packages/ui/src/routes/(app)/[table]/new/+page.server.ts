@@ -3,7 +3,7 @@ import type { PageServerLoad, Actions } from './$types';
 import { getSchemaMeta, getTableMeta, getPool, SCHEMA } from '$lib/server/db.js';
 import { getTableRbacInfo } from '$lib/server/rbac.js';
 import { requireAuth, requireInsert, getWritableColumnNames } from '$lib/server/rbac-guards.js';
-import { escapeIdentifier, sanitizeDbError } from '@simplicity-admin/db';
+import { escapeIdentifier, sanitizeDbError } from '@mabulu-inc/simplicity-admin-db';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const tableName = params.table;

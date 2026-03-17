@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { ConnectionPool, TokenProvider } from '@simplicity-admin/core';
-import { defineConfig } from '@simplicity-admin/core';
+import type { ConnectionPool, TokenProvider } from '@mabulu-inc/simplicity-admin-core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 import { bootstrap } from '../../db/src/bootstrap.js';
 import { jwtTokenProvider } from '../src/providers/jwt.js';
 import { hashPassword } from '../src/strategies/password.js';
@@ -10,7 +10,7 @@ import { createLoginHandler } from '../src/routes/login.js';
 import { createLogoutHandler } from '../src/routes/logout.js';
 import { createRefreshHandler } from '../src/routes/refresh.js';
 import { createInMemoryRevocationStore } from '../src/revocation.js';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 const TEST_SCHEMA = 'public';
 

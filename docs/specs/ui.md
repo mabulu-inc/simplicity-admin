@@ -4,17 +4,17 @@
 
 ## Overview
 
-The UI module (`@simplicity-admin/ui`) provides the SvelteKit-based admin interface. It includes reusable components (DataTable, AutoForm, Shell, Sidebar, TopBar), a design token system for theming, and the SvelteKit route structure for the admin panel. Components are metadata-driven — they receive `ColumnMeta[]` and render appropriate UI elements.
+The UI module (`@mabulu-inc/simplicity-admin-ui`) provides the SvelteKit-based admin interface. It includes reusable components (DataTable, AutoForm, Shell, Sidebar, TopBar), a design token system for theming, and the SvelteKit route structure for the admin panel. Components are metadata-driven — they receive `ColumnMeta[]` and render appropriate UI elements.
 
 ## Package Location
 
-- Package: `@simplicity-admin/ui`
+- Package: `@mabulu-inc/simplicity-admin-ui`
 - Source: `packages/ui/src/`
 - Tests: `packages/ui/tests/`
 
 ## Dependencies
 
-- `@simplicity-admin/core` — metadata types (ColumnMeta, TableMeta, EnumMeta)
+- `@mabulu-inc/simplicity-admin-core` — metadata types (ColumnMeta, TableMeta, EnumMeta)
 - `svelte` — Svelte 5 (runes)
 - `@sveltejs/kit` — SvelteKit 2
 - `tailwindcss` — Tailwind CSS v4

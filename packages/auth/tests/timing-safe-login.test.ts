@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { ConnectionPool, TokenProvider, QueryResult } from '@simplicity-admin/core';
+import type { ConnectionPool, TokenProvider, QueryResult } from '@mabulu-inc/simplicity-admin-core';
 import { createLoginHandler } from '../src/routes/login.js';
 
 /**

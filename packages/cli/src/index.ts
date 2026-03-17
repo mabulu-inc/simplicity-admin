@@ -1,6 +1,6 @@
-// @simplicity-admin/cli — programmatic API
+// @mabulu-inc/simplicity-admin-cli — programmatic API
 
-import type { ProjectConfig, HttpHandler } from '@simplicity-admin/core';
+import type { ProjectConfig, HttpHandler } from '@mabulu-inc/simplicity-admin-core';
 import type { Server } from 'node:http';
 
 /**

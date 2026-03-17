@@ -8,7 +8,7 @@ Plugins let you extend SIMPLICITY-ADMIN by hooking into lifecycle events. A plug
 ## Plugin Interface
 
 ```ts
-import type { Plugin } from '@simplicity-admin/core';
+import type { Plugin } from '@mabulu-inc/simplicity-admin-core';
 
 const myPlugin: Plugin = {
   name: 'my-plugin',
@@ -55,7 +55,7 @@ Fires on graceful server shutdown. Use this to close external connections, flush
 ## Example: Request Logger Plugin
 
 ```ts
-import type { Plugin } from '@simplicity-admin/core';
+import type { Plugin } from '@mabulu-inc/simplicity-admin-core';
 
 export function requestLogger(): Plugin {
   return {
@@ -76,7 +76,7 @@ export function requestLogger(): Plugin {
 Add plugins to the `plugins` array in your config. Plugins execute in array order:
 
 ```ts
-import { defineConfig } from '@simplicity-admin/core';
+import { defineConfig } from '@mabulu-inc/simplicity-admin-core';
 import { requestLogger } from './plugins/request-logger';
 import { auditTrail } from './plugins/audit-trail';
 

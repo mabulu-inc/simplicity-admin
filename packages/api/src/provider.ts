@@ -5,7 +5,7 @@ import type {
   SchemaMeta,
   APIConfig,
   ProjectConfig,
-} from '@simplicity-admin/core';
+} from '@mabulu-inc/simplicity-admin-core';
 import { createAPIServer } from './server.js';
 
 export function postgraphileProvider(): APIProvider {

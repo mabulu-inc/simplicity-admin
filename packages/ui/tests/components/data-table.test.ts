@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/svelte';
 import DataTable from '../../src/lib/components/DataTable.svelte';
-import type { ColumnMeta } from '@simplicity-admin/core';
+import type { ColumnMeta } from '@mabulu-inc/simplicity-admin-core';
 
 afterEach(() => cleanup());
 

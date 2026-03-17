@@ -4,7 +4,7 @@ import type {
   TablePermission,
   ColumnPermission,
   EffectivePermissions,
-} from '@simplicity-admin/auth';
+} from '@mabulu-inc/simplicity-admin-auth';
 
 describe('RBAC permission types', () => {
   it('Operation type accepts valid operations', () => {

@@ -1,5 +1,5 @@
 {
-  "name": "@simplicity-admin/db",
+  "name": "@mabulu-inc/simplicity-admin-db",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@mabulu-inc/simplicity-schema": "^0.2.1",
-    "@simplicity-admin/core": "workspace:*",
+    "@mabulu-inc/simplicity-admin-core": "workspace:*",
     "pg": "^8.20.0"
   },
   "devDependencies": {

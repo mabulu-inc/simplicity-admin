@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { hashPassword, verifyPassword } from '@simplicity-admin/auth';
+import { hashPassword, verifyPassword } from '@mabulu-inc/simplicity-admin-auth';
 
 describe('password utilities', () => {
   it('hashPassword returns bcrypt hash starting with $2b$', async () => {

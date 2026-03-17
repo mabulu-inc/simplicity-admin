@@ -1,9 +1,9 @@
 // @vitest-environment node
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import type { ConnectionPool } from '@simplicity-admin/core';
+import type { ConnectionPool } from '@mabulu-inc/simplicity-admin-core';
 import { executeWidgetQuery } from '../../src/lib/dashboards/manager.js';
 import type { Widget } from '../../src/lib/dashboards/types.js';
-import { createTestDb, destroyTestDb, type TestDb } from '@simplicity-admin/test-support';
+import { createTestDb, destroyTestDb, type TestDb } from '@mabulu-inc/simplicity-admin-test-support';
 
 describe('Widget Execution Engine (integration)', () => {
 	let testDb: TestDb;

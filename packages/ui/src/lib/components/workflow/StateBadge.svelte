@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { StateDefinition } from '@simplicity-admin/core';
+	import type { StateDefinition } from '@mabulu-inc/simplicity-admin-core';
 
 	interface Props {
 		states: StateDefinition[];

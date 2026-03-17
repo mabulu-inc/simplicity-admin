@@ -39,7 +39,7 @@ The `update`, `delete`, and `transition` form actions in `[table]/[id]/+page.ser
 Table names from `params.table` and column names from schema metadata are interpolated into SQL using manual double-quote wrapping (`"${name}"`). While table names are validated against schema metadata, column names are trusted from `information_schema`.
 
 **Requirements:**
-- Create a shared `escapeIdentifier(name: string): string` utility in `@simplicity-admin/db` that properly escapes SQL identifiers (replace `"` with `""`, wrap in double quotes)
+- Create a shared `escapeIdentifier(name: string): string` utility in `@mabulu-inc/simplicity-admin-db` that properly escapes SQL identifiers (replace `"` with `""`, wrap in double quotes)
 - Replace all manual `"${name}"` interpolation in `+page.server.ts` files with the utility
 - Replace the `ident()` function in `bootstrap.ts` with the shared utility
 - Add tests for edge cases: names with quotes, unicode, reserved words

@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 
-describe('@simplicity-admin/db', () => {
+describe('@mabulu-inc/simplicity-admin-db', () => {
   it('can be imported', async () => {
-    const mod = await import('@simplicity-admin/db');
+    const mod = await import('@mabulu-inc/simplicity-admin-db');
     expect(mod).toBeDefined();
   });
 });

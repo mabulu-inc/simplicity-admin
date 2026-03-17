@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ColumnMeta } from '@simplicity-admin/core';
+  import type { ColumnMeta } from '@mabulu-inc/simplicity-admin-core';
   import { getFieldComponent } from './field-map.js';
   import TextInput from './fields/TextInput.svelte';
   import NumberInput from './fields/NumberInput.svelte';

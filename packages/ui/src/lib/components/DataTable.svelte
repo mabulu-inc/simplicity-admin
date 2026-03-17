@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ColumnMeta } from '@simplicity-admin/core';
+  import type { ColumnMeta } from '@mabulu-inc/simplicity-admin-core';
   import { getDisplayFormatter } from './field-map.js';
 
   interface Props {

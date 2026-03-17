@@ -1,4 +1,4 @@
-import type { ConnectionPool, SchemaMeta } from '@simplicity-admin/core';
+import type { ConnectionPool, SchemaMeta } from '@mabulu-inc/simplicity-admin-core';
 import { DatabaseError } from '../errors.js';
 import { listTables } from './tables.js';
 import { introspectColumns } from './columns.js';

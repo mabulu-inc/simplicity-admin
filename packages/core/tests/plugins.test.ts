@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { PluginManager, PluginError } from '@simplicity-admin/core';
-import type { Plugin, SchemaMeta, ProjectConfig, AppContext } from '@simplicity-admin/core';
+import { PluginManager, PluginError } from '@mabulu-inc/simplicity-admin-core';
+import type { Plugin, SchemaMeta, ProjectConfig, AppContext } from '@mabulu-inc/simplicity-admin-core';
 
 const dummyConfig = { database: 'postgres://localhost/test' } as ProjectConfig;
 

@@ -12,7 +12,7 @@ The framework auto-generates an API from the database schema. Options considered
 PostGraphile V5 generates a complete, spec-compliant GraphQL API from PostgreSQL with zero code. It handles queries, mutations, pagination, filtering, ordering, relations, and subscriptions. It deeply integrates with PostgreSQL features (RLS, grants, functions) for security enforcement.
 
 ## Decision
-**PostGraphile V5 as the default `APIProvider`.** PostGraphile is configured via a custom preset in `@simplicity-admin/api`. The framework adds a thin layer:
+**PostGraphile V5 as the default `APIProvider`.** PostGraphile is configured via a custom preset in `@mabulu-inc/simplicity-admin-api`. The framework adds a thin layer:
 - Custom Graphile preset for framework-specific configuration
 - pgSettings mapper (JWT payload → PostgreSQL session settings for RLS)
 - Optional REST adapter that generates RESTful endpoints from the same metadata
