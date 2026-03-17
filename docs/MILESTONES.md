@@ -101,15 +101,15 @@
 - [x] T-081: begin_session role validation — $0.29
 - [x] T-082: M5 security integration test — $0.78
 
-## M6 — Code Quality & Hardening ($8.63)
+## M6 — Code Quality & Hardening ($9.45)
 
 - [x] T-083: Replace z.any() with typed schemas in core config — $0.63
 - [x] T-084: Add justifying comments to all as any casts — $0.19
-- [ ] T-085: Validate JSON-parsed user input with Zod
+- [x] T-085: Validate JSON-parsed user input with Zod — $0.82
 - [ ] T-086: Extract shared admin auth check helper
 - [ ] T-087: Replace unsafe double type casts with runtime validation
 - [x] T-088: Test infrastructure — Docker lifecycle and per-test database isolation — $5.42
 - [x] T-089: Fix Svelte 5 state_referenced_locally warnings — $0.93
 - [x] T-090: Convert test-support to a workspace package — $1.46
 
-**Grand Total: $17.85**
+**Grand Total: $18.67**
