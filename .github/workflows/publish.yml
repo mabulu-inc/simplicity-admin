@@ -23,6 +23,8 @@ jobs:
           registry-url: https://npm.pkg.github.com
 
       - run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
 
       - run: pnpm build
 
