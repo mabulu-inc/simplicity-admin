@@ -1,17 +1,16 @@
-name: Publish Packages
+name: Publish
 
 on:
   push:
-    branches: [main]
-
-permissions:
-  contents: read
-  packages: write
+    tags:
+      - v*
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
@@ -21,14 +20,12 @@ jobs:
         with:
           node-version: 20
           cache: pnpm
+          registry-url: https://npm.pkg.github.com
 
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm build
 
-      - name: Configure npm for GitHub Packages
-        run: |
-          echo "@simplicity-admin:registry=https://npm.pkg.github.com" >> ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
-
       - run: pnpm publish -r --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
