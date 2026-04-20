@@ -12,13 +12,27 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
         with:
-          node-version: 22
+          # Full history so the ancestry check below can walk the graph.
+          fetch-depth: 0
+
+      # Refuse to publish unless the release tag's commit is reachable
+      # from main. Catches accidental pushes of version tags from a
+      # feature branch that hasn't been merged yet.
+      - name: Refuse to publish if tag isn't on main
+        run: |
+          git fetch origin main
+          if ! git merge-base --is-ancestor "${{ github.sha }}" origin/main; then
+            echo "::error::Tag ${{ github.ref_name }} (commit ${{ github.sha }}) is not reachable from main. Refusing to publish. Re-run the release from main."
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
           cache: pnpm
           registry-url: https://npm.pkg.github.com
 
