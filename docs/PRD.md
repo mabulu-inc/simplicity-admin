@@ -24,7 +24,7 @@ These are immutable. Every decision must be validated against them.
 
 5. **Security is PostgreSQL-native.** Row-Level Security policies, database roles, and column-level grants are the enforcement mechanism — not application-layer middleware that can be bypassed. The database is the last line of defense.
 
-6. **AI-native development.** The project is built to be developed, extended, and maintained by AI coding assistants. Documentation is structured for stateless AI loops (Ralph Loop). Specs are unambiguous. Tasks are self-contained. The project should be easily discoverable and usable by AI when developers are vibe-coding.
+6. **AI-native development.** The project is built to be developed, extended, and maintained by AI coding assistants. Documentation is structured for stateless AI workflows. Specs are unambiguous. Tasks are self-contained. The project should be easily discoverable and usable by AI when developers are vibe-coding.
 
 7. **Minimal dependencies — own your stack.** Every dependency must earn its place. Prefer standard APIs over libraries. The framework should be light enough to embed anywhere without bloating the host application.
 
@@ -293,7 +293,6 @@ SIMPLICITY-ADMIN is licensed under the **Business Source License (BSL 1.1)**.
 | **simplicity-schema** | `@mabulu-inc/simplicity-schema` — declarative PostgreSQL migration tool that defines schema as YAML files. Supports tables, columns, enums, mixins, RLS policies, grants, triggers, functions, and views. |
 | **System schema** | Database objects owned by SIMPLICITY-ADMIN (users, tenants, memberships, roles). Managed via simplicity-schema YAML shipped with the framework. |
 | **Application schema** | Database objects owned by the developer's application. Introspected by SIMPLICITY-ADMIN to generate CRUD, API, and UI. |
-| **Ralph Loop** | AI development methodology: stateless while loop where each iteration reads specs, picks a task, does TDD, commits, and resets context. |
 | **Code ceiling** | RBAC principle: permissions defined in code (simplicity-schema YAML) set the maximum access level. UI-based customization can further restrict but never exceed this ceiling. |
 | **Metadata model** | Internal representation of the database schema (tables, columns, relations, enums) that drives CRUD generation, form rendering, and API schema. |
 | **Design tokens** | CSS custom properties that define the visual language (colors, spacing, typography). Swappable via themes. |

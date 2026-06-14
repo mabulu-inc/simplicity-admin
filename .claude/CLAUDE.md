@@ -5,10 +5,6 @@
 Build simplicity-admin.
 Requirements are defined in `docs/PRD.md`.
 
-## Methodology
-
-Follow the Ralph Methodology defined in `docs/RALPH-METHODOLOGY.md`.
-
 ## Svelte 5 Conventions
 
 This project uses Svelte 5 with runes. Follow these rules when writing or modifying Svelte components:

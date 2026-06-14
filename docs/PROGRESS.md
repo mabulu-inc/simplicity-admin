@@ -1,7 +1,7 @@
 # Progress Log
 
 ## Current State
-<!-- Updated by each Ralph Loop iteration. Read this FIRST. -->
+<!-- Read this FIRST. -->
 Last completed task: T-068
 Next eligible task: T-069 (Bootstrap via simplicity-schema programmatic API)
 Blockers: none
