@@ -22,7 +22,7 @@ This creates a project directory with:
 - `simplicity-admin.config.ts` — Configuration file
 - `package.json` — Dependencies and scripts
 - `.env` — Environment variable template
-- `schema/` — Directory for simplicity-schema YAML files
+- `schema/` — Directory for schema-flow YAML files
 
 #### Starter Templates
 
@@ -47,7 +47,7 @@ Start a development server with hot reloading.
 npx simplicity-admin dev
 ```
 
-The dev server watches for changes to the config file, view YAML files, and simplicity-schema files. Schema changes trigger re-introspection automatically.
+The dev server watches for changes to the config file, view YAML files, and schema-flow files. Schema changes trigger re-introspection automatically.
 
 ### `build`
 
@@ -61,7 +61,7 @@ Outputs optimized assets ready for deployment. The build includes the SvelteKit 
 
 ### `generate`
 
-Introspect the database and generate simplicity-schema YAML files.
+Introspect the database and generate schema-flow YAML files.
 
 ```bash
 npx simplicity-admin generate

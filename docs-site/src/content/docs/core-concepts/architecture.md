@@ -41,7 +41,7 @@ Each built-in package (`@mabulu-inc/simplicity-admin-db`, `@mabulu-inc/simplicit
 ```
 @mabulu-inc/simplicity-admin-core          (zero dependencies on other @simplicity-admin packages)
   |
-  +-- @mabulu-inc/simplicity-admin-db      (depends on core + simplicity-schema)
+  +-- @mabulu-inc/simplicity-admin-db      (depends on core + schema-flow)
   |     |
   |     +-- @mabulu-inc/simplicity-admin-api   (depends on core + db)
   |     |

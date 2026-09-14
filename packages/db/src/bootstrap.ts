@@ -1,5 +1,5 @@
 import type { ConnectionPool, ProjectConfig } from '@mabulu-inc/simplicity-admin-core';
-import { resolveConfig, runAll, createLogger, closePool } from '@mabulu-inc/simplicity-schema';
+import { resolveConfig, runAll, createLogger, closePool } from '@smplcty/schema-flow';
 import { DatabaseError } from './errors.js';
 import { escapeIdentifier } from './escape.js';
 import bcrypt from 'bcrypt';
@@ -16,7 +16,7 @@ function getSchemaDir(): string {
 
 /**
  * Bootstraps the system schema on a fresh or existing database.
- * Delegates DDL to @mabulu-inc/simplicity-schema using YAML schema files,
+ * Delegates DDL to @smplcty/schema-flow using YAML schema files,
  * then seeds default data (tenant, admin user, membership).
  * Idempotent — safe to run multiple times.
  */
@@ -27,7 +27,7 @@ export async function bootstrap(pool: ConnectionPool, config: ProjectConfig): Pr
     // 1. Create target schema if it doesn't exist
     await pool.query(`CREATE SCHEMA IF NOT EXISTS ${escapeIdentifier(schema)}`);
 
-    // 2. Apply DDL via simplicity-schema (roles, functions, tables, indexes, triggers, grants)
+    // 2. Apply DDL via schema-flow (roles, functions, tables, indexes, triggers, grants)
     const schemaConfig = resolveConfig({
       connectionString: config.database,
       baseDir: getSchemaDir(),
@@ -42,7 +42,7 @@ export async function bootstrap(pool: ConnectionPool, config: ProjectConfig): Pr
     // 3. Seed default data
     await seedDefaults(pool, schema);
   } catch (err) {
-    // Ensure simplicity-schema pool is cleaned up on error
+    // Ensure schema-flow pool is cleaned up on error
     await closePool().catch(() => {});
 
     if (err instanceof DatabaseError) throw err;

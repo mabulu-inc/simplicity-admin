@@ -28,7 +28,7 @@ function parseArgs(args: string[]): {
 }
 
 /**
- * Run simplicity-schema migrations (plan + apply).
+ * Run schema-flow migrations (plan + apply).
  * Delegates to the DatabaseProvider.migrate() method.
  */
 export async function runMigrate(args: string[]): Promise<void> {

@@ -75,7 +75,7 @@ Outputs compiled assets to the `build/` directory. The build includes the Svelte
 
 ## `generate`
 
-Introspect the database and generate simplicity-schema YAML files.
+Introspect the database and generate schema-flow YAML files.
 
 ```bash
 npx simplicity-admin generate

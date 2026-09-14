@@ -78,11 +78,11 @@ Your tables. SIMPLICITY-ADMIN introspects this schema and generates the admin in
 
 ### System Schema (`_simplicity`)
 
-Created automatically on first startup. Stores internal state: user accounts, sessions, role assignments, saved views, and audit logs. This schema is managed entirely by SIMPLICITY-ADMIN via simplicity-schema and should not be modified manually.
+Created automatically on first startup. Stores internal state: user accounts, sessions, role assignments, saved views, and audit logs. This schema is managed entirely by SIMPLICITY-ADMIN via schema-flow and should not be modified manually.
 
-## Schema Management with simplicity-schema
+## Schema Management with schema-flow
 
-SIMPLICITY-ADMIN uses simplicity-schema for declarative DDL. Define your tables in YAML, and simplicity-schema handles migrations:
+SIMPLICITY-ADMIN uses schema-flow for declarative DDL. Define your tables in YAML, and schema-flow handles migrations:
 
 ```yaml
 # schema/tables/products.yaml

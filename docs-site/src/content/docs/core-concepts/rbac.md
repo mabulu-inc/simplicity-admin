@@ -36,7 +36,7 @@ SIMPLICITY-ADMIN ships with four functional roles:
 | `app_editor` | Read and write access to application tables. |
 | `app_admin` | Full access including user management and configuration. |
 
-These roles map to PostgreSQL database roles. Grants are defined in simplicity-schema YAML:
+These roles map to PostgreSQL database roles. Grants are defined in schema-flow YAML:
 
 ```yaml
 # schema/tables/products.yaml
