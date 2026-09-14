@@ -1,13 +1,13 @@
 ---
 title: Adding a Table
-description: Create a table with simplicity-schema and have SIMPLICITY-ADMIN generate views and API endpoints automatically.
+description: Create a table with schema-flow and have SIMPLICITY-ADMIN generate views and API endpoints automatically.
 ---
 
 This guide walks through adding a new `products` table to your SIMPLICITY-ADMIN project, including RBAC grants and view customization.
 
 ## 1. Define the Table
 
-Create a simplicity-schema YAML file:
+Create a schema-flow YAML file:
 
 ```yaml
 # schema/tables/products.yaml
@@ -37,7 +37,7 @@ columns:
 
 ## 2. Run Migrations
 
-If your project uses simplicity-schema migrations, apply them:
+If your project uses schema-flow migrations, apply them:
 
 ```bash
 npx simplicity-admin dev

@@ -63,7 +63,7 @@ Use the auto-generated UI to manage data, configure views, and control access â€
 - **GraphQL:** PostGraphile V5
 - **UI:** SvelteKit
 - **Auth:** JWT + bcrypt
-- **Schema Management:** simplicity-schema (declarative DDL via YAML)
+- **Schema Management:** schema-flow (declarative DDL via YAML)
 
 ## Next Steps
 

@@ -5,7 +5,7 @@ description: PostgreSQL connection pooling, schema introspection, and system sch
 
 The `db` package implements the `DatabaseProvider` interface from `core`. It manages the PostgreSQL connection, introspects the database schema, and bootstraps the internal system schema.
 
-**Dependencies:** `@mabulu-inc/simplicity-admin-core`, `simplicity-schema`
+**Dependencies:** `@mabulu-inc/simplicity-admin-core`, `schema-flow`
 
 ## Connection Pooling
 
@@ -46,7 +46,7 @@ export default defineConfig({
 
 ## System Schema Bootstrap
 
-On first startup, the `db` package creates the `_simplicity` system schema using simplicity-schema. This schema stores:
+On first startup, the `db` package creates the `_simplicity` system schema using schema-flow. This schema stores:
 
 - **Users** — Admin user accounts (email, password hash, roles)
 - **Sessions** — Active refresh tokens
@@ -54,7 +54,7 @@ On first startup, the `db` package creates the `_simplicity` system schema using
 - **Saved views** — User-customized list/detail view configurations
 - **Audit log** — Record of mutations performed through the admin
 
-The system schema is managed entirely by SIMPLICITY-ADMIN. On subsequent startups, simplicity-schema runs any necessary migrations to keep the system schema up to date.
+The system schema is managed entirely by SIMPLICITY-ADMIN. On subsequent startups, schema-flow runs any necessary migrations to keep the system schema up to date.
 
 ## Disconnect
 

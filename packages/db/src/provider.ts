@@ -48,7 +48,7 @@ export function postgresProvider(): DatabaseProvider {
       _outputDir: string,
       _schema?: string,
     ): Promise<void> {
-      // Placeholder — full simplicity-schema YAML generation will be implemented
+      // Placeholder — full schema-flow YAML generation will be implemented
       // when the generate-from-db feature is built (B-DB-017).
     },
   };

@@ -36,7 +36,7 @@ describe('bootstrap', () => {
     expect(tableNames).toContain('memberships');
   });
 
-  it('creates all schema-defined tables via simplicity-schema', async () => {
+  it('creates all schema-defined tables via schema-flow', async () => {
     const tables = await testDb.pool.query<{ table_name: string }>(
       `SELECT table_name FROM information_schema.tables WHERE table_schema = $1 ORDER BY table_name`,
       [testSchema],

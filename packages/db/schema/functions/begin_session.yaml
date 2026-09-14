@@ -1,7 +1,6 @@
 name: begin_session
 language: plpgsql
 returns: void
-replace: true
 security: definer
 args:
   - name: p_role

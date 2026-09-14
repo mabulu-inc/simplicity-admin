@@ -62,7 +62,7 @@ grants:
     privileges: [SELECT, INSERT, UPDATE, DELETE]
   - to: app_editor
     privileges: [SELECT, INSERT, UPDATE]
+  # Viewers can only read and mark their own notifications
   - to: app_viewer
     privileges: [SELECT, UPDATE]
     columns: [id, user_id, read]
-    comment: "Viewers can only read and mark their own notifications"

@@ -58,7 +58,7 @@ Unauthenticated requests receive the `anon` role.
 
 ## RBAC Engine
 
-The RBAC engine merges code-defined permissions (from simplicity-schema grants) with database-stored permission overrides. Code permissions set the ceiling; database overrides can only restrict further.
+The RBAC engine merges code-defined permissions (from schema-flow grants) with database-stored permission overrides. Code permissions set the ceiling; database overrides can only restrict further.
 
 Permission resolution for a request:
 

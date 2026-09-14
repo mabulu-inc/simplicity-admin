@@ -33,7 +33,7 @@ That's it. You have a working admin panel with authentication, auto-generated CR
 | Package | Description |
 |---------|-------------|
 | `@mabulu-inc/simplicity-admin-core` | Config system, metadata model, provider interfaces, plugin registry |
-| `@mabulu-inc/simplicity-admin-db` | Database connection, schema introspection, bootstrap via simplicity-schema |
+| `@mabulu-inc/simplicity-admin-db` | Database connection, schema introspection, bootstrap via schema-flow |
 | `@mabulu-inc/simplicity-admin-auth` | JWT authentication, bcrypt password hashing, RBAC engine |
 | `@mabulu-inc/simplicity-admin-api` | PostGraphile V5 GraphQL API, optional REST adapter |
 | `@mabulu-inc/simplicity-admin-ui` | SvelteKit admin UI with auto-generated views and components |
